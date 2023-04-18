@@ -5,22 +5,33 @@ import Button from "../components/utils/Button";
 
 type UserType = {
   username: string
+  email: string
   password: string
-  apikey: string
 }
 
 function SignUp() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
   const [user, setUser] = useState<UserType>({
     username: "",
-    password: "",
-    apikey: "",
+    email: "",
+    password: ""
   })
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     setIsSubmitted(true)
     console.log(user)
+
+    fetch(`${import.meta.env.VITE_BACK_API_URL}/users`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({...user, role: 0 })
+    }).then((res) => {
+      console.log(res)
+    })
   }
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,14 +46,14 @@ function SignUp() {
       return;
     }
 
-    fetch(`${import.meta.env.VITE_GW2_API_URL}/account`, {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        mode: 'no-cors',
-        authentication: `Bearer ${user.apikey}`
-      }
-    })
+    // fetch(`${import.meta.env.VITE_GW2_API_URL}/account`, {
+    //   method: 'GET',
+    //   headers: {
+    //     accept: 'application/json',
+    //     mode: 'no-cors',
+    //     authentication: `Bearer ${user.apikey}`
+    //   }
+    // })
   }, [isSubmitted])
 
   return (
@@ -63,13 +74,22 @@ function SignUp() {
         />
         <Input 
           type="text"
+          name="email"
+          value={user.email} 
+          placeholder="E-mail"
+          handleChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+            handleUserChange(e)
+          }}  
+        />
+        {/* <Input 
+          type="text"
           name="apikey"
           value={user.apikey}
           placeholder="Clé d'api GW2" 
           handleChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
             handleUserChange(e)
           }} 
-        />
+        /> */}
         <Input 
           type="password"
           name="password"
