@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { ScrollRestoration, useParams } from "react-router-dom";
 import Page from "../components/layout/Page";
 
@@ -7,7 +7,7 @@ function Guild () {
 
   return (
     <Page>
-      <ScrollRestoration />
+      <ScrollRestoration  />
       <img 
         className=" overflow-hidden rounded-xl mb-4 max-h-80 w-full object-cover"
         src="/images/bg-home.jpg" 

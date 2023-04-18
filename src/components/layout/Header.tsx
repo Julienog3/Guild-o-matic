@@ -1,6 +1,7 @@
 import React from "react"
 import Button from "../utils/Button"
 import { Link } from "react-router-dom"
+import LinkedButton from "../utils/LinkedButton"
 
 const Header = (): JSX.Element => {
   return (
@@ -8,7 +9,10 @@ const Header = (): JSX.Element => {
       <Link to="/">
         <h1 className="text-white font-bold text-xl ">GW2 Guild&apos;Finder</h1>
       </Link>
-      <Button>Login</Button>
+      <div className="flex gap-4">
+        <LinkedButton path="/sign-up">Sign up</LinkedButton>
+        <Button>Login</Button>
+      </div>
     </header>
   )
 }

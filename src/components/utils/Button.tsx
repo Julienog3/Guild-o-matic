@@ -1,12 +1,22 @@
 import React from "react"
 
 interface ButtonProps {
+  type?: "button" | "submit" | "reset"
+  onClick?: () => void
   children: React.ReactNode
 }
 
-const Button = ({ children }: ButtonProps) => {
+const Button = ({ type, onClick, children }: ButtonProps) => {
   return (
-    <button className="bg-neutral-900 px-8 py-3 text-white rounded-full">
+    <button 
+      type={type}
+      onClick={(): void => {
+        if (onClick) {
+          onClick()
+        }
+      }}
+      className="bg-neutral-900 px-8 py-3 text-white rounded-full"
+    >
       {children}
     </button>
   )
