@@ -2,10 +2,15 @@ import React from "react";
 import Page from "../components/layout/Page";
 import GuildCards from "../components/guilds/GuildCards";
 import { useAtom } from "jotai";
-import { guildAtom } from "../App";
+import { atomsWithQuery } from "jotai-tanstack-query";
 
 function Guilds () {
-  const [guilds] = useAtom(guildAtom)
+  const [guildsAtom] = atomsWithQuery((get) => ({
+    queryKey: ['guilds'],
+    queryFn: () => fetch('http://127.0.0.1:3333/guilds').then((res) => res.json())
+  }))
+
+  const [guilds] = useAtom(guildsAtom)
 
   return (
     <Page>
