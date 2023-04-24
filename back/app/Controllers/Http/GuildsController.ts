@@ -16,11 +16,12 @@ export default class GuildsController {
     })
 
     const payload = await request.validate({ schema: newPostSchema })
-
     Guild.create(payload)
   }
 
-  public async show(ctx: HttpContextContract) {}
+  public async show({ request }: HttpContextContract) {
+    return Guild.find(request.param('id'))
+  }
 
   public async destroy(ctx: HttpContextContract) {}
 }

@@ -25,6 +25,10 @@ Route.get('/guilds', async (ctx) => {
   return new GuildsController().index(ctx)
 })
 
+Route.get('/guilds/:id', async (ctx) => {
+  return new GuildsController().show(ctx)
+})
+
 Route.post('/guilds', async (ctx) => {
   return new GuildsController().store(ctx)
 })
