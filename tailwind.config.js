@@ -9,6 +9,7 @@ export default {
   theme: {
     colors: {
       white: colors.white,
+      black: colors.black,
       'bg-blue': '#0B0C13',
       'main-blue': '#11141C',
       'light-blue': '#181D2A',
@@ -24,6 +25,8 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }
 

@@ -7,7 +7,7 @@ interface PageProps {
 
 const Page = ({ className, children }: PageProps): JSX.Element => {
   return (
-    <main className={`w-full p-8 h-full ${className}`}>
+    <main className={`w-full px-8 h-full ${className}`}>
       {children}
     </main>
   )
