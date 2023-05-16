@@ -54,7 +54,7 @@ const Header = (): JSX.Element => {
         ? <Profile profile={profile} /> 
         : <button 
             onClick={() => setToggleModal(true)}
-            className="cursor-pointer w-fit px-8 font-raleway gap-8 border text-white border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors"
+            className="cursor-pointer w-fit px-8 py-4 font-raleway gap-8 border text-white border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors"
           >
             Sign in
           </button>

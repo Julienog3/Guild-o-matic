@@ -10,7 +10,6 @@ function Guild () {
 
   const [guild, setGuild] = useState<GuildType>()
 
-  const text = "# salut"
 
   useEffect(() => {
     const getGuilds = async () => {
@@ -26,7 +25,25 @@ function Guild () {
       const formattedData = keysToCamel(data)
       setGuild(formattedData[0])
     }
-   
+
+    const getAccount = () => {
+      fetch(`${import.meta.env.VITE_GW2_API_URL}/v2/account?access_token=${import.meta.env.VITE_GW2_API_KEY}`, {
+        method: "GET",
+      }).then((res) => {
+        console.log(res)
+      })
+    }
+
+    const getGuild = () => {
+      fetch(`${import.meta.env.VITE_GW2_API_URL}/v2/guild/41DDD105-36E2-E811-81A8-CDE2AC1EED30?access_token=${import.meta.env.VITE_GW2_API_KEY}`, {
+        method: "GET",
+      }).then((res) => {
+        console.log(res)
+      })
+    }
+    
+    getAccount()
+    getGuild()
     getGuilds()
   }, [])
 

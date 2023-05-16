@@ -6,6 +6,7 @@ import App from "./App";
 import ErrorPage from "./pages/ErrorPage";
 import Guild from "./pages/Guild";
 import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: 'sign-up',
         element: <SignUp />
+      },
+      {
+        path: 'profile',
+        element: <Profile />
       }
     ]
   }

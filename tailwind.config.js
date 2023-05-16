@@ -21,7 +21,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        'raleway': ['Raleway', 'cursive'],
+        sans: ['Raleway', 'cursive'],
       },
     },
   },

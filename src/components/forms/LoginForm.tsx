@@ -2,14 +2,10 @@ import React, { FormEvent, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { supabase } from "../../supabaseClient"
 import useAuth from "../../hooks/useAuth"
-
-interface LoginFormProps {
-  
-}
+import FormError from "./FormError"
 
 const LoginForm = (): JSX.Element => {
-
-  const { session, signIn } = useAuth()
+  const { session, error, signIn } = useAuth()
  
   const [userData, setUserData] = useState({
     email: '',
@@ -25,29 +21,44 @@ const LoginForm = (): JSX.Element => {
     signIn(userData.email, userData.password)
   }
 
-  return <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-    <input 
-      className="bg-main-blue p-2 rounded-lg border border-light-blue text-white" 
-      value={userData.email}
-      onChange={e => setUserData(userData => ({
-        ...userData,
-        email: e.target.value
-      }))}
-      type="email" 
-      placeholder="E-mail"
-    />
-    <input 
-      className="bg-main-blue p-2 rounded-lg border border-light-blue text-white"
-      value={userData.password}
-      onChange={e => setUserData(userData => ({
-        ...userData,
-        password: e.target.value
-      }))}
-      type="password"
-      placeholder="Mot de passe"
-    />
-    <button type="submit" className="bg-accent-blue h-12 rounded-lg px-4 text-white">Se connecter</button>
-    <p className="text-white text-center font-raleway font-semibold">Vous n&apos;avez pas de compte ? <Link className="text-accent-blue" to="/">S&apos;inscrire</Link></p>
+  return <form className="flex flex-col gap-8 h-full" onSubmit={handleSubmit}>
+    {error &&<FormError>
+      {error.message}
+    </FormError>}
+    <div className="flex flex-col gap-4 h-full">
+      <div className="flex flex-col">
+        <label className="text-light-gray mb-2 text-md" htmlFor="password">E-mail</label>
+        <input 
+          className="bg-main-blue p-4 rounded-lg border border-light-blue text-white" 
+          value={userData.email}
+          onChange={e => setUserData(userData => ({
+            ...userData,
+            email: e.target.value
+          }))}
+          type="email" 
+          placeholder="E-mail"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label className="text-light-gray mb-2 text-md" htmlFor="password">Mot de passe</label>
+        <input 
+          className="bg-main-blue p-4 rounded-lg border border-light-blue text-white mb-3"
+          value={userData.password}
+          onChange={e => setUserData(userData => ({
+            ...userData,
+            password: e.target.value
+          }))}
+          type="password"
+          placeholder="Mot de passe"
+        />
+        <Link className="text-accent-blue font-raleway self-end" to="/">Mot de passe oublié ?</Link>
+      </div>
+    </div>
+    <div className="flex flex-col justify-center gap-6">
+      <button type="submit" className="bg-accent-blue rounded-lg p-4 text-lg font-raleway text-white">Se connecter</button>
+      <p className="text-white text-center font-raleway">Vous n&apos;avez pas de compte ? <Link className="text-accent-blue" to="/">S&apos;inscrire</Link></p>
+
+    </div>
   </form>
 }
 
