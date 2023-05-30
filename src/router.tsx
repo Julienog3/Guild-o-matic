@@ -7,6 +7,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Guild from "./pages/Guild";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
+import AddingGuild from "./pages/AddingGuild";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: 'guilds/:guildId',
         element: <Guild />
+      },
+      {
+        path: 'guilds/add',
+        element: <AddingGuild />
       },
       {
         path: 'sign-up',

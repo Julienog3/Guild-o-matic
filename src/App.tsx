@@ -3,9 +3,12 @@ import React, { useState } from "react";
 import Sidebar from "./components/layout/sidebar/Sidebar";
 import Header from "./components/layout/Header";
 import { AiFillHome } from "react-icons/ai";
-import { BsFillShieldFill } from "react-icons/bs";
+import { BsFillShieldFill, BsPlus } from "react-icons/bs";
 import Modal from "./components/utils/Modal";
 import LoginModal from "./components/modals/LoginModal";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { AuthContext } from "./contexts/AuthContext";
+import { Session } from "@supabase/supabase-js";
 
 export type SidebarButtonType = {
   name: string
@@ -14,7 +17,8 @@ export type SidebarButtonType = {
 }
 
 function App() {
-  
+  const queryClient = new QueryClient()
+  const [session, setSession] = useState<Session>({} as Session)
 
   const sidebarButtons: SidebarButtonType[] = [
     {
@@ -27,16 +31,25 @@ function App() {
       icon: <BsFillShieldFill />,
       link: '/guilds'
     },
+    {
+      name: 'add-guild',
+      icon: <BsPlus />,
+      link: '/guilds/add'
+    },
   ]
 
   return (
-    <div className="bg-bg-blue flex w-full min-h-screen">
-      <Sidebar buttons={sidebarButtons} />
-      <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
-        <Header />
-        <Outlet />
-      </div>
-    </div>
+    <AuthContext.Provider value={{ session, setSession }}>
+      <QueryClientProvider client={queryClient}>
+        <div className="bg-bg-blue flex w-full min-h-screen">
+          <Sidebar buttons={sidebarButtons} />
+          <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
+            <Header />
+            <Outlet />
+          </div>
+        </div>
+      </QueryClientProvider>
+    </AuthContext.Provider>
   )
 }
 

@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { supabase } from "../supabaseClient"
 import { AuthError, Session } from "@supabase/supabase-js"
+import { AuthContext } from "../contexts/AuthContext";
 
 const useAuth = () => {
-  const [session, setSession] = useState<Session>()
+  const { session, setSession} = useContext(AuthContext);
+
   const [error, setError] = useState<AuthError>()
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const useAuth = () => {
       return setError(error)
     }
 
-    setSession(undefined)
+    setSession({} as Session) 
   }
 
   return { session, error, signIn, signOut }

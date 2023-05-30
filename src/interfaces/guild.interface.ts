@@ -1,7 +1,16 @@
-export type GuildType = {
+export interface Guild {
   id: number
-  name: string
-  isRecruiting: boolean
-  members: number
+  tag: string
+  memberCount: number
+  numberCapacity: number
   level: number
+  createdAt: Date
+  name: string
+  description: string
+  isRecruiting: boolean
+  guildId: string
+}
+
+export enum GuildCategory {
+
 }

@@ -26,7 +26,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
           </div>
           <div className="flex flex-col gap-1">
             <h4 className="text-light-gray font-raleway text-lg font-semibold">Membres</h4>
-            <span className="text-white text-2xl font-semibold">{guild.members}</span>
+            <span className="text-white text-2xl font-semibold">{guild.memberCount} / {guild.memberCapacity}</span>
           </div>
         </div>
       </div>

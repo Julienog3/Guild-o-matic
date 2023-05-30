@@ -3,25 +3,25 @@ import { Link } from "react-router-dom"
 import { supabase } from "../../supabaseClient"
 import useAuth from "../../hooks/useAuth"
 import FormError from "./FormError"
+import { AuthError } from "@supabase/supabase-js"
 
-const LoginForm = (): JSX.Element => {
-  const { session, error, signIn } = useAuth()
- 
-  const [userData, setUserData] = useState({
+interface LoginFormProps {
+  onSubmit: (event: FormEvent, credentials: Credentials) => void;
+  error?: AuthError
+}
+
+interface Credentials {
+  email: string;
+  password: string;
+}
+
+const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
+  const [credentials, setCredentials] = useState<Credentials>({
     email: '',
     password: ''
   })
 
-  useEffect(() => {
-    console.log(session)
-  }, [session])
-
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault()
-    signIn(userData.email, userData.password)
-  }
-
-  return <form className="flex flex-col gap-8 h-full" onSubmit={handleSubmit}>
+  return <form className="flex flex-col gap-8 h-full" onSubmit={(e: FormEvent) => onSubmit(e, credentials)}>
     {error &&<FormError>
       {error.message}
     </FormError>}
@@ -30,9 +30,9 @@ const LoginForm = (): JSX.Element => {
         <label className="text-light-gray mb-2 text-md" htmlFor="password">E-mail</label>
         <input 
           className="bg-main-blue p-4 rounded-lg border border-light-blue text-white" 
-          value={userData.email}
-          onChange={e => setUserData(userData => ({
-            ...userData,
+          value={credentials.email}
+          onChange={e => setCredentials(credentials => ({
+            ...credentials,
             email: e.target.value
           }))}
           type="email" 
@@ -43,9 +43,9 @@ const LoginForm = (): JSX.Element => {
         <label className="text-light-gray mb-2 text-md" htmlFor="password">Mot de passe</label>
         <input 
           className="bg-main-blue p-4 rounded-lg border border-light-blue text-white mb-3"
-          value={userData.password}
-          onChange={e => setUserData(userData => ({
-            ...userData,
+          value={credentials.password}
+          onChange={e => setCredentials(credentials => ({
+            ...credentials,
             password: e.target.value
           }))}
           type="password"

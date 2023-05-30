@@ -5,17 +5,17 @@ import { FaBell } from "react-icons/fa"
 import LoginModal from "../modals/LoginModal"
 import useAuth from "../../hooks/useAuth"
 import { supabase } from "../../supabaseClient"
-import { keysToCamel } from "../../utils/format"
+import { keysToCamel } from "../../utils/helpers"
 
 const Header = (): JSX.Element => {
   const [toggleModal, setToggleModal] = useState<boolean>(false)
   const [profile, setProfile] = useState<any>()
 
-  const { session, signOut } = useAuth()
+  const { session } = useAuth()
 
   useEffect(() => {
-    if (!session) {
-      return;
+    if (!session.user) {
+      return setProfile(undefined)
     }
     
     const getProfile = async () => {
@@ -34,10 +34,6 @@ const Header = (): JSX.Element => {
 
     getProfile()
   }, [session])
-
-  useEffect(() => {
-    console.log(profile)
-  }, [profile])
 
   return (
     <>
@@ -59,12 +55,6 @@ const Header = (): JSX.Element => {
             Sign in
           </button>
       }
-
-      <div
-        onClick={() => signOut()}
-        className="cursor-pointer w-16 gap-8 border border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors">
-        Disconnect
-      </div>
       </div>
     </header>
     </>
