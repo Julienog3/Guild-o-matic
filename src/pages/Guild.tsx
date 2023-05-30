@@ -8,13 +8,9 @@ import { useQuery } from "react-query";
 import { guildsService } from "../services/guilds.service";
 import { gw2Service } from "../services/gw2.service";
 
-function Guild () {
+function Guild (): JSX.Element {
   const { guildId } = useParams()
   const [guildDetails, setGuildDetails] = useState<GuildType>()
-
-  if (!guildId) {
-    return
-  }
 
   const { data } = useQuery(['guilds', guildId], () => guildsService.getGuildById(guildId))
 

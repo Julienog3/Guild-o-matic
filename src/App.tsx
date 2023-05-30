@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Sidebar from "./components/layout/sidebar/Sidebar";
 import Header from "./components/layout/Header";
 import { AiFillHome } from "react-icons/ai";
-import { BsFillShieldFill, BsPlus } from "react-icons/bs";
+import { BsFillGearFill, BsFillShieldFill, BsPlus } from "react-icons/bs";
 import Modal from "./components/utils/Modal";
 import LoginModal from "./components/modals/LoginModal";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -36,13 +36,18 @@ function App() {
       icon: <BsPlus />,
       link: '/guilds/add'
     },
+    {
+      name: 'settings',
+      icon: <BsFillGearFill />,
+      link: '/settings'
+    },
   ]
 
   return (
     <AuthContext.Provider value={{ session, setSession }}>
       <QueryClientProvider client={queryClient}>
         <div className="bg-bg-blue flex w-full min-h-screen">
-          <Sidebar buttons={sidebarButtons} />
+          {session.user && <Sidebar buttons={sidebarButtons} />}
           <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
             <Header />
             <Outlet />

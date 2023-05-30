@@ -35,11 +35,7 @@ const AddingGuild = (): JSX.Element => {
       getAllGuilds(player.guilds)
     }
   }, [player])
-
-  useEffect(() => {
-    console.log('guilds', guilds)
-  }, [guilds])
-
+  
   return (
     <Page>
       <div className="w-full border-b border-light-blue mb-4">

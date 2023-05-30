@@ -8,6 +8,7 @@ import Guild from "./pages/Guild";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import AddingGuild from "./pages/AddingGuild";
+import Settings from "./pages/Settings";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: 'profile',
         element: <Profile />
+      },
+      {
+        path: 'settings',
+        element: <Settings />
       }
     ]
   }
