@@ -57,7 +57,6 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
     <div className="flex flex-col justify-center gap-6">
       <button type="submit" className="bg-accent-blue rounded-lg p-4 text-lg font-raleway text-white">Se connecter</button>
       <p className="text-white text-center font-raleway">Vous n&apos;avez pas de compte ? <Link className="text-accent-blue" to="/">S&apos;inscrire</Link></p>
-
     </div>
   </form>
 }
