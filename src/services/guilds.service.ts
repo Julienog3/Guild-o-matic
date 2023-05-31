@@ -1,6 +1,6 @@
 import { Guild } from "../interfaces/guild.interface"
 import { supabase } from "../supabaseClient"
-import { keysToCamel } from "../utils/helpers"
+import { keysToCamel, keysToSnake } from "../utils/helpers"
 import { gw2Service } from "./gw2.service"
 
 export const guildsService = {
@@ -46,5 +46,16 @@ export const guildsService = {
     }
 
     return keysToCamel(data[0])
+  },
+  postGuild: async (guild: any): Promise<any> => {
+    const { data, error } = await supabase
+      .from('guilds')
+      .insert([keysToSnake(guild)])
+
+      if (error) {
+        return
+      }
+
+      console.log(data)
   }
 }

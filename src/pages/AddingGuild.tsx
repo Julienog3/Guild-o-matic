@@ -4,8 +4,13 @@ import usePlayer from "../hooks/usePlayer"
 import { keysToCamel } from "../utils/helpers"
 import { GuildType } from "../interfaces/gw2/guild"
 import ReactMarkdown from "react-markdown"
+import { useMutation } from "react-query"
+import { guildsService } from "../services/guilds.service"
+import { QueryClient } from "@tanstack/query-core"
 
 const AddingGuild = (): JSX.Element => {
+  const queryClient = new QueryClient()
+  
   const { player, apiKey } = usePlayer()
   const [guilds, setGuilds] = useState<any[]>([])
 
@@ -14,11 +19,20 @@ const AddingGuild = (): JSX.Element => {
     isRecruiting: false,
     description: ''
   })
+  
+  const mutation = useMutation({
+    mutationFn: guildsService.postGuild,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['guilds'] })
+    },
+  })
 
   const [gameGuild, setGameGuild] = useState<GuildType>()
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    mutation.mutate(guildToAdd)
+    // await addGuild(guildToAdd)
     console.log(guildToAdd)
   }  
 
@@ -47,8 +61,6 @@ const AddingGuild = (): JSX.Element => {
   }, [player])
 
   useEffect(() => {
-
-
     const getGuild = async (id: string) => {
       return await fetch(`${import.meta.env.VITE_GW2_API_URL}/v2/guild/${id}?access_token=${apiKey}`, {
         method: "GET",
