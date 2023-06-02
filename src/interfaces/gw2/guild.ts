@@ -1,8 +1,8 @@
-export type GuildType = {
+export type GW2GuildType = {
   id: string
   name: string
   tag: string
-  emblem: GuildEmblemType
+  emblem: GW2GuildEmblemType
   level: number
   motd: string
   influence: number
@@ -12,7 +12,7 @@ export type GuildType = {
   memberCapacity: number
 }
 
-export type GuildEmblemType = {
+export type GW2GuildEmblemType = {
   background: {
     id: string
     colors: number[]

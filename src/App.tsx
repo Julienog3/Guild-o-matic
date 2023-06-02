@@ -11,6 +11,7 @@ import { Session } from "@supabase/supabase-js";
 import Landing from "./pages/Landing";
 import { ModalContext } from "./contexts/ModalContext";
 import { Modal, ModalType } from "./interfaces/modal.interface";
+import Footer from "./components/layout/Footer";
 
 export type SidebarButtonType = {
   name: string
@@ -56,6 +57,7 @@ function App() {
             <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
               <Header />
               <Outlet />
+              <Footer />
             </div>
           </div>
         </QueryClientProvider>

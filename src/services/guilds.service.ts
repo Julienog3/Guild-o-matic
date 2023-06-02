@@ -1,10 +1,10 @@
-import { Guild } from "../interfaces/guild.interface"
+import { GuildType } from "../interfaces/guild.interface"
 import { supabase } from "../supabaseClient"
 import { keysToCamel, keysToSnake } from "../utils/helpers"
 import { gw2Service } from "./gw2.service"
 
 export const guildsService = {
-  getGuilds: async (): Promise<Guild[] | undefined> => {
+  getGuilds: async (): Promise<GuildType[] | undefined> => {
     const { data, error } = await supabase
       .from('guilds')
       .select('*')
@@ -13,7 +13,7 @@ export const guildsService = {
       return
     }
 
-    const guilds: Guild[] = keysToCamel(data)
+    const guilds: GuildType[] = keysToCamel(data)
 
     return Promise.all(
       guilds.map(async (guild) => {
@@ -35,7 +35,7 @@ export const guildsService = {
       })
     )
   },
-  getGuildById: async (id: string): Promise<Guild | undefined> => {
+  getGuildById: async (id: string): Promise<GuildType | undefined> => {
     const { data, error } = await supabase
       .from('guilds')
       .select('*')
