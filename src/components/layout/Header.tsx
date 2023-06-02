@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useMatches } from "react-router-dom"
 import Profile from "../Profile"
 import { FaBell } from "react-icons/fa"
 import LoginModal from "../modals/LoginModal"
 import useAuth from "../../hooks/useAuth"
 import { supabase } from "../../supabaseClient"
 import { keysToCamel } from "../../utils/helpers"
+import SignUpModal from "../modals/SignUpModal"
 
 const Header = (): JSX.Element => {
-  const [toggleModal, setToggleModal] = useState<boolean>(false)
+  const [toggleLoginModal, setToggleLoginModal] = useState<boolean>(false)
+  const [toggleSignUpModal, setToggleSignUpModal] = useState<boolean>(false)
+
   const [profile, setProfile] = useState<any>()
+
+   const matches = useMatches();
+
+   console.log(matches)
 
   const { session } = useAuth()
 
@@ -37,8 +44,9 @@ const Header = (): JSX.Element => {
 
   return (
     <>
-    {toggleModal && <LoginModal onClose={() => { setToggleModal(false) }} />}
-    <header className="w-full p-8 flex justify-between items-center">
+    {toggleLoginModal && <LoginModal onClose={() => { setToggleLoginModal(false) }} />}
+    {toggleSignUpModal && <SignUpModal onClose={() => { setToggleSignUpModal(false) }} />}
+    <header className="z-10 w-full p-8 flex justify-between items-center">
       <Link to="/">
         <h1 className="text-white font-semibold font-raleway text-3xl ">GW2 Guild&apos;Finder</h1>
       </Link>
@@ -48,12 +56,20 @@ const Header = (): JSX.Element => {
       </div>
       {profile 
         ? <Profile profile={profile} /> 
-        : <button 
-            onClick={() => setToggleModal(true)}
+        : <>
+          <button 
+            onClick={() => setToggleLoginModal(true)}
             className="cursor-pointer w-fit px-8 py-4 font-raleway gap-8 border text-white border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors"
           >
             Sign in
           </button>
+          <button 
+            onClick={() => setToggleSignUpModal(true)}
+            className="cursor-pointer w-fit px-8 py-4 font-raleway gap-8 border text-white border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors"
+          >
+            Sign up
+          </button>
+        </>
       }
       </div>
     </header>

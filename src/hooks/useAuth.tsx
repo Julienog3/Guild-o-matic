@@ -4,8 +4,7 @@ import { AuthError, Session } from "@supabase/supabase-js"
 import { AuthContext } from "../contexts/AuthContext";
 
 const useAuth = () => {
-  const { session, setSession} = useContext(AuthContext);
-
+  const { session, setSession } = useContext(AuthContext);
   const [error, setError] = useState<AuthError>()
 
   useEffect(() => {
@@ -39,6 +38,19 @@ const useAuth = () => {
     }
   }
 
+  const signUp = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.admin.createUser({
+      email: email,
+      password: password,
+    })
+
+    if (error) {
+      setError(error)
+    }
+
+    console.log(data.user)
+  }
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
 
@@ -49,7 +61,7 @@ const useAuth = () => {
     setSession({} as Session) 
   }
 
-  return { session, error, signIn, signOut }
+  return { session, error, signIn, signUp, signOut }
 }
 
 export default useAuth

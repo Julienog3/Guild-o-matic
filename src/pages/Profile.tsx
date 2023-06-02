@@ -79,7 +79,7 @@ const Profile = (): JSX.Element => {
             <button className="bg-red/25 border border-red font-medium text-white p-4 rounded-lg" onClick={(): void => setIsDisconnectModalOpened(true)}>Déconnecter</button>
           </div>
           : <div>
-            Vous n'etes pas connecté
+            Vous n&apos;etes pas connecté
           </div>
         }
       </Page>

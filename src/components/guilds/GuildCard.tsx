@@ -1,16 +1,16 @@
 import React from "react"
-import { GuildType } from "../../interfaces/guild.interface"
+import { Guild } from "../../interfaces/guild.interface"
 
 interface GuildCardProps {
-  guild: GuildType
+  guild: Guild
 }
 
 const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
   return <article className="guild-card bg-light-blue rounded-lg overflow-hidden ">
-    <div className="relative h-48 w-full p-6 overflow-hidden">
+    <div className="relative h-32 w-full p-6 overflow-hidden">
       <div className="relative z-10 flex flex-col h-full justify-between">
         <div className="flex items-center justify-between">
-          <h3 className="text-white font-raleway text-3xl font-bold">{guild.name}</h3>
+          <h3 className="text-white font-raleway text-2xl font-semibold">{guild.name}</h3>
           <div className="flex gap-4 items-center">
             <span className={`${guild.isRecruiting ? 'bg-green' : 'bg-red'} w-2 h-2 rounded-full`} />
             {guild.isRecruiting 
@@ -19,7 +19,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
             }
           </div>
         </div>
-        <div className="flex gap-12">
+        {/* <div className="flex gap-12">
           <div className="flex flex-col gap-1">
             <h4 className="text-light-gray font-raleway text-lg font-semibold">Niveau</h4>
             <span className="text-white text-2xl font-semibold">{guild.level}</span>
@@ -28,7 +28,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
             <h4 className="text-light-gray font-raleway text-lg font-semibold">Membres</h4>
             <span className="text-white text-2xl font-semibold">{guild.memberCount} / {guild.memberCapacity}</span>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="absolute top-0 left-0 w-full h-full guild-card__image">
         <img className="absolute h-full object-cover w-full" src="./images/bg-card.jpg" alt="" />

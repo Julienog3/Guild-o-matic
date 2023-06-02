@@ -4,11 +4,13 @@ import Sidebar from "./components/layout/sidebar/Sidebar";
 import Header from "./components/layout/Header";
 import { AiFillHome } from "react-icons/ai";
 import { BsFillGearFill, BsFillShieldFill, BsPlus } from "react-icons/bs";
-import Modal from "./components/utils/Modal";
 import LoginModal from "./components/modals/LoginModal";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthContext } from "./contexts/AuthContext";
 import { Session } from "@supabase/supabase-js";
+import Landing from "./pages/Landing";
+import { ModalContext } from "./contexts/ModalContext";
+import { Modal, ModalType } from "./interfaces/modal.interface";
 
 export type SidebarButtonType = {
   name: string
@@ -19,6 +21,8 @@ export type SidebarButtonType = {
 function App() {
   const queryClient = new QueryClient()
   const [session, setSession] = useState<Session>({} as Session)
+  const [modal, setModal] = useState<Modal>({} as Modal)
+
 
   const sidebarButtons: SidebarButtonType[] = [
     {
@@ -45,15 +49,17 @@ function App() {
 
   return (
     <AuthContext.Provider value={{ session, setSession }}>
-      <QueryClientProvider client={queryClient}>
-        <div className="bg-bg-blue flex w-full min-h-screen">
-          {session.user && <Sidebar buttons={sidebarButtons} />}
-          <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
-            <Header />
-            <Outlet />
+      <ModalContext.Provider value={{ modal, setModal }}>
+        <QueryClientProvider client={queryClient}>
+          <div className="bg-bg-blue flex w-full min-h-screen">
+            <Sidebar buttons={sidebarButtons} />
+            <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
+              <Header />
+              <Outlet />
+            </div>
           </div>
-        </div>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </ModalContext.Provider>
     </AuthContext.Provider>
   )
 }

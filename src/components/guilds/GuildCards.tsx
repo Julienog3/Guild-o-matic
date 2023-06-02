@@ -10,7 +10,7 @@ interface GuildCardsProps {
 const GuildCards = ({ guilds }: GuildCardsProps): JSX.Element => {
   return (
     <div className="w-full">
-      {guilds &&<ul className="grid gap-4 grid-cols-3">
+      {guilds &&<ul className="grid gap-8 grid-cols-3">
         {guilds.map((guild: Guild) => {
           return <Link to={`/guilds/${guild.id}`} key={guild.id}>
             <GuildCard guild={guild} />
