@@ -20,8 +20,10 @@ const AddingGuild = (): JSX.Element => {
     isRecruiting: false,
     description: '',
     discordLink: '',
-    categories: [GuildCategoryEnum.MCM]
+    categories: []
   })
+
+  const categories: GuildCategoryEnum[] = [GuildCategoryEnum.MCM, GuildCategoryEnum.PVE, GuildCategoryEnum.PVP]
   
   const mutation = useMutation({
     mutationFn: guildsService.postGuild,
@@ -35,8 +37,6 @@ const AddingGuild = (): JSX.Element => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     mutation.mutate(guildToAdd)
-    // await addGuild(guildToAdd)
-    console.log(guildToAdd)
   }  
 
   useEffect(() => {
@@ -49,6 +49,7 @@ const AddingGuild = (): JSX.Element => {
     }
 
     const getAllGuilds = (guildsId: string[]) => {
+      
       Promise.all(
         [...guildsId].map(async (guildId) => {
           return await getGuild(guildId)
@@ -82,95 +83,9 @@ const AddingGuild = (): JSX.Element => {
         <div className="flex flex-col w-full">
           <AddingGuildHeader />
           <form className="flex flex-col w-1/2 gap-4" id="adding-form" onSubmit={(e) => handleSubmit(e)}>
-            <div className="grid grid-cols-3 gap-4">
-              <label htmlFor="guild-type-pve">
-                <input
-                  type="checkbox"
-                  id="guild-type-pve"
-                  checked={guildToAdd.categories.includes(GuildCategoryEnum.PVE)}
-                  className="sr-only peer"
-                  onChange={e => setGuildToAdd(guildToAdd => {
-                    if (guildToAdd.categories.includes(GuildCategoryEnum.PVE)) {
-                      return {
-                        ...guildToAdd,
-                        categories: guildToAdd.categories.filter((category) => category !== GuildCategoryEnum.PVE)
-                      }
-                    } else {
-                      return {
-                        ...guildToAdd,
-                        categories: [
-                          ...guildToAdd.categories,
-                          GuildCategoryEnum.PVE
-                        ]
-                      }
-                    }
-                  })}
-                />
-                <div className="relative text-white font-semibold text-xl flex items-end p-4 justify-center peer bg-main-blue rounded-lg overflow-hidden border peer-checked:border-accent-blue border-light-blue w-full h-40">
-                  <p className="z-10">PVE</p>
-                  <img className="absolute top-0 w-full h-full object-cover opacity-25" src="/images/bg-mcm.jpg" alt="" />
-                </div>
-              </label>
-              <label htmlFor="guild-type-mcm">
-                <input 
-                  type="checkbox"
-                  id="guild-type-mcm"
-                  checked={guildToAdd.categories.includes(GuildCategoryEnum.MCM)}
-                  className="sr-only peer"
-                  onChange={e => setGuildToAdd(guildToAdd => {
-                    console.log(e.target.value)
-
-                    if (guildToAdd.categories.includes(GuildCategoryEnum.MCM)) {
-                      return {
-                        ...guildToAdd,
-                        categories: guildToAdd.categories.filter((category) => category !== GuildCategoryEnum.MCM)
-                      }
-                    } else {
-                      return {
-                        ...guildToAdd,
-                        categories: [
-                          ...guildToAdd.categories,
-                          GuildCategoryEnum.MCM
-                        ]
-                      }
-                    }
-                  })}
-                />
-                <div className="text-white font-semibold text-xl flex items-end p-4 justify-center peer bg-main-blue rounded-lg border peer-checked:border-accent-blue border-light-blue w-full h-40">
-                  MCM
-                </div>
-              </label>
-              <label htmlFor="guild-type-pvp">
-                <input 
-                  type="checkbox"
-                  id="guild-type-pvp"
-                  checked={guildToAdd.categories.includes(GuildCategoryEnum.PVP)}
-                  className="sr-only peer"
-                  onChange={e => setGuildToAdd(guildToAdd => {
-                    if (guildToAdd.categories.includes(GuildCategoryEnum.PVP)) {
-                      return {
-                        ...guildToAdd,
-                        categories: guildToAdd.categories.filter((category) => category !== GuildCategoryEnum.PVP)
-                      }
-                    } else {
-                      return {
-                        ...guildToAdd,
-                        categories: [
-                          ...guildToAdd.categories,
-                          GuildCategoryEnum.PVP
-                        ]
-                      }
-                    }
-                  })}
-                />
-                <div className="text-white font-semibold text-xl flex items-end p-4 justify-center peer bg-main-blue rounded-lg border peer-checked:border-accent-blue border-light-blue w-full h-40">
-                  PVP
-                </div>
-              </label>
-            </div>
-            <label className="relative flex flex-col gap-2 text-light-gray" htmlFor="guilds" aria-required>
-              <p>Guilde <span className="text-accent-blue">*</span></p>
-              <select 
+          <label className="relative flex flex-col gap-2 text-light-gray" htmlFor="guilds" aria-required>
+            <p>Guilde <span className="text-accent-blue">*</span></p>
+            <select 
               name="guilds"
               id="guilds" 
               value={guildToAdd.guildId}
@@ -185,6 +100,41 @@ const AddingGuild = (): JSX.Element => {
               })}
             </select>
             </label>
+            <div className="relative flex flex-col gap-2 text-light-gray">
+              Catégories
+              <div className="grid grid-cols-3 gap-4">
+                {categories && categories.map((category: GuildCategoryEnum) => {
+                  return <label htmlFor={`guild-type-${category}`} key={category}>
+                    <input
+                      type="checkbox"
+                      id={`guild-type-${category}`}
+                      checked={guildToAdd.categories.includes(category)}
+                      className="sr-only peer"
+                      onChange={e => setGuildToAdd(guildToAdd => {
+                        if (guildToAdd.categories.includes(category)) {
+                          return {
+                            ...guildToAdd,
+                            categories: guildToAdd.categories.filter((guildCategory) => guildCategory !== category)
+                          }
+                        } else {
+                          return {
+                            ...guildToAdd,
+                            categories: [
+                              ...guildToAdd.categories,
+                              category
+                            ]
+                          }
+                        }
+                      })}
+                    />
+                    <div className="relative cursor-pointer text-white font-semibold text-2xl flex items-center justify-center bg-main-blue rounded-lg overflow-hidden border peer-checked:border-accent-blue transition-all border-light-blue w-full h-28">
+                      <p className="z-10">{category.toUpperCase()}</p>
+                      <img className="absolute top-0 w-full h-full object-cover opacity-25 peer-checked:opacity-50" src={`/images/bg-${category}.jpg`} alt="" />
+                    </div>
+                  </label>
+                })}
+              </div>
+            </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input 
                 type="checkbox" 

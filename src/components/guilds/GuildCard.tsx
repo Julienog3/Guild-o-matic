@@ -14,8 +14,8 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
           <div className="flex gap-4 items-center">
             <span className={`${guild.isRecruiting ? 'bg-green' : 'bg-red'} w-2 h-2 rounded-full`} />
             {guild.isRecruiting 
-              ? <p className="text-green text-lg font-medium">Ouvert</p>
-              : <p className="text-red text-lg font-medium">Fermé</p>
+              ? <p className="text-green font-medium">Ouvert</p>
+              : <p className="text-red font-medium">Fermé</p>
             }
           </div>
         </div>
@@ -42,7 +42,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
           <span className="text-white font-semibold text-lg">Myst</span>
         </div>
       </div>
-      <div className="h-12 w-fit px-4 text-white bg-accent-blue flex items-center font-raleway font-medium rounded-md">
+      <div className="h-12 w-fit px-4 text-white bg-accent-blue flex items-center rounded-md">
         En savoir plus
       </div>
     </div>

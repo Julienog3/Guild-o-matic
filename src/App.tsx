@@ -2,8 +2,8 @@ import { Outlet } from "react-router-dom"
 import React, { useState } from "react";
 import Sidebar from "./components/layout/sidebar/Sidebar";
 import Header from "./components/layout/Header";
-import { AiFillHome } from "react-icons/ai";
-import { BsFillGearFill, BsFillShieldFill, BsPlus } from "react-icons/bs";
+import { AiFillHome, AiOutlinePlus } from "react-icons/ai";
+import { BsFillGearFill, BsFillShieldFill } from "react-icons/bs";
 import LoginModal from "./components/modals/LoginModal";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthContext } from "./contexts/AuthContext";
@@ -38,7 +38,7 @@ function App() {
     },
     {
       name: 'add-guild',
-      icon: <BsPlus />,
+      icon: <AiOutlinePlus />,
       link: '/guilds/add'
     },
     {

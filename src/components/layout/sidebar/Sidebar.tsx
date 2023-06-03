@@ -12,7 +12,6 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
-
   const location = useLocation();
 
   const isButtonActive = (button: SidebarButtonType): boolean => {
