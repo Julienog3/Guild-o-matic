@@ -12,6 +12,7 @@ import Landing from "./pages/Landing";
 import { ModalContext } from "./contexts/ModalContext";
 import { Modal, ModalType } from "./interfaces/modal.interface";
 import Footer from "./components/layout/Footer";
+import Alert from "./components/layout/Alert";
 
 export type SidebarButtonType = {
   name: string
@@ -52,7 +53,7 @@ function App() {
     <AuthContext.Provider value={{ session, setSession }}>
       <ModalContext.Provider value={{ modal, setModal }}>
         <QueryClientProvider client={queryClient}>
-          <div className="bg-bg-blue flex w-full min-h-screen">
+          <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Sidebar buttons={sidebarButtons} />
             <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
               <Header />

@@ -46,7 +46,7 @@ const Header = (): JSX.Element => {
     <>
     {toggleLoginModal && <LoginModal onClose={() => { setToggleLoginModal(false) }} />}
     {toggleSignUpModal && <SignUpModal onClose={() => { setToggleSignUpModal(false) }} />}
-    <header className="z-10 w-full p-8 flex justify-between items-center">
+    <header className="z-10 w-full p-8 pb-0 flex justify-between items-center">
       <Link to="/">
         <h1 className="text-white font-semibold font-raleway text-3xl ">GW2 Guild&apos;Finder</h1>
       </Link>

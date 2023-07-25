@@ -79,7 +79,7 @@ const AddingGuild = (): JSX.Element => {
   
   return (
     <Page>
-      <div className="flex gap-4 h-full">
+      <div className="flex gap-4">
         <div className="flex flex-col w-full">
           <AddingGuildHeader />
           <form className="flex flex-col w-1/2 gap-4" id="adding-form" onSubmit={(e) => handleSubmit(e)}>

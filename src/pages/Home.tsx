@@ -11,11 +11,15 @@ function Home () {
 
   return (
     <Page>
+      <div className="flex mb-4 p-8 rounded-lg overflow-hidden relative h-64">
+        <div className="absolute z-0 top-0 left-0 w-full h-full ">
+          <img className="absolute h-full object-cover w-full" src="/images/bg-landing.jpg" alt="" />
+        </div>
+      </div>
       <div className="w-full border-b border-light-blue mb-4">
         <h2 className="text-4xl font-raleway font-semibold text-white mb-4">Les guildes récentes</h2>
       </div>
-      <GuildFilter />
-      {(data?.length) ? <GuildCards guilds={data}/> : <div>There is nothing</div>}
+      {(data?.length) ? <GuildCards guilds={data} singleRow /> : <div>There is nothing</div>}
     </Page>
   )
 }

@@ -1,15 +1,15 @@
 import React from "react"
 
-interface GuildPresentation {
+interface GuildConditions {
   description?: string
 }
 
-const GuildPresentation = ({ description }: GuildPresentation): JSX.Element => {
+const GuildConditions = ({ description }: GuildConditions): JSX.Element => {
   return <div>
     <div className="flex flex-col w-full">
       <article className="relative w-full rounded bg-light-blue border border-light-blue p-8 z-10">
-        <h3 className="text-xl font-semibold text-white">Description</h3>
-        <div className="prose text-light-gray">
+        <h3 className="text-xl font-semibold text-white">Conditions</h3>
+        <div className="prose">
           {description}
         </div>
       </article>
@@ -17,4 +17,4 @@ const GuildPresentation = ({ description }: GuildPresentation): JSX.Element => {
 </div>
 }
 
-export default GuildPresentation
+export default GuildConditions

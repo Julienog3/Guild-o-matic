@@ -47,6 +47,18 @@ export const guildsService = {
 
     return keysToCamel(data[0])
   },
+  getGuildCategoriesById: async (id: number): Promise<any> => {
+    const { data, error } = await supabase
+      .from('guild_categories')
+      .select('categories (name)')
+      .eq('id', id)
+
+    if (error) {
+      return
+    }
+
+    return data
+  },
   postGuild: async (guild: any): Promise<any> => {
     const { data, error } = await supabase
       .from('guilds')
