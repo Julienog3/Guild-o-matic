@@ -16,7 +16,7 @@ const Input = ({ type, name, value, placeholder, handleChange }: InputProps): JS
       name={name}
       placeholder={placeholder}
       onChange={(e: React.ChangeEvent<HTMLInputElement>): void => handleChange(e)}
-      className="rounded-lg bg-transparent border max-w-lg p-2 text-white" 
+      className="rounded-lg text-sm bg-transparent border max-w-lg p-2 text-white" 
     />
   )
 }

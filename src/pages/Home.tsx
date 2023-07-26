@@ -5,6 +5,7 @@ import GuildFilter from "../components/guilds/GuildFilter";
 import GuildCards from "../components/guilds/GuildCards";
 import { guildsService } from "../services/guilds.service";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 
 function Home () {
   const { data } = useQuery('guilds', guildsService.getGuilds)
@@ -16,8 +17,11 @@ function Home () {
           <img className="absolute h-full object-cover w-full" src="/images/bg-landing.jpg" alt="" />
         </div>
       </div>
-      <div className="w-full border-b border-light-blue mb-4">
-        <h2 className="text-4xl font-raleway font-semibold text-white mb-4">Les guildes récentes</h2>
+      <div className="w-full flex items-center gap-4 border-b border-light-blue pb-4 my-8">
+        <h2 className="text-2xl font-semibold text-white">Les guildes récentes</h2>
+        <Link to="/guilds">
+          <span className="text-accent-blue text-sm">Voir toutes les guildes</span>
+        </Link>
       </div>
       {(data?.length) ? <GuildCards guilds={data} singleRow /> : <div>There is nothing</div>}
     </Page>

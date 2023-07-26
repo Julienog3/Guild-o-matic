@@ -48,26 +48,26 @@ const Header = (): JSX.Element => {
     {toggleSignUpModal && <SignUpModal onClose={() => { setToggleSignUpModal(false) }} />}
     <header className="z-10 w-full p-8 pb-0 flex justify-between items-center">
       <Link to="/">
-        <h1 className="text-white font-semibold font-raleway text-3xl ">GW2 Guild&apos;Finder</h1>
+        <h1 className="text-white font-semibold font-raleway text-3xl ">Guild-o-matic</h1>
       </Link>
       <div className="flex gap-4">
-      <div className="cursor-pointer w-16 gap-8 border border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors">
+      {profile && <div className="cursor-pointer w-16 gap-8 border border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors">
         <FaBell className="text-white text-lg" />
-      </div>
+      </div>}
       {profile 
         ? <Profile profile={profile} /> 
         : <>
           <button 
             onClick={() => setToggleLoginModal(true)}
-            className="cursor-pointer w-fit px-8 py-4 font-raleway gap-8 border text-white border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors"
+            className="cursor-pointer w-fit px-8 py-4 font-raleway gap-8 border text-white text-sm  border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors"
           >
-            Sign in
+            Se connecter
           </button>
           <button 
             onClick={() => setToggleSignUpModal(true)}
-            className="cursor-pointer w-fit px-8 py-4 font-raleway gap-8 border text-white border-light-blue rounded-lg bg-main-blue flex items-center justify-center hover:border-accent-blue transition-colors"
+            className="cursor-pointer w-fit px-8 py-4 font-raleway gap-8 border text-white text-sm border-light-blue rounded-lg bg-accent-blue flex items-center justify-center hover:border-accent-blue transition-colors"
           >
-            Sign up
+            S&apos;inscrire
           </button>
         </>
       }
