@@ -1,8 +1,8 @@
 import React from "react"
-import { Guild } from "../../interfaces/guild.interface"
+import { GuildType } from "../../interfaces/guild.interface"
 
 interface GuildCardProps {
-  guild: Guild
+  guild: GuildType
 }
 
 const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {

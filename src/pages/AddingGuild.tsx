@@ -16,6 +16,7 @@ const AddingGuild = (): JSX.Element => {
   const [guilds, setGuilds] = useState<any[]>([])
 
   const [guildToAdd, setGuildToAdd] = useState<GuildType>({
+    id: 0,
     guildId: '',
     isRecruiting: false,
     description: '',
