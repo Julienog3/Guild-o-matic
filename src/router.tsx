@@ -33,10 +33,6 @@ const router = createBrowserRouter([
         element: <AddingGuild />
       },
       {
-        path: 'sign-up',
-        element: <SignUp />
-      },
-      {
         path: 'profile',
         element: <Profile />
       },

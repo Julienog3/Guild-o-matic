@@ -4,6 +4,7 @@ import useAuth from "../hooks/useAuth"
 import { supabase } from "../supabaseClient"
 import { keysToCamel } from "../utils/helpers"
 import DisconnectModal from "../components/modals/DisconnectModal"
+import { useNavigate } from "react-router-dom"
 
 const Profile = (): JSX.Element => {
   const [userProfile, setUserProfile] = useState<any>()
@@ -11,6 +12,8 @@ const Profile = (): JSX.Element => {
   const [isDisconnectModalOpened, setIsDisconnectModalOpened] = useState<boolean>(false)
 
   const { session, signOut } = useAuth()
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!session.user) {
@@ -33,6 +36,11 @@ const Profile = (): JSX.Element => {
 
     getProfile()
   }, [session])
+
+  const handleDisconnect = (): void => {
+    signOut()
+    navigate('/')
+  }
 
   useEffect(() => {
     if (!userProfile) {
@@ -59,7 +67,7 @@ const Profile = (): JSX.Element => {
       {isDisconnectModalOpened && 
         <DisconnectModal 
           onClose={(): void => setIsDisconnectModalOpened(false)}
-          onDisconnect={(): Promise<void> => signOut()} 
+          onDisconnect={(): void => handleDisconnect()} 
         />
       }
       <Page>

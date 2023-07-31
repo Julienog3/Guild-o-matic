@@ -53,14 +53,14 @@ function App() {
     <AuthContext.Provider value={{ session, setSession }}>
       <ModalContext.Provider value={{ modal, setModal }}>
         <QueryClientProvider client={queryClient}>
-          <div className="relative bg-bg-blue flex w-full min-h-screen">
+          {session.user ? <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Sidebar buttons={sidebarButtons} />
             <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
               <Header />
               <Outlet />
               <Footer />
             </div>
-          </div>
+          </div> : <Landing />}
         </QueryClientProvider>
       </ModalContext.Provider>
     </AuthContext.Provider>
