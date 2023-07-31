@@ -54,7 +54,7 @@ export const guildsService = {
       .eq('id', id)
 
     if (error) {
-      return
+      return;
     }
 
     return data

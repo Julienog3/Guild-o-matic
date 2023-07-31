@@ -1,54 +1,57 @@
-import { useEffect, useState } from "react"
-import useAuth from "./useAuth"
-import { supabase } from "../supabaseClient"
-import { keysToCamel } from "../utils/helpers"
+import { useEffect, useState } from 'react';
+import useAuth from './useAuth';
+import { supabase } from '../supabaseClient';
+import { keysToCamel } from '../utils/helpers';
 
 const usePlayer = () => {
-  const { session } = useAuth()
+  const { session } = useAuth();
 
-  const [player, setPlayer] = useState<any>()
-  const [profile, setProfile] = useState<any>()
+  const [player, setPlayer] = useState<any>();
+  const [profile, setProfile] = useState<any>();
 
-  const { apiKey } = profile ?? ''
+  const { apiKey } = profile ?? '';
 
   useEffect(() => {
     const getProfile = async () => {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', session?.user.id)
+        .eq('user_id', session?.user.id);
 
       if (error) {
         return;
       }
 
-      const formattedData = keysToCamel(data)
-      setProfile(formattedData[0]) 
-    }
+      const formattedData = keysToCamel(data);
+      setProfile(formattedData[0]);
+    };
 
-    getProfile()   
-  }, [session])
+    getProfile();
+  }, [session]);
 
   useEffect(() => {
     if (!profile) {
-      return
+      return;
     }
 
     const getPlayer = async (apiKey: string) => {
-      await fetch(`${import.meta.env.VITE_GW2_API_URL}/v2/account?access_token=${apiKey}`, {
-        method: "GET",
-      })
+      await fetch(
+        `${import.meta.env.VITE_GW2_API_URL}/v2/account?access_token=${apiKey}`,
+        {
+          method: 'GET',
+        },
+      )
         .then((res) => res.json())
         .then((data) => keysToCamel(data))
-        .then((formattedData) => setPlayer(formattedData))
-    }
+        .then((formattedData) => setPlayer(formattedData));
+    };
 
     if (profile.apiKey) {
-      getPlayer(profile.apiKey)
+      getPlayer(profile.apiKey);
     }
-  }, [profile])
+  }, [profile]);
 
-  return { player, apiKey }
-}
+  return { player, apiKey };
+};
 
-export default usePlayer
+export default usePlayer;

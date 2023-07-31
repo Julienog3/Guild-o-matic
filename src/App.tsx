@@ -15,9 +15,9 @@ import Footer from "./components/layout/Footer";
 import Alert from "./components/layout/Alert";
 
 export type SidebarButtonType = {
-  name: string
-  icon: React.ReactNode
-  link: string
+  name: string,
+  icon: React.ReactNode,
+  link: string,
 }
 
 function App() {
