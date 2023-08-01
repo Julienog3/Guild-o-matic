@@ -1,73 +1,135 @@
-import { GuildType } from "../interfaces/guild.interface"
-import { supabase } from "../supabaseClient"
-import { keysToCamel, keysToSnake } from "../utils/helpers"
-import { gw2Service } from "./gw2.service"
+import {
+  GuildCategoryInterface,
+  GuildPayloadInterface,
+  GuildType,
+} from '../interfaces/guild.interface';
+import { supabase } from '../supabaseClient';
+import { keysToCamel, keysToSnake } from '../utils/helpers';
+import { gw2Service } from './gw2.service';
 
 export const guildsService = {
   getGuilds: async (): Promise<GuildType[] | undefined> => {
-    const { data, error } = await supabase
-      .from('guilds')
-      .select('*')
-
-    if (error) {
-      return
-    }
-
-    const guilds: GuildType[] = keysToCamel(data)
-
-    return Promise.all(
-      guilds.map(async (guild) => {
-        const gw2Guild = await gw2Service.getGuildById(guild.guildId).then((gw2Guild) => {
-          const KEYS_ALLOWED = ['tag', 'name', 'level', 'memberCapacity', 'memberCount']
-
-          return Object.keys(gw2Guild)
-            .filter(key => KEYS_ALLOWED.includes(key))
-            .reduce((obj: any, key) => {
-              obj[key] = gw2Guild[key];
-              return obj;
-            }, {});
-        })
-
-        return {
-          ...guild,
-          ...gw2Guild,
-        }
-      })
-    )
-  },
-  getGuildById: async (id: string): Promise<GuildType | undefined> => {
-    const { data, error } = await supabase
-      .from('guilds')
-      .select('*')
-      .eq('id', id)
-
-    if (error) {
-      return
-    }
-
-    return keysToCamel(data[0])
-  },
-  getGuildCategoriesById: async (id: number): Promise<any> => {
-    const { data, error } = await supabase
-      .from('guild_categories')
-      .select('categories (name)')
-      .eq('id', id)
+    const { data, error } = await supabase.from('guilds').select('*');
 
     if (error) {
       return;
     }
 
-    return data
+    const guilds: GuildType[] = keysToCamel(data);
+
+    return Promise.all(
+      guilds.map(async (guild) => {
+        const gw2Guild = await gw2Service
+          .getGuildById(guild.guildId)
+          .then((gw2Guild) => {
+            const KEYS_ALLOWED = [
+              'tag',
+              'name',
+              'level',
+              'memberCapacity',
+              'memberCount',
+            ];
+
+            return Object.keys(gw2Guild)
+              .filter((key) => KEYS_ALLOWED.includes(key))
+              .reduce((obj: any, key) => {
+                obj[key] = gw2Guild[key];
+                return obj;
+              }, {});
+          });
+
+        return {
+          ...guild,
+          ...gw2Guild,
+        };
+      }),
+    );
   },
-  postGuild: async (guild: any): Promise<any> => {
+  getGuildById: async (id: string): Promise<GuildType | undefined> => {
     const { data, error } = await supabase
       .from('guilds')
-      .insert([keysToSnake(guild)])
+      .select('*')
+      .eq('id', id);
 
-      if (error) {
-        return
+    if (error) {
+      return;
+    }
+
+    return keysToCamel(data[0]);
+  },
+  getGuildCategoriesById: async (id: number): Promise<any> => {
+    const { data, error } = await supabase
+      .from('guilds_category')
+      .select('categories (name)')
+      .eq('guild_id', id);
+
+    if (error) {
+      return;
+    }
+
+    return data;
+  },
+  postGuild: async (guild: GuildPayloadInterface): Promise<any> => {
+    const guildPayload = Object.fromEntries(
+      Object.entries(guild).filter(([key]) => key !== 'categories'),
+    );
+
+    const { data, error } = await supabase
+      .from('guilds')
+      .insert([keysToSnake(guildPayload)])
+      .select();
+
+    if (error) {
+      return;
+    }
+
+    if (data) {
+      guildsService.addCategoriesToGuild(
+        keysToCamel(data[0]).id,
+        guild.categories,
+      );
+    }
+
+    console.log(data);
+  },
+  getGuildCategory: async (
+    categoryName: string,
+  ): Promise<GuildCategoryInterface | undefined> => {
+    const { data, error } = await supabase
+      .from('categories')
+      .select()
+      .eq('name', categoryName)
+      .limit(1);
+
+    if (error) {
+      return;
+    }
+
+    return keysToCamel(data[0]);
+  },
+  addCategoriesToGuild: async (
+    guildId: string,
+    categories: string[],
+  ): Promise<any> => {
+    categories.forEach(async (category) => {
+      const guildCategory = await guildsService.getGuildCategory(category);
+
+      if (guildCategory === undefined) {
+        return;
       }
 
-      console.log(data)
-  }
-}
+      const { data, error } = await supabase.from('guilds_category').insert([
+        keysToSnake({
+          guildId: guildId,
+          categoryId: guildCategory.id,
+        }),
+      ]);
+
+      if (error) {
+        return;
+      }
+
+      console.log(data);
+    });
+  },
+};

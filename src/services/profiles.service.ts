@@ -1,16 +1,16 @@
-import { supabase } from "../supabaseClient"
-import { keysToCamel, keysToSnake } from "../utils/helpers"
+import { supabase } from '../supabaseClient';
+import { keysToCamel, keysToSnake } from '../utils/helpers';
 
 export const profilesService = {
   postProfile: async (user: any): Promise<any> => {
     const { data, error } = await supabase
       .from('profiles')
-      .insert(keysToSnake(user))
+      .insert(keysToSnake(user));
 
     if (error) {
-        return
-      }
+      return;
+    }
 
-    console.log(data)
+    console.log(data);
   },
-}
+};

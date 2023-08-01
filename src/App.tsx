@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./components/layout/sidebar/Sidebar";
 import Header from "./components/layout/Header";
 import { AiFillHome, AiOutlinePlus } from "react-icons/ai";
@@ -13,6 +13,7 @@ import { ModalContext } from "./contexts/ModalContext";
 import { Modal, ModalType } from "./interfaces/modal.interface";
 import Footer from "./components/layout/Footer";
 import Alert from "./components/layout/Alert";
+import { supabase } from "./supabaseClient";
 
 export type SidebarButtonType = {
   name: string,
@@ -25,6 +26,21 @@ function App() {
   const [session, setSession] = useState<Session>({} as Session)
   const [modal, setModal] = useState<Modal>({} as Modal)
 
+  useEffect(() => {
+    const getSession = async () => {
+      const { data, error } = await supabase.auth.getSession()
+
+      if (error) {
+        return
+      }
+  
+      if (data.session) {
+        setSession(data.session)
+      }
+    } 
+
+    getSession()
+  }, [])
 
   const sidebarButtons: SidebarButtonType[] = [
     {

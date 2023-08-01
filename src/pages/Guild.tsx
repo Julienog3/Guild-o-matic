@@ -18,7 +18,7 @@ export type Tab = {
 function Guild(): JSX.Element {
   const { guildId } = useParams();
   const [guildDetails, setGuildDetails] = useState<GuildType>();
-  const [categories, setCategories] = useState<GuildCategoryEnum[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   const { data } = useQuery(['guilds', guildId], () => {
     if (guildId) {
@@ -60,18 +60,28 @@ function Guild(): JSX.Element {
   return (
     <Page>
       <ScrollRestoration />
-      <div className="flex mb-4 p-8 rounded-lg overflow-hidden relative h-64">
+      <div className="flex flex-col max-w-7xl mx-auto gap-4 mb-4 p-8 justify-end rounded-lg overflow-hidden relative h-64">
         {guildDetails && (
-          <h2 className="flex z-10 self-end items-center gap-4 text-white text-4xl font-bold">
+          <h2 className="flex z-10 items-center gap-4 text-white text-4xl font-bold">
             <span className=" bg-accent-blue/25 border text-xl border-accent-blue font-medium text-accent-blue py-1 px-3 rounded-lg ">
               {guildDetails.tag}
             </span>
             {guildDetails.name}
           </h2>
         )}
-        {/* {categories.map((category, index) => {
-          return <span key={index}>{category}</span>
-        })} */}
+        <div className="flex gap-2">
+          {categories &&
+            categories.map((category, index) => {
+              return (
+                <div
+                  className="bg-light-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
+                  key={index}
+                >
+                  {category.categories.name}
+                </div>
+              );
+            })}
+        </div>
         <div className="absolute z-0 top-0 left-0 w-full h-full guild-card__image">
           <img
             className="absolute h-full object-cover w-full"

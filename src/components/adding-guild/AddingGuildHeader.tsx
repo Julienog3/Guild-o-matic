@@ -5,7 +5,7 @@ const AddingGuildHeader = (): JSX.Element => {
   return (
     <>
       <div className="flex mb-4 p-8 rounded-lg overflow-hidden relative h-64">
-        <div className="absolute z-0 top-0 left-0 w-full h-full ">
+        <div className="absolute z-0 top-0 left-0 w-full h-full">
           <img
             className="absolute h-full object-cover w-full"
             src="/images/bg-landing.jpg"
@@ -14,7 +14,7 @@ const AddingGuildHeader = (): JSX.Element => {
         </div>
       </div>
       <div className="w-full flex justify-between items-center py-4 border-b border-light-blue mb-4">
-        <h2 className="text-4xl font-raleway font-semibold text-white">
+        <h2 className="text-2xl  font-semibold text-white">
           Ajouter une guilde
         </h2>
         <button

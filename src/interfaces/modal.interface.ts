@@ -1,10 +1,10 @@
 export enum ModalType {
-  LOGIN = "login",
-  LOGOUT = "logout",
-  SIGNUP = "signup",
+  LOGIN = 'login',
+  LOGOUT = 'logout',
+  SIGNUP = 'signup',
 }
 
 export type Modal = {
-  isToggled: boolean
-  type?: ModalType
-}
+  isToggled: boolean,
+  type?: ModalType,
+};

@@ -64,10 +64,6 @@ const Profile = (): JSX.Element => {
     getAccount();
   }, [userProfile]);
 
-  useEffect(() => {
-    console.log(playerInformations);
-  }, [playerInformations]);
-
   return (
     <>
       {isDisconnectModalOpened && (
@@ -76,9 +72,9 @@ const Profile = (): JSX.Element => {
           onDisconnect={(): void => handleDisconnect()}
         />
       )}
-      <Page>
-        {userProfile ? (
-          <div>
+      {userProfile && (
+        <Page>
+          <div className="max-w-7xl mx-auto mb-8">
             <div className="w-full border-b border-light-blue mb-4">
               <h2 className="text-4xl font-raleway font-semibold text-white mb-4">
                 Profil de {userProfile.username}
@@ -108,10 +104,8 @@ const Profile = (): JSX.Element => {
               Déconnecter
             </button>
           </div>
-        ) : (
-          <div>Vous n&apos;etes pas connecté</div>
-        )}
-      </Page>
+        </Page>
+      )}
     </>
   );
 };

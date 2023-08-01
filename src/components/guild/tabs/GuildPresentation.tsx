@@ -1,4 +1,7 @@
+/* eslint-disable react/no-children-prop */
 import React from 'react';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface GuildPresentation {
   description?: string;
@@ -7,10 +10,17 @@ interface GuildPresentation {
 const GuildPresentation = ({ description }: GuildPresentation): JSX.Element => {
   return (
     <div>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col mb-4 max-w-7xl mx-auto">
         <article className="relative w-full rounded bg-light-blue border border-light-blue p-8 z-10">
-          <h3 className="text-xl font-semibold text-white">Description</h3>
-          <div className="prose text-light-gray">{description}</div>
+          <h3 className="text-xl font-semibold text-white mb-4">Description</h3>
+          <div className="prose text-light-gray prose-headings:text-white prose-headings:text-xl prose-headings:font-semibold">
+            {description && (
+              <ReactMarkdown
+                children={description}
+                remarkPlugins={[remarkGfm]}
+              />
+            )}
+          </div>
         </article>
       </div>
     </div>
