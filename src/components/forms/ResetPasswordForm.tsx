@@ -59,7 +59,7 @@ const ResetPasswordForm = ({
           type="submit"
           className="bg-accent-blue rounded-lg p-4 text-sm text-white transition-all hover:bg-accent-blue/75"
         >
-          Se connecter
+          Réinitialiser le mail
         </button>
         <p className="text-white text-center text-sm">
           Vous avez retrouvez votre mot de passe ?{' '}

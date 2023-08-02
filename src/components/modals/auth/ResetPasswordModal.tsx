@@ -7,11 +7,11 @@ interface Credentials {
   password: string;
 }
 const ResetPasswordModal = (): JSX.Element => {
-  const { session, signIn, error } = useAuth();
+  const { resetPassword, error } = useAuth();
 
-  const handleSubmit = (event: FormEvent, { email, password }: Credentials) => {
+  const handleSubmit = (event: FormEvent, { email }: Credentials) => {
     event.preventDefault();
-    // signIn(email, password);
+    resetPassword(email);
   };
 
   return <ResetPasswordForm onSubmit={handleSubmit} error={error} />;

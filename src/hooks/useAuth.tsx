@@ -70,7 +70,19 @@ const useAuth = () => {
     setSession({} as Session) 
   }
 
-  return { session, error, signIn, signUp, signOut }
+  const resetPassword = async (email: string) => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'http://127.0.0.1:5173/',
+    })
+
+    if (error) {
+      return setError(error)
+    }
+
+    // setSession({} as Session) 
+  }
+
+  return { session, error, signIn, signUp, signOut, resetPassword }
 }
 
 export default useAuth
