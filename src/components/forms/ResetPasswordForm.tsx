@@ -17,7 +17,10 @@ interface Credentials {
   password: string;
 }
 
-const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
+const ResetPasswordForm = ({
+  onSubmit,
+  error,
+}: LoginFormProps): JSX.Element => {
   const [credentials, setCredentials] = useState<Credentials>({
     email: '',
     password: '',
@@ -50,30 +53,6 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
             placeholder="E-mail"
           />
         </div>
-        <div className="flex flex-col">
-          <label className="text-light-gray mb-2 text-sm" htmlFor="password">
-            Mot de passe
-          </label>
-          <input
-            className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white focus:outline-none focus:border-accent-blue mb-3"
-            value={credentials.password}
-            required
-            onChange={(e) =>
-              setCredentials((credentials) => ({
-                ...credentials,
-                password: e.target.value,
-              }))
-            }
-            type="password"
-            placeholder="Mot de passe"
-          />
-          <span
-            className="text-accent-blue self-end text-sm cursor-pointer"
-            onClick={(): void => setType(AuthModalTypeEnum.RESET_PASSWORD)}
-          >
-            Mot de passe oublié ?
-          </span>
-        </div>
       </div>
       <div className="flex flex-col justify-center gap-6">
         <button
@@ -83,12 +62,12 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
           Se connecter
         </button>
         <p className="text-white text-center text-sm">
-          Vous n&apos;avez pas de compte ?{' '}
+          Vous avez retrouvez votre mot de passe ?{' '}
           <span
             className="text-accent-blue cursor-pointer"
-            onClick={(): void => setType(AuthModalTypeEnum.SIGN_UP)}
+            onClick={(): void => setType(AuthModalTypeEnum.LOGIN)}
           >
-            S&apos;inscrire
+            Se connecter
           </span>
         </p>
       </div>
@@ -96,4 +75,4 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
   );
 };
 
-export default LoginForm;
+export default ResetPasswordForm;

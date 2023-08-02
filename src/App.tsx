@@ -4,7 +4,7 @@ import Sidebar from "./components/layout/sidebar/Sidebar";
 import Header from "./components/layout/Header";
 import { AiFillHome, AiOutlinePlus } from "react-icons/ai";
 import { BsFillGearFill, BsFillShieldFill } from "react-icons/bs";
-import LoginModal from "./components/modals/LoginModal";
+import LoginModal from "./components/modals/auth/LoginModal";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthContext } from "./contexts/AuthContext";
 import { Session } from "@supabase/supabase-js";

@@ -1,10 +1,12 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import useAuth from '../../hooks/useAuth';
 import FormError from './FormError';
 import { AuthError } from '@supabase/supabase-js';
 import { GW2UserType } from '../../interfaces/gw2/user';
+import { AuthModalTypeEnum } from '../modals/auth/AuthModal';
+import { AuthModalContext } from '../../contexts/AuthModalContext';
 
 interface SignUpFormProps {
   onSubmit: (event: FormEvent, credentials: Credentials) => void;
@@ -21,6 +23,7 @@ interface Credentials {
 
 const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
   const [playerInformations, setPlayerInformations] = useState<GW2UserType>();
+  const { setType } = useContext(AuthModalContext);
 
   const [credentials, setCredentials] = useState<Credentials>({
     username: '',
@@ -171,15 +174,18 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
       <div className="flex flex-col justify-center gap-6">
         <button
           type="submit"
-          className="bg-accent-blue rounded-lg p-4 font-raleway text-white"
+          className="bg-accent-blue rounded-lg p-4 text-sm text-white transition-all hover:bg-accent-blue/75"
         >
           S&apos;inscrire
         </button>
         <p className="text-white text-sm text-center font-raleway">
           Vous avez déjà un compte ?{' '}
-          <Link className="text-accent-blue" to="/">
+          <span
+            className="text-accent-blue cursor-pointer"
+            onClick={(): void => setType(AuthModalTypeEnum.LOGIN)}
+          >
             Se connecter
-          </Link>
+          </span>
         </p>
       </div>
     </form>
