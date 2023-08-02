@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Page from '../components/layout/Page';
 import usePlayer from '../hooks/usePlayer';
 import { keysToCamel } from '../utils/helpers';
-import { GW2GuildType } from '../interfaces/gw2/guild';
 import { useMutation } from 'react-query';
 import { guildsService } from '../services/guilds.service';
 import { QueryClient } from '@tanstack/query-core';
@@ -11,16 +10,14 @@ import {
   GuildCategoryEnum,
   GuildPayloadInterface,
 } from '../interfaces/guild.interface';
-import { Session } from '@supabase/supabase-js';
 import useAuth from '../hooks/useAuth';
-import { supabase } from '../supabaseClient';
+import TextEditor from '../components/utils/TextEditor';
 
 const AddingGuild = (): JSX.Element => {
   const queryClient = new QueryClient();
 
   const { player, apiKey } = usePlayer();
   const [guilds, setGuilds] = useState<any[]>([]);
-  const [profile, setProfile] = useState<any>();
 
   const [guildToAdd, setGuildToAdd] = useState<GuildPayloadInterface>({
     guildId: '',
@@ -51,6 +48,13 @@ const AddingGuild = (): JSX.Element => {
   };
 
   const { session } = useAuth();
+
+  const handleTextEditorChange = (change: string): void => {
+    setGuildToAdd((guildToAdd) => ({
+      ...guildToAdd,
+      description: change,
+    }));
+  };
 
   useEffect(() => {
     if (!session) {
@@ -97,145 +101,139 @@ const AddingGuild = (): JSX.Element => {
       <div className="flex gap-4 max-w-7xl mx-auto">
         <div className="flex flex-col w-full relative">
           <AddingGuildHeader />
-          <div className="max-w-3xl mx-auto w-full">
+          <div className=" w-full">
             <form
-              className="flex flex-col gap-4 w-full relative"
+              className="flex gap-8 w-full relative"
               id="adding-form"
               onSubmit={(e) => handleSubmit(e)}
             >
-              <label
-                className="relative flex flex-col gap-2 text-light-gray"
-                htmlFor="guilds"
-                aria-required
-              >
-                <p>
-                  Guilde <span className="text-accent-blue">*</span>
-                </p>
-                <select
-                  name="guilds"
-                  id="guilds"
-                  value={guildToAdd.guildId}
-                  onChange={(e) => {
-                    console.log(e.target.value);
-
-                    setGuildToAdd((guildToAdd) => ({
-                      ...guildToAdd,
-                      guildId: e.target.value,
-                    }));
-                  }}
-                  className="bg-main-blue p-4 rounded-lg border border-light-blue text-white"
+              <div className="flex flex-col gap-4 w-full">
+                <label
+                  className="relative flex flex-col gap-2 text-light-gray"
+                  htmlFor="guilds"
+                  aria-required
                 >
-                  {guilds &&
-                    guilds.map((guild) => {
-                      return (
-                        <option key={guild.id} value={guild.id}>
-                          {guild.name}
-                        </option>
-                      );
-                    })}
-                </select>
-              </label>
-              <div className="relative flex flex-col gap-2 text-light-gray">
-                Catégories
-                <div className="grid grid-cols-3 gap-4">
-                  {categories &&
-                    categories.map((category: GuildCategoryEnum) => {
-                      return (
-                        <label
-                          htmlFor={`guild-type-${category}`}
-                          key={category}
-                        >
-                          <input
-                            type="checkbox"
-                            id={`guild-type-${category}`}
-                            checked={guildToAdd.categories.includes(category)}
-                            className="sr-only peer"
-                            onChange={(e) =>
-                              setGuildToAdd((guildToAdd) => {
-                                if (guildToAdd.categories.includes(category)) {
-                                  return {
-                                    ...guildToAdd,
-                                    categories: guildToAdd.categories.filter(
-                                      (guildCategory) =>
-                                        guildCategory !== category,
-                                    ),
-                                  };
-                                } else {
-                                  return {
-                                    ...guildToAdd,
-                                    categories: [
-                                      ...guildToAdd.categories,
-                                      category,
-                                    ],
-                                  };
-                                }
-                              })
-                            }
-                          />
-                          <div className="relative cursor-pointer text-white font-semibold text-2xl flex items-center justify-center bg-main-blue rounded-lg overflow-hidden border peer-checked:border-accent-blue transition-all border-light-blue w-full h-28">
-                            <p className="z-10">{category.toUpperCase()}</p>
-                            <img
-                              className="absolute top-0 w-full h-full object-cover opacity-25 peer-checked:opacity-50"
-                              src={`/images/bg-${category}.jpg`}
-                              alt=""
+                  <p>
+                    Guilde <span className="text-accent-blue">*</span>
+                  </p>
+                  <select
+                    name="guilds"
+                    id="guilds"
+                    value={guildToAdd.guildId}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+
+                      setGuildToAdd((guildToAdd) => ({
+                        ...guildToAdd,
+                        guildId: e.target.value,
+                      }));
+                    }}
+                    className="bg-main-blue p-4 rounded-lg border border-light-blue text-white"
+                  >
+                    {guilds &&
+                      guilds.map((guild) => {
+                        return (
+                          <option key={guild.id} value={guild.id}>
+                            {guild.name}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </label>
+                <div className="relative flex flex-col gap-2 text-light-gray">
+                  Catégories
+                  <div className="grid grid-cols-3 gap-4">
+                    {categories &&
+                      categories.map((category: GuildCategoryEnum) => {
+                        return (
+                          <label
+                            htmlFor={`guild-type-${category}`}
+                            key={category}
+                          >
+                            <input
+                              type="checkbox"
+                              id={`guild-type-${category}`}
+                              checked={guildToAdd.categories.includes(category)}
+                              className="sr-only peer"
+                              onChange={(e) =>
+                                setGuildToAdd((guildToAdd) => {
+                                  if (
+                                    guildToAdd.categories.includes(category)
+                                  ) {
+                                    return {
+                                      ...guildToAdd,
+                                      categories: guildToAdd.categories.filter(
+                                        (guildCategory) =>
+                                          guildCategory !== category,
+                                      ),
+                                    };
+                                  } else {
+                                    return {
+                                      ...guildToAdd,
+                                      categories: [
+                                        ...guildToAdd.categories,
+                                        category,
+                                      ],
+                                    };
+                                  }
+                                })
+                              }
                             />
-                          </div>
-                        </label>
-                      );
-                    })}
+                            <div className="relative cursor-pointer text-white font-semibold text-2xl flex items-center justify-center bg-main-blue rounded-lg overflow-hidden border peer-checked:border-accent-blue transition-all border-light-blue w-full h-28">
+                              <p className="z-10">{category.toUpperCase()}</p>
+                              <img
+                                className="absolute top-0 w-full h-full object-cover opacity-25 peer-checked:opacity-50"
+                                src={`/images/bg-${category}.jpg`}
+                                alt=""
+                              />
+                            </div>
+                          </label>
+                        );
+                      })}
+                  </div>
                 </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={guildToAdd.isRecruiting}
+                    onChange={() =>
+                      setGuildToAdd((guildToAdd) => ({
+                        ...guildToAdd,
+                        isRecruiting: !guildToAdd.isRecruiting,
+                      }))
+                    }
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-light-blue rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-blue"></div>
+                  <span className="ml-3 text-sm text-white">
+                    Est ce que la guilde recrute ?
+                  </span>
+                </label>
+                <label
+                  className="relative flex flex-col gap-2 text-light-gray"
+                  htmlFor=""
+                >
+                  Lien discord
+                  <input
+                    type="text"
+                    className="bg-main-blue w-full p-4 rounded-lg border border-light-blue text-white"
+                    placeholder="ex : https://discord.com/invite/..."
+                    value={guildToAdd.discordLink}
+                    onChange={(e) =>
+                      setGuildToAdd((guildToAdd) => ({
+                        ...guildToAdd,
+                        discordLink: e.target.value,
+                      }))
+                    }
+                  />
+                </label>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={guildToAdd.isRecruiting}
-                  onChange={() =>
-                    setGuildToAdd((guildToAdd) => ({
-                      ...guildToAdd,
-                      isRecruiting: !guildToAdd.isRecruiting,
-                    }))
-                  }
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-light-blue rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-blue"></div>
-                <span className="ml-3 text-sm text-white">
-                  Est ce que la guilde recrute ?
-                </span>
-              </label>
               <label
-                className="relative flex flex-col gap-2 text-light-gray"
-                htmlFor=""
-              >
-                Lien discord
-                <input
-                  type="text"
-                  className="bg-main-blue w-full p-4 rounded-lg border border-light-blue text-white"
-                  placeholder="ex : https://discord.com/invite/..."
-                  value={guildToAdd.discordLink}
-                  onChange={(e) =>
-                    setGuildToAdd((guildToAdd) => ({
-                      ...guildToAdd,
-                      discordLink: e.target.value,
-                    }))
-                  }
-                />
-              </label>
-              <label
-                className="relative flex flex-col gap-2 text-light-gray"
+                className="relative flex flex-col gap-2 text-light-gray w-full"
                 htmlFor=""
               >
                 <p>Description</p>
-                <textarea
-                  value={guildToAdd.description}
-                  onChange={(e) =>
-                    setGuildToAdd((guildToAdd) => ({
-                      ...guildToAdd,
-                      description: e.target.value,
-                    }))
-                  }
-                  placeholder="Une description complète de votre guilde"
-                  className="bg-main-blue w-full p-4 rounded-lg border border-light-blue text-white"
-                />
+                <TextEditor handleChange={handleTextEditorChange} />
               </label>
             </form>
           </div>

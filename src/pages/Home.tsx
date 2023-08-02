@@ -12,7 +12,7 @@ function Home() {
 
   return (
     <Page>
-      <div className="max-w-7xl mx-auto">
+      <div className="flex flex-col max-w-7xl mx-auto">
         <div className="flex mb-4 p-8 rounded-lg overflow-hidden relative h-64">
           <div className="absolute z-0 top-0 left-0 w-full h-full ">
             <img

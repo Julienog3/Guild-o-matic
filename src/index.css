@@ -5,6 +5,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: revert;
+    font-weight: revert;
+  }
+}
+
 .guild-card__image::before {
   content: "";
   position: absolute;
@@ -15,4 +27,9 @@
   display: block;
   background: linear-gradient(0deg, rgba(17,20,28,.75) 0%, rgba(17,20,28,.5) 100%);
   z-index: 1;
+}
+
+div.public-DraftEditor-content {
+  height: 250px;
+  overflow: auto;
 }

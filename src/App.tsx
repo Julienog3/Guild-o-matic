@@ -14,6 +14,7 @@ import { Modal, ModalType } from "./interfaces/modal.interface";
 import Footer from "./components/layout/Footer";
 import Alert from "./components/layout/Alert";
 import { supabase } from "./supabaseClient";
+import { IoMdWarning } from "react-icons/io";
 
 export type SidebarButtonType = {
   name: string,
@@ -71,7 +72,11 @@ function App() {
         <QueryClientProvider client={queryClient}>
           {session.user ? <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Sidebar buttons={sidebarButtons} />
-            <div className="flex flex-col gap-4 h-screen overflow-y-scroll w-full">
+            <div className="flex flex-col gap-4 p-8 h-screen overflow-y-scroll w-full">
+              <div className="flex items-center gap-4 text-yellow-500 bg-yellow-500/25 border border-yellow-500 rounded-md mb-6 max-w-7xl mx-auto w-full p-4">
+                <IoMdWarning className="text-lg" />
+                Site en cours de développement
+              </div>
               <Header />
               <Outlet />
               <Footer />

@@ -1,9 +1,8 @@
-import useAuth from "../../hooks/useAuth";
-import LoginForm from "../forms/LoginForm"
-import SignUpForm from "../forms/SignUpForm";
-import Modal from "../utils/Modal"
-import React, { FormEvent, useEffect, useState } from "react"
-
+import useAuth from '../../hooks/useAuth';
+import LoginForm from '../forms/LoginForm';
+import SignUpForm from '../forms/SignUpForm';
+import Modal from '../utils/Modal';
+import React, { FormEvent, useEffect } from 'react';
 
 interface Credentials {
   username: string;
@@ -13,26 +12,28 @@ interface Credentials {
   repeatedPassword: string;
 }
 interface SignUpModalProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 const SignUpModal = ({ onClose }: SignUpModalProps): JSX.Element => {
-  const { session, signUp, error } = useAuth()
+  const { session, signUp, error } = useAuth();
 
   const handleSubmit = (event: FormEvent, credentials: Credentials) => {
-    event.preventDefault()
-    signUp(credentials)
-  }
+    event.preventDefault();
+    signUp(credentials);
+  };
 
   useEffect(() => {
     if (session.user) {
-      onClose()
+      onClose();
     }
-  }, [session])
+  }, [session]);
 
-  return <Modal onClose={onClose} title="Inscription" >
-    <SignUpForm onSubmit={handleSubmit} error={error} />
-  </Modal>
-}
+  return (
+    <Modal onClose={onClose} title="Inscription">
+      <SignUpForm onSubmit={handleSubmit} error={error} />
+    </Modal>
+  );
+};
 
-export default SignUpModal
+export default SignUpModal;

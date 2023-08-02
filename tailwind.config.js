@@ -1,11 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     colors: {
       white: colors.white,
@@ -14,10 +11,11 @@ export default {
       'main-blue': '#11141C',
       'light-blue': '#181D2A',
       'accent-blue': '#198AFF',
-      'gray': '#474747',
+      gray: '#474747',
       'light-gray': '#ABABAB',
-      'green': '#3CFF8A',
-      'red': '#FF3C3C'
+      green: '#3CFF8A',
+      red: '#FF3C3C',
+      yellow: colors.yellow,
     },
     extend: {
       fontFamily: {
@@ -25,8 +23,5 @@ export default {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-}
-
+  plugins: [require('@tailwindcss/typography')],
+};

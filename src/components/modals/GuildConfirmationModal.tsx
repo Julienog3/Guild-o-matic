@@ -7,7 +7,7 @@ interface DisconnectModalProps {
   onDisconnect: () => void;
 }
 
-const DisconnectModal = ({
+const GuildConfirmationModal = ({
   onClose,
   onDisconnect,
 }: DisconnectModalProps): JSX.Element => {
@@ -36,4 +36,4 @@ const DisconnectModal = ({
   );
 };
 
-export default DisconnectModal;
+export default GuildConfirmationModal;

@@ -19,6 +19,8 @@ export const guildsService = {
 
     return Promise.all(
       guilds.map(async (guild) => {
+        console.log(guild.name, guild.guildId);
+
         const gw2Guild = await gw2Service
           .getGuildById(guild.guildId)
           .then((gw2Guild) => {

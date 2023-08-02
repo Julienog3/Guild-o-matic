@@ -54,11 +54,9 @@ const Header = (): JSX.Element => {
           }}
         />
       )}
-      <header className="z-10 max-w-7xl w-full mx-auto p-8 pb-0 flex justify-between items-center">
+      <header className="z-10 max-w-7xl w-full mx-auto pb-0 flex justify-between items-center">
         <Link to="/">
-          <h1 className="text-white font-semibold font-raleway text-3xl ">
-            Guild-o-matic
-          </h1>
+          <h1 className="text-white font-semibold text-3xl">Guild-o-matic</h1>
         </Link>
         <div className="flex gap-4">
           {profile && (
