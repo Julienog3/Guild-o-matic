@@ -2,7 +2,6 @@ import React from 'react';
 import { GuildType } from '../../interfaces/guild.interface';
 import { Link } from 'react-router-dom';
 import GuildCard from './GuildCard';
-import CardSkeleton from '../utils/skeletons/CardSkeleton';
 
 interface GuildCardsProps {
   guilds: GuildType[];

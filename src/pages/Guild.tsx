@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollRestoration, useParams } from 'react-router-dom';
+import { Link, ScrollRestoration, useParams } from 'react-router-dom';
 import Page from '../components/layout/Page';
 import { GuildCategoryEnum, GuildType } from '../interfaces/guild.interface';
 import { useQuery } from 'react-query';
@@ -8,6 +8,7 @@ import { gw2Service } from '../services/gw2.service';
 import GuildPresentation from '../components/guild/tabs/GuildPresentation';
 import GuildConditions from '../components/guild/tabs/GuildConditions';
 import GuildTabs from '../components/guild/GuildTabs';
+import { BsDiscord } from 'react-icons/bs';
 
 export type Tab = {
   name: string,
@@ -51,11 +52,9 @@ function Guild(): JSX.Element {
     guildsService.getGuildCategoriesById(data.id).then((res) => {
       setCategories(res);
     });
-  }, [data]);
 
-  useEffect(() => {
-    console.log(categories);
-  }, [categories]);
+    console.log(data.discordLink);
+  }, [data]);
 
   return (
     <Page>
@@ -69,18 +68,27 @@ function Guild(): JSX.Element {
             {guildDetails.name}
           </h2>
         )}
-        <div className="flex gap-2">
-          {categories &&
-            categories.map((category, index) => {
-              return (
-                <div
-                  className="bg-light-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
-                  key={index}
-                >
-                  {category.categories.name}
-                </div>
-              );
-            })}
+        <div className="flex gap-2 items-center justify-between">
+          <div className="flex gap-2">
+            {categories &&
+              categories.map((category, index) => {
+                return (
+                  <div
+                    className="bg-light-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
+                    key={index}
+                  >
+                    {category.categories.name}
+                  </div>
+                );
+              })}
+          </div>
+          {data && (
+            <Link to={data.discordLink}>
+              <span className="z-10 flex gap-2 items-center bg-accent-blue/25 p-3 rounded-md border border-accent-blue text-white text-sm">
+                <BsDiscord /> Lien du serveur discord
+              </span>
+            </Link>
+          )}
         </div>
         <div className="absolute z-0 top-0 left-0 w-full h-full guild-card__image">
           <img
