@@ -19,11 +19,11 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
   };
 
   return (
-    <aside className="flex flex-col p-4 gap-4 w-24 h-screen bg-main-blue border-r border-light-blue items-center">
-      <span className="mt-4 text-2xl text-white">
+    <aside className="z-20 flex sm:flex-col p-4 gap-4 sm:w-24 w-full sm:justify-normal justify-center sm:h-screen h-24 bottom-0 bg-main-blue border-r border-light-blue items-center sm:relative fixed">
+      <span className="mt-4 text-2xl text-white sm:block hidden">
         <BsShieldShaded />
       </span>
-      <div className="mt-8 flex flex-col gap-4">
+      <div className="sm:mt-8 flex sm:flex-col gap-4 ">
         {buttons &&
           buttons.map((button) => {
             return (

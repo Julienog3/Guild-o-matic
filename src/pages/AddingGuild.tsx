@@ -43,7 +43,6 @@ const AddingGuild = (): JSX.Element => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(guildToAdd);
     mutation.mutate(guildToAdd);
   };
 
@@ -81,12 +80,25 @@ const AddingGuild = (): JSX.Element => {
         .then((data) => keysToCamel(data));
     };
 
-    const getAllGuilds = (guildsId: string[]) => {
-      Promise.all(
-        [...guildsId].map(async (guildId) => {
+    const getAllGuilds = async (guildsId: string[]) => {
+      const asyncFilter = async (arr: string[], predicate: (guildId: string) => Promise<boolean>) => {
+          const results = await Promise.all(arr.map(predicate));
+      
+          return arr.filter((_v, index) => results[index]);
+      }
+
+      await asyncFilter([...guildsId], async (guildId: string) => {
+          const guildCount = await guildsService.getGuildCountByGameId(guildId)
+          return (guildCount === 0)
+        })
+      .then((filteredGuilds) => {
+        console.log(filteredGuilds)
+
+        return Promise.all(filteredGuilds.map(async (guildId) => {
           return await getGuild(guildId);
-        }),
-      ).then((guilds) => {
+        }))
+      })
+      .then((guilds) => {
         setGuilds(guilds);
       });
     };

@@ -60,31 +60,38 @@ function Guild(): JSX.Element {
     <Page>
       <ScrollRestoration />
       <div className="flex flex-col max-w-7xl mx-auto gap-4 mb-4 p-8 justify-end rounded-lg overflow-hidden relative h-64">
-        {guildDetails && (
-          <h2 className="flex z-10 items-center gap-4 text-white text-4xl font-bold">
-            <span className=" bg-accent-blue/25 border text-xl border-accent-blue font-medium text-accent-blue py-1 px-3 rounded-lg ">
-              {guildDetails.tag}
-            </span>
-            {guildDetails.name}
-          </h2>
-        )}
+        
+        
+        <div className='flex justify-between items-center'>
+        
         <div className="flex gap-2 items-center justify-between">
-          <div className="flex gap-2">
-            {categories &&
-              categories.map((category, index) => {
-                return (
-                  <div
-                    className="bg-light-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
-                    key={index}
-                  >
-                    {category.categories.name}
-                  </div>
-                );
+          <div className="flex flex-col gap-4">
+            {guildDetails && (
+              <h2 className="flex z-10 items-center gap-4 text-white text-4xl font-bold">
+                <span className=" bg-accent-blue/25 border text-xl border-accent-blue font-medium backdrop-blur text-accent-blue py-1 px-3 rounded-lg ">
+                  {guildDetails.tag}
+                </span>
+                {guildDetails.name}
+              </h2>
+            )}
+            <div className='flex gap-2'>
+              {categories &&
+                categories.map((category, index) => {
+                  return (
+                    <div
+                      className="bg-light-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
+                      key={index}
+                    >
+                      {category.categories.name}
+                    </div>
+                  );
               })}
+            </div>
+            </div>
           </div>
-          {data && (
-            <Link to={data.discordLink}>
-              <span className="z-10 flex gap-2 items-center bg-accent-blue/25 p-3 rounded-md border border-accent-blue text-white text-sm">
+          {data && data.discordLink && (
+            <Link className="z-10" to={data.discordLink}>
+              <span className="flex gap-2 items-center bg-purple/50 p-3 rounded-md border backdrop-blur border-purple text-white text-sm hover:bg-purple transition-all">
                 <BsDiscord /> Lien du serveur discord
               </span>
             </Link>
