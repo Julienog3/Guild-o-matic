@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors');
 
@@ -16,7 +17,7 @@ export default {
       green: '#3CFF8A',
       red: '#FF3C3C',
       yellow: colors.yellow,
-      purple:'#7289DA'
+      purple: '#7289DA',
     },
     extend: {
       fontFamily: {

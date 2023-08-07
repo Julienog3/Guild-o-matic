@@ -5,6 +5,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: theme('colors.white');
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: theme('colors.accent-blue');
+  
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  cursor: pointer;
+}
+
 @layer base {
   h1,
   h2,

@@ -19,6 +19,7 @@ import { Notification, NotificationEnum } from "./interfaces/notification.interf
 import Toaster from "./components/layout/toaster/Toaster";
 import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal";
 import { AuthModalContext } from "./contexts/AuthModalContext";
+import ChangelogModal from "./components/modals/ChangelogModal";
 
 export type SidebarButtonType = {
   name: string,
@@ -34,6 +35,8 @@ function App() {
   const [notifications, setNotifications] = useState<Notification[]>([ ])
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
+  const [isChangelogModalOpened, setIsChangelogModalOpened] =
+    useState<boolean>(true);
 
   useEffect(() => {
     const getSession = async () => {
@@ -91,6 +94,7 @@ function App() {
       <NotificationContext.Provider value={{ notifications, setNotifications}}>
       <ModalContext.Provider value={{ modal, setModal }}>
         <QueryClientProvider client={queryClient}>
+          {isChangelogModalOpened && <ChangelogModal onClose={(): void => setIsChangelogModalOpened(false)} />}
            <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Toaster />
             <Sidebar buttons={sidebarButtons} />

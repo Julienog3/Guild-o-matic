@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdx-js/mdx": "^2.3.0",
+    "@mdx-js/react": "^2.3.0",
+    "@mdx-js/rollup": "^2.3.0",
     "@react-spring/web": "^9.7.3",
     "@supabase/supabase-js": "^2.21.0",
     "@tanstack/query-core": "^4.29.1",
