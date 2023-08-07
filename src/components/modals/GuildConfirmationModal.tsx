@@ -1,21 +1,20 @@
-import LoginForm from '../forms/LoginForm';
 import Modal from '../utils/Modal';
 import React from 'react';
 
-interface DisconnectModalProps {
+interface GuildConfirmationModalProps {
   onClose: () => void;
-  onDisconnect: () => void;
+  onConfirmation: () => void;
 }
 
 const GuildConfirmationModal = ({
   onClose,
-  onDisconnect,
-}: DisconnectModalProps): JSX.Element => {
+  onConfirmation,
+}: GuildConfirmationModalProps): JSX.Element => {
   return (
-    <Modal onClose={onClose} title="Déconnexion">
+    <Modal onClose={onClose} title="Ajout de guilde">
       <div className="flex flex-col">
         <p className="text-white mb-6">
-          Etes vous sûr de vouloir vous déconnecter ?
+          Etes vous sûr de vouloir vouloir ajouter cette guilde ?
         </p>
         <div className="flex gap-4 self-end">
           <button
@@ -25,10 +24,10 @@ const GuildConfirmationModal = ({
             Annuler
           </button>
           <button
-            className="bg-red text-white p-4 rounded-lg"
-            onClick={(): void => onDisconnect()}
+            className="bg-accent-blue text-white p-4 rounded-lg"
+            onClick={(): void => onConfirmation()}
           >
-            Déconnecter
+            Publier
           </button>
         </div>
       </div>
