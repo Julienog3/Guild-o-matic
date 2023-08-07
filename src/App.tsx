@@ -63,11 +63,11 @@ function App() {
       icon: <AiOutlinePlus />,
       link: '/guilds/add'
     },
-    {
-      name: 'settings',
-      icon: <BsFillGearFill />,
-      link: '/settings'
-    },
+    // {
+    //   name: 'settings',
+    //   icon: <BsFillGearFill />,
+    //   link: '/settings'
+    // },
   ]
 
   return (

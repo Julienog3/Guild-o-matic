@@ -7,9 +7,6 @@ import AuthModal, {
 import { AuthModalContext } from '../contexts/AuthModalContext';
 
 function Landing(): JSX.Element {
-  const [toggleLoginModal, setToggleLoginModal] = useState<boolean>(false);
-  const [toggleSignUpModal, setToggleSignUpModal] = useState<boolean>(false);
-
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
 

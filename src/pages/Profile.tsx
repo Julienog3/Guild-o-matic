@@ -5,6 +5,8 @@ import { supabase } from '../supabaseClient';
 import { keysToCamel } from '../utils/helpers';
 import DisconnectModal from '../components/modals/DisconnectModal';
 import { useNavigate } from 'react-router-dom';
+import { FaPen } from 'react-icons/fa';
+import { BsCheckLg } from 'react-icons/bs';
 
 const Profile = (): JSX.Element => {
   const [userProfile, setUserProfile] = useState<any>();
@@ -13,6 +15,9 @@ const Profile = (): JSX.Element => {
     useState<boolean>(false);
 
   const { session, signOut } = useAuth();
+
+  const [userApiKey, setUserApiKey] = useState<string>('');
+  const [isApiKeyEditing, setIsApiKeyEditing] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -38,6 +43,14 @@ const Profile = (): JSX.Element => {
     getProfile();
   }, [session]);
 
+  useEffect(() => {
+    if (!userProfile) {
+      return;
+    }
+
+    setUserApiKey(userProfile.apiKey);
+  }, [userProfile]);
+
   const handleDisconnect = (): void => {
     signOut();
     navigate('/');
@@ -50,9 +63,9 @@ const Profile = (): JSX.Element => {
 
     const getAccount = async () => {
       await fetch(
-        `${import.meta.env.VITE_GW2_API_URL}/v2/account?access_token=${
-          userProfile.apiKey
-        }`,
+        `${
+          import.meta.env.VITE_GW2_API_URL
+        }/v2/account?access_token=${userApiKey}`,
         {
           method: 'GET',
         },
@@ -62,7 +75,7 @@ const Profile = (): JSX.Element => {
     };
 
     getAccount();
-  }, [userProfile]);
+  }, [userApiKey]);
 
   return (
     <>
@@ -84,17 +97,38 @@ const Profile = (): JSX.Element => {
               <label className="text-light-gray mb-2 text-md" htmlFor="">
                 Clé api
               </label>
-              <input
-                className="bg-main-blue p-4 rounded-lg border border-light-blue text-white w-96"
-                type="text"
-                disabled
-                value={userProfile.apiKey}
-              />
+              <div className="flex gap-4">
+                <input
+                  className="bg-main-blue p-4 rounded-lg border border-light-blue text-white w-96 disabled:text-gray"
+                  type="text"
+                  disabled={!isApiKeyEditing}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+                    setUserApiKey(e.target.value)
+                  }
+                  value={userApiKey}
+                />
+                <button
+                  onClick={(): void => setIsApiKeyEditing(!isApiKeyEditing)}
+                  className={`${
+                    isApiKeyEditing ? 'bg-accent-blue' : 'bg-main-blue'
+                  } flex items-center justify-center w-14 rounded-lg border border-light-blue text-white`}
+                >
+                  {isApiKeyEditing ? (
+                    <BsCheckLg className="text-2xl" />
+                  ) : (
+                    <FaPen />
+                  )}
+                </button>
+              </div>
             </div>
-            {playerInformations && (
-              <div className="flex gap-4 p-4 w-96 text-white items-center rounded-lg bg-main-blue border border-light-blue mb-4">
+            {playerInformations && playerInformations.name ? (
+              <div className="flex gap-4 p-4 w-96 text-white items-center rounded-lg bg-green/25 border border-green mb-4">
                 <span className="bg-green w-2 h-2 rounded-full" />
                 Connecté en tant que {playerInformations.name}
+              </div>
+            ) : (
+              <div className="flex gap-4 p-4 w-96 text-white items-center rounded-lg bg-red/25 border border-red mb-4">
+                Compte Guild Wars 2 introuvable
               </div>
             )}
             <button
