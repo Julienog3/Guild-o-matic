@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Page from '../components/layout/Page';
 import usePlayer from '../hooks/usePlayer';
 import { keysToCamel } from '../utils/helpers';
@@ -14,9 +14,12 @@ import useAuth from '../hooks/useAuth';
 import TextEditor from '../components/utils/TextEditor';
 import GuildConfirmationModal from '../components/modals/GuildConfirmationModal';
 import { useNavigate } from 'react-router-dom';
+import { NotificationContext } from '../contexts/NotificationContext';
+import { NotificationEnum } from '../interfaces/notification.interface';
 
 const AddingGuild = (): JSX.Element => {
   const queryClient = new QueryClient();
+  const { notifications, setNotifications } = useContext(NotificationContext);
 
   const navigate = useNavigate();
   const { player, apiKey } = usePlayer();
@@ -127,6 +130,13 @@ const AddingGuild = (): JSX.Element => {
             mutation.mutate(guildToAdd);
             setIsConfirmationModalOpened(false);
             navigate('/guilds');
+            setNotifications([
+              ...notifications,
+              {
+                type: NotificationEnum.SUCCESS,
+                message: 'Votre guilde a été ajouté avec succès !',
+              },
+            ]);
           }}
         />
       )}

@@ -1,10 +1,11 @@
-import React from "react"
-import Input from "../utils/Input"
-import { FiMenu } from "react-icons/fi";
-import { BsGridFill } from "react-icons/bs";
+import React from 'react';
+import Input from '../utils/Input';
+import { FiMenu } from 'react-icons/fi';
+import { BsGridFill } from 'react-icons/bs';
 
 const GuildFilter = (): JSX.Element => {
-  return <div className="flex flex-col">
+  return (
+    <div className="flex flex-col">
       <h3 className=" text-light-gray text-sm mb-3">Filtrer par Catégories</h3>
       <ul className="flex gap-3">
         <div className="bg-light-blue rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold">
@@ -18,6 +19,7 @@ const GuildFilter = (): JSX.Element => {
         </div>
       </ul>
     </div>
-}
+  );
+};
 
-export default GuildFilter
+export default GuildFilter;

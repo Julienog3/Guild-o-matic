@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { GuildType } from '../../interfaces/guild.interface';
-import { gw2Service } from '../../services/gw2.service';
 import { guildsService } from '../../services/guilds.service';
 import { supabase } from '../../supabaseClient';
 import { keysToCamel } from '../../utils/helpers';

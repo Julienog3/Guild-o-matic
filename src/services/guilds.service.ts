@@ -59,8 +59,10 @@ export const guildsService = {
 
     return keysToCamel(data[0]);
   },
-  getGuildCountByGameId: async (guildId: string): Promise<number | undefined> => {
-    console.log(guildId)
+  getGuildCountByGameId: async (
+    guildId: string,
+  ): Promise<number | undefined> => {
+    console.log(guildId);
 
     const { count, error } = await supabase
       .from('guilds')
