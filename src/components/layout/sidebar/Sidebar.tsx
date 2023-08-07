@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../../utils/Button';
 import { Link, useLocation } from 'react-router-dom';
 import LinkedButton from '../../utils/LinkedButton';
@@ -6,6 +6,7 @@ import { BsFillShieldFill, BsShieldShaded } from 'react-icons/bs';
 import { AiFillHome } from 'react-icons/ai';
 import SidebarButton from './SidebarButton';
 import { SidebarButtonType } from '../../../App';
+import useAuth from '../../../hooks/useAuth';
 
 interface SidebarProps {
   buttons: SidebarButtonType[];
@@ -13,6 +14,29 @@ interface SidebarProps {
 
 const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
   const location = useLocation();
+
+  const { session } = useAuth();
+  const [filteredButtons, setFilteredButtons] = useState<SidebarButtonType[]>(
+    [],
+  );
+
+  useEffect(() => {
+    if (!session) {
+      return;
+    }
+
+    if (session.user) {
+      setFilteredButtons(buttons);
+    } else {
+      setFilteredButtons(
+        buttons.filter((button) => button.isAuthNeeded === false),
+      );
+    }
+  }, [session]);
+
+  useEffect(() => {
+    console.log(filteredButtons);
+  }, [filteredButtons]);
 
   const isButtonActive = (button: SidebarButtonType): boolean => {
     return button.link === location.pathname;
@@ -24,8 +48,8 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
         <BsShieldShaded />
       </span>
       <div className="sm:mt-8 flex sm:flex-col gap-4 ">
-        {buttons &&
-          buttons.map((button) => {
+        {filteredButtons &&
+          filteredButtons.map((button) => {
             return (
               <SidebarButton
                 key={button.name}

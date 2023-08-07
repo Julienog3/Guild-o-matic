@@ -22,6 +22,7 @@ const AddingGuild = (): JSX.Element => {
   const { notifications, setNotifications } = useContext(NotificationContext);
 
   const navigate = useNavigate();
+  const { session } = useAuth();
   const { player, apiKey } = usePlayer();
   const [guilds, setGuilds] = useState<any[]>([]);
   const [isConfirmationModalOpened, setIsConfirmationModalOpened] =
@@ -54,8 +55,6 @@ const AddingGuild = (): JSX.Element => {
     setIsConfirmationModalOpened(true);
   };
 
-  const { session } = useAuth();
-
   const handleTextEditorChange = (change: string): void => {
     setGuildToAdd((guildToAdd) => ({
       ...guildToAdd,
@@ -66,6 +65,10 @@ const AddingGuild = (): JSX.Element => {
   useEffect(() => {
     if (!session) {
       return;
+    }
+
+    if (!session.user) {
+      navigate('/');
     }
 
     setGuildToAdd({

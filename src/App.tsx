@@ -8,7 +8,6 @@ import LoginModal from "./components/modals/auth/LoginModal";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthContext } from "./contexts/AuthContext";
 import { Session } from "@supabase/supabase-js";
-import Landing from "./pages/Landing";
 import { ModalContext } from "./contexts/ModalContext";
 import { NotificationContext } from "./contexts/NotificationContext";
 import { Modal, ModalType } from "./interfaces/modal.interface";
@@ -18,11 +17,14 @@ import { supabase } from "./supabaseClient";
 import { IoMdWarning } from "react-icons/io";
 import { Notification, NotificationEnum } from "./interfaces/notification.interface";
 import Toaster from "./components/layout/toaster/Toaster";
+import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal";
+import { AuthModalContext } from "./contexts/AuthModalContext";
 
 export type SidebarButtonType = {
   name: string,
   icon: React.ReactNode,
   link: string,
+  isAuthNeeded?: boolean,
 }
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
   const [session, setSession] = useState<Session>({} as Session)
   const [modal, setModal] = useState<Modal>({} as Modal)
   const [notifications, setNotifications] = useState<Notification[]>([ ])
+  const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
+  const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
 
   useEffect(() => {
     const getSession = async () => {
@@ -51,17 +55,20 @@ function App() {
     {
       name: 'home',
       icon: <AiFillHome />,
-      link: '/'
+      link: '/',
+      isAuthNeeded: false
     },
     {
       name: 'guilds',
       icon: <BsFillShieldFill />,
-      link: '/guilds'
+      link: '/guilds',
+      isAuthNeeded: false
     },
     {
       name: 'add-guild',
       icon: <AiOutlinePlus />,
-      link: '/guilds/add'
+      link: '/guilds/add',
+      isAuthNeeded: true
     },
     // {
     //   name: 'settings',
@@ -72,10 +79,19 @@ function App() {
 
   return (
     <AuthContext.Provider value={{ session, setSession }}>
+      <AuthModalContext.Provider
+        value={{
+          isOpen: isAuthModalOpened,
+          setIsOpen: setIsAuthModalOpened,
+          type: authModalType,
+          setType: setAuthModalType,
+        }}
+      >
+      <AuthModal onClose={() => setIsAuthModalOpened(false)} />
       <NotificationContext.Provider value={{ notifications, setNotifications}}>
       <ModalContext.Provider value={{ modal, setModal }}>
         <QueryClientProvider client={queryClient}>
-          {session.user ? <div className="relative bg-bg-blue flex w-full min-h-screen">
+           <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Toaster />
             <Sidebar buttons={sidebarButtons} />
             <div className="flex flex-col gap-4 p-8 h-screen overflow-y-scroll w-full">
@@ -87,10 +103,11 @@ function App() {
               <Outlet />
               <Footer />
             </div>
-          </div> : <Landing />}
+          </div>
         </QueryClientProvider>
       </ModalContext.Provider>
       </NotificationContext.Provider>
+      </AuthModalContext.Provider>
     </AuthContext.Provider>
   )
 }

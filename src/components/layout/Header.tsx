@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Profile from '../Profile';
 import { FaBell } from 'react-icons/fa';
 import useAuth from '../../hooks/useAuth';
 import { supabase } from '../../supabaseClient';
 import { keysToCamel } from '../../utils/helpers';
+import { AuthModalTypeEnum } from '../modals/auth/AuthModal';
+import { AuthModalContext } from '../../contexts/AuthModalContext';
 
 const Header = (): JSX.Element => {
   const [profile, setProfile] = useState<any>();
+  const { setType, setIsOpen } = useContext(AuthModalContext);
 
   const { session } = useAuth();
 
@@ -45,7 +48,33 @@ const Header = (): JSX.Element => {
               <FaBell className="text-white text-lg" />
             </div>
           )}
-          {profile && <Profile profile={profile} />}
+
+          {profile ? (
+            <Profile profile={profile} />
+          ) : (
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setType(AuthModalTypeEnum.LOGIN);
+                  setIsOpen(true);
+                }}
+                className="rounded-lg bg-main-blue border-light-blue border px-6 py-4 text-white w-fit text-sm"
+              >
+                Se connecter
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setType(AuthModalTypeEnum.SIGN_UP);
+                  setIsOpen(true);
+                }}
+                className="rounded-lg bg-accent-blue px-6 py-4 text-white w-fit text-sm"
+              >
+                S&apos;inscrire
+              </button>
+            </div>
+          )}
         </div>
       </header>
     </>
