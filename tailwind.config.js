@@ -18,6 +18,7 @@ export default {
       red: '#FF3C3C',
       yellow: colors.yellow,
       purple: '#7289DA',
+      transparent: colors.transparent,
     },
     extend: {
       fontFamily: {

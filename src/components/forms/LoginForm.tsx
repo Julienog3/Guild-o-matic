@@ -6,7 +6,7 @@ import FormError from './FormError';
 import { AuthError } from '@supabase/supabase-js';
 import { AuthModalContext } from '../../contexts/AuthModalContext';
 import { AuthModalTypeEnum } from '../modals/auth/AuthModal';
-import { AiFillEye } from 'react-icons/ai';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 interface LoginFormProps {
   onSubmit: (event: FormEvent, credentials: Credentials) => void;
@@ -57,30 +57,32 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
           <label className="text-light-gray mb-2 text-sm" htmlFor="password">
             Mot de passe
           </label>
-          <input
-            className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white focus:outline-none focus:border-accent-blue mb-3"
-            value={credentials.password}
-            required
-            onChange={(e) =>
-              setCredentials((credentials) => ({
-                ...credentials,
-                password: e.target.value,
-              }))
-            }
-            type={isPasswordRevealed ? 'text' : 'password'}
-            placeholder="Mot de passe"
-          />
-          <button
-            className="bg-red text-white p-4 rounded-md"
-            onClick={(
-              e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-            ): void => {
-              e.preventDefault();
-              setIsPasswordRevealed(!isPasswordRevealed);
-            }}
-          >
-            <AiFillEye />
-          </button>
+          <div className="flex bg-bg-blue border-light-blue rounded-lg border items-center mb-3">
+            <input
+              className="bg-transparent text-sm h-full w-full p-4 text-white focus:outline-none focus:border-accent-blue "
+              value={credentials.password}
+              required
+              onChange={(e) =>
+                setCredentials((credentials) => ({
+                  ...credentials,
+                  password: e.target.value,
+                }))
+              }
+              type={isPasswordRevealed ? 'text' : 'password'}
+              placeholder="Mot de passe"
+            />
+            <button
+              className="bg-main-blue border border-light-blue hover:bg-light-blue transition-all p-2 mr-3 text-white rounded-md"
+              onClick={(
+                e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+              ): void => {
+                e.preventDefault();
+                setIsPasswordRevealed(!isPasswordRevealed);
+              }}
+            >
+              {isPasswordRevealed ? <AiFillEyeInvisible /> : <AiFillEye />}
+            </button>
+          </div>
           <span
             className="text-accent-blue self-end text-sm cursor-pointer"
             onClick={(): void => setType(AuthModalTypeEnum.RESET_PASSWORD)}

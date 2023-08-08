@@ -14,13 +14,12 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: theme('colors.white');
+  background: transparent;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: theme('colors.accent-blue');
-  
   border-radius: 5px;
 }
 
