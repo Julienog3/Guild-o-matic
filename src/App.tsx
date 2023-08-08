@@ -36,7 +36,7 @@ function App() {
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
   const [isChangelogModalOpened, setIsChangelogModalOpened] =
-    useState<boolean>(true);
+    useState<boolean>(false);
 
   useEffect(() => {
     const getSession = async () => {
