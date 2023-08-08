@@ -6,6 +6,7 @@ import FormError from './FormError';
 import { AuthError } from '@supabase/supabase-js';
 import { AuthModalContext } from '../../contexts/AuthModalContext';
 import { AuthModalTypeEnum } from '../modals/auth/AuthModal';
+import { AiFillEye } from 'react-icons/ai';
 
 interface LoginFormProps {
   onSubmit: (event: FormEvent, credentials: Credentials) => void;
@@ -22,6 +23,8 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
     email: '',
     password: '',
   });
+
+  const [isPasswordRevealed, setIsPasswordRevealed] = useState<boolean>(false);
 
   const { setType } = useContext(AuthModalContext);
 
@@ -64,9 +67,20 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
                 password: e.target.value,
               }))
             }
-            type="password"
+            type={isPasswordRevealed ? 'text' : 'password'}
             placeholder="Mot de passe"
           />
+          <button
+            className="bg-red text-white p-4 rounded-md"
+            onClick={(
+              e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+            ): void => {
+              e.preventDefault();
+              setIsPasswordRevealed(!isPasswordRevealed);
+            }}
+          >
+            <AiFillEye />
+          </button>
           <span
             className="text-accent-blue self-end text-sm cursor-pointer"
             onClick={(): void => setType(AuthModalTypeEnum.RESET_PASSWORD)}
