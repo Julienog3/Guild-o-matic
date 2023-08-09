@@ -12,6 +12,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
   const [categories, setCategories] = useState<any[]>([]);
   const [owner, setOwner] = useState<any>();
   const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
+  const [guildOwnerAvatarUrl, setGuildOwnerAvatarUrl] = useState<string>();
 
   useEffect(() => {
     if (!guild) {
@@ -30,6 +31,19 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
 
       const formattedData = keysToCamel(data[0]);
       setOwner(formattedData);
+    };
+
+    const getGuildOwnerAvatarUrl = async () => {
+      const { data, error } = await supabase.storage
+        .from('users')
+        .createSignedUrl(`${guild.ownerId}/avatar`, 3600);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setGuildOwnerAvatarUrl(data.signedUrl);
     };
 
     const getGuildBackgroundUrl = async () => {
@@ -51,6 +65,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
 
     getGuildOwner();
     getGuildBackgroundUrl();
+    getGuildOwnerAvatarUrl();
   }, [guild]);
 
   return (
@@ -106,7 +121,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
         <div className="flex gap-4 items-center">
           <img
             className="rounded-xl w-10 h-10"
-            src="https://avatarfiles.alphacoders.com/108/thumb-108702.jpg"
+            src={guildOwnerAvatarUrl}
             alt=""
           />
           <div className="flex flex-col">
