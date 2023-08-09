@@ -7,6 +7,7 @@ import DisconnectModal from '../components/modals/DisconnectModal';
 import { useNavigate } from 'react-router-dom';
 import { FaPen } from 'react-icons/fa';
 import { BsCheckLg } from 'react-icons/bs';
+import { v4 as uuidv4 } from 'uuid';
 
 const Profile = (): JSX.Element => {
   const [userProfile, setUserProfile] = useState<any>();
@@ -18,8 +19,30 @@ const Profile = (): JSX.Element => {
 
   const [userApiKey, setUserApiKey] = useState<string>('');
   const [isApiKeyEditing, setIsApiKeyEditing] = useState<boolean>(false);
+  const [selectedAvatar, setSelectedAvatar] = useState<File>();
 
   const navigate = useNavigate();
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+
+    setSelectedAvatar(e.target.files[0]);
+  };
+
+  const uploadAvatar = async (avatar: File) => {
+    const { data, error } = await supabase.storage
+      .from('users')
+      .upload(`${session.user.id}/avatar`, avatar);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    console.log(data);
+  };
 
   useEffect(() => {
     if (!session.user) {
@@ -87,7 +110,7 @@ const Profile = (): JSX.Element => {
       )}
       {userProfile && (
         <Page>
-          <div className="max-w-7xl mx-auto mb-8">
+          <div className="max-w-7xl mx-auto mb-8 flex flex-col">
             <div className="w-full border-b border-light-blue mb-4">
               <h2 className="text-4xl font-raleway font-semibold text-white mb-4">
                 Profil de {userProfile.username}
@@ -131,8 +154,34 @@ const Profile = (): JSX.Element => {
                 Compte Guild Wars 2 introuvable
               </div>
             )}
+            <div className="flex gap-4">
+              <input
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleAvatarChange(e)
+                }
+                type="file"
+                accept=".jpg, .jpeg, .png"
+              />
+              <button
+                className="bg-accent-blue/25 border border-accent-blue font-medium text-white p-4 rounded-lg w-fit"
+                onClick={(
+                  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+                ): void => {
+                  e.preventDefault();
+
+                  if (!selectedAvatar) {
+                    return;
+                  }
+
+                  uploadAvatar(selectedAvatar);
+                }}
+              >
+                Upload avatar
+              </button>
+            </div>
+
             <button
-              className="bg-red/25 border border-red font-medium text-white p-4 rounded-lg"
+              className="bg-red/25 border border-red font-medium text-white p-4 rounded-lg w-fit"
               onClick={(): void => setIsDisconnectModalOpened(true)}
             >
               Déconnecter

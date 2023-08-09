@@ -12,7 +12,6 @@ import { ModalContext } from "./contexts/ModalContext";
 import { NotificationContext } from "./contexts/NotificationContext";
 import { Modal, ModalType } from "./interfaces/modal.interface";
 import Footer from "./components/layout/Footer";
-import Alert from "./components/layout/Alert";
 import { supabase } from "./supabaseClient";
 import { IoMdWarning } from "react-icons/io";
 import { Notification, NotificationEnum } from "./interfaces/notification.interface";
@@ -22,10 +21,11 @@ import { AuthModalContext } from "./contexts/AuthModalContext";
 import ChangelogModal from "./components/modals/ChangelogModal";
 
 export type SidebarButtonType = {
-  name: string,
-  icon: React.ReactNode,
-  link: string,
-  isAuthNeeded?: boolean,
+  name: string;
+  label: string;
+  icon: React.ReactNode;
+  link: string;
+  isAuthNeeded?: boolean;
 }
 
 function App() {
@@ -57,18 +57,21 @@ function App() {
   const sidebarButtons: SidebarButtonType[] = [
     {
       name: 'home',
+      label: 'Accueil',
       icon: <AiFillHome />,
       link: '/',
       isAuthNeeded: false
     },
     {
       name: 'guilds',
+      label: 'Guildes',
       icon: <BsFillShieldFill />,
       link: '/guilds',
       isAuthNeeded: false
     },
     {
       name: 'add-guild',
+      label: 'Ajout de guilde',
       icon: <AiOutlinePlus />,
       link: '/guilds/add',
       isAuthNeeded: true

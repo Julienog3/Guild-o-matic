@@ -11,6 +11,7 @@ interface GuildCardProps {
 const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
   const [categories, setCategories] = useState<any[]>([]);
   const [owner, setOwner] = useState<any>();
+  const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
 
   useEffect(() => {
     if (!guild) {
@@ -31,11 +32,25 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
       setOwner(formattedData);
     };
 
+    const getGuildBackgroundUrl = async () => {
+      const { data, error } = await supabase.storage
+        .from('guilds')
+        .createSignedUrl(`${guild.id}/background`, 3600);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setGuildBackgroundUrl(data.signedUrl);
+    };
+
     guildsService.getGuildCategoriesById(guild.id).then((res) => {
       setCategories(res);
     });
 
     getGuildOwner();
+    getGuildBackgroundUrl();
   }, [guild]);
 
   return (
@@ -82,7 +97,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
         <div className="absolute top-0 left-0 w-full h-full guild-card__image">
           <img
             className="absolute h-full object-cover w-full group-hover:scale-110 transition-transform"
-            src="./images/bg-card.jpg"
+            src={guildBackgroundUrl}
             alt=""
           />
         </div>

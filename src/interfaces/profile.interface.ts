@@ -1,5 +1,5 @@
 export type ProfileType = {
-  id: number
-  userId: string
-  username: string
-}
+  id: number,
+  userId: string,
+  username: string,
+};

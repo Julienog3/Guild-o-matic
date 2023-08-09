@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Button from '../../utils/Button';
-import { Link, useLocation } from 'react-router-dom';
-import LinkedButton from '../../utils/LinkedButton';
-import { BsFillShieldFill, BsShieldShaded } from 'react-icons/bs';
-import { AiFillHome } from 'react-icons/ai';
+import { useLocation } from 'react-router-dom';
+import { BsShieldShaded } from 'react-icons/bs';
 import SidebarButton from './SidebarButton';
 import { SidebarButtonType } from '../../../App';
 import useAuth from '../../../hooks/useAuth';
@@ -34,10 +31,6 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
     }
   }, [session]);
 
-  useEffect(() => {
-    console.log(filteredButtons);
-  }, [filteredButtons]);
-
   const isButtonActive = (button: SidebarButtonType): boolean => {
     return button.link === location.pathname;
   };
@@ -52,6 +45,7 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
           filteredButtons.map((button) => {
             return (
               <SidebarButton
+                label={button.label}
                 key={button.name}
                 to={button.link}
                 isActive={isButtonActive(button)}
