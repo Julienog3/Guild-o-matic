@@ -19,18 +19,23 @@ const SidebarButton = ({
   return (
     <Link to={to}>
       <div
-        onMouseEnter={() => setIsButtonHovered(true)}
-        onMouseLeave={() => setIsButtonHovered(false)}
-        className={`relative w-14 h-14 rounded-md bg-light-blue flex items-center justify-center text-lg text-white hover:border border-accent-blue transition-opacity  ${
-          isActive ? 'border' : ''
-        }`}
+        className={`${
+          isActive ? 'bg-accent-blue text-white' : 'hover:bg-light-blue'
+        } flex items-center text-light-gray text-sm gap-5  py-4 px-5 rounded-md`}
       >
-        {icon}
-        {isButtonHovered && (
-          <span className="absolute z-50 text-sm text-white top-1/2 -translate-y-1/2 left-20 bg-main-blue p-2 whitespace-nowrap rounded-md border border-light-blue">
-            {label}
-          </span>
-        )}
+        <div
+          onMouseEnter={() => setIsButtonHovered(true)}
+          onMouseLeave={() => setIsButtonHovered(false)}
+          className="relative flex items-center justify-center text-xl text-white transition-opacity"
+        >
+          {icon}
+          {/* {isButtonHovered && (
+            <span className="absolute z-50 text-sm text-white top-1/2 -translate-y-1/2 left-20 bg-main-blue p-2 whitespace-nowrap rounded-md border border-light-blue">
+              {label}
+            </span>
+          )} */}
+        </div>
+        {label}
       </div>
     </Link>
   );

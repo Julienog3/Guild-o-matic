@@ -35,8 +35,6 @@ function App() {
   const [notifications, setNotifications] = useState<Notification[]>([ ])
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
-  const [isChangelogModalOpened, setIsChangelogModalOpened] =
-    useState<boolean>(false);
 
   const sidebarButtons: SidebarButtonType[] = [
     {
@@ -48,14 +46,14 @@ function App() {
     },
     {
       name: 'guilds',
-      label: 'Guildes',
+      label: 'Toutes les guildes',
       icon: <BsFillShieldFill />,
       link: '/guilds',
       isAuthNeeded: false
     },
     {
       name: 'add-guild',
-      label: 'Ajout de guilde',
+      label: 'Ajouter une guilde',
       icon: <AiOutlinePlus />,
       link: '/guilds/add',
       isAuthNeeded: true
@@ -75,7 +73,6 @@ function App() {
       <AuthModal onClose={() => setIsAuthModalOpened(false)} />
       <NotificationContext.Provider value={{ notifications, setNotifications}}>
       <ModalContext.Provider value={{ modal, setModal }}>
-          {isChangelogModalOpened && <ChangelogModal onClose={(): void => setIsChangelogModalOpened(false)} />}
            <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Toaster />
             <Sidebar buttons={sidebarButtons} />

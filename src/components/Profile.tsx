@@ -54,7 +54,7 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
                   className="rounded-lg w-12 h-12 object-cover"
                   src={profile.avatarUrl}
                 />
-                <span className="absolute bottom-0 right-0 translate-x-1 translate-y-1 bg-green w-3 h-3 rounded-full" />
+                <span className="absolute bottom-0 right-0 translate-x-1 border-2 border-main-blue translate-y-1 bg-green w-3 h-3 rounded-full" />
               </div>
             )}
             {isProfileDropdownToggled ? (
