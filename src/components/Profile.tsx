@@ -1,45 +1,92 @@
 import React, { useEffect, useState } from 'react';
-import { ProfileType } from '../interfaces/profile.interface';
-import { Link } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { profilesService } from '../services/profiles.service';
+import { useQuery } from 'react-query';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import DisconnectModal from './modals/DisconnectModal';
+import useAuth from '../hooks/useAuth';
 
 interface ProfileProps {
-  profile: ProfileType;
+  userId: string;
 }
 
-const Profile = ({ profile }: ProfileProps): JSX.Element => {
-  const [userAvatarUrl, setUserAvatarUrl] = useState<string>();
+const Profile = ({ userId }: ProfileProps): JSX.Element => {
+  const { signOut } = useAuth();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [isProfileDropdownToggled, setIsProfileDropdownToggled] =
+    useState<boolean>(false);
+  const [isDisconnectModalOpened, setIsDisconnectModalOpened] =
+    useState<boolean>(false);
+
+  const { data: profile } = useQuery(['profile', userId], () =>
+    profilesService.getProfile(userId),
+  );
+
+  const handleDisconnect = (): void => {
+    signOut();
+    navigate('/');
+  };
 
   useEffect(() => {
-    const getAvatar = async () => {
-      const { data, error } = await supabase.storage
-        .from('users')
-        .createSignedUrl(`${profile.userId}/avatar`, 3600);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setUserAvatarUrl(data.signedUrl);
-    };
-
-    getAvatar();
-  }, []);
+    setIsProfileDropdownToggled(false);
+  }, [location]);
 
   return (
-    <Link to="/profile">
-      <div className="cursor-pointer w-fit gap-8 py-2 px-4 border border-light-blue rounded-lg bg-main-blue flex items-center justify-between hover:border-accent-blue transition-colors">
-        <span className="text-white font-medium font-raleway">
-          {profile.username}
-        </span>
-        <img
-          className="rounded-xl w-12 h-12 object-cover"
-          src={userAvatarUrl}
-          alt=""
+    <>
+      {isDisconnectModalOpened && (
+        <DisconnectModal
+          onClose={(): void => setIsDisconnectModalOpened(false)}
+          onDisconnect={(): void => handleDisconnect()}
         />
-      </div>
-    </Link>
+      )}
+      {profile && (
+        <div className="relative">
+          <div
+            onClick={() => setIsProfileDropdownToggled((value) => !value)}
+            className="cursor-pointer w-fit gap-4 py-2 px-4 border border-light-blue rounded-lg bg-main-blue flex items-center justify-between hover:border-accent-blue transition-colors"
+          >
+            {profile.avatarUrl && (
+              <div className="relative">
+                <img
+                  className="rounded-lg w-12 h-12 object-cover"
+                  src={profile.avatarUrl}
+                />
+                <span className="absolute bottom-0 right-0 translate-x-1 translate-y-1 bg-green w-3 h-3 rounded-full" />
+              </div>
+            )}
+            {isProfileDropdownToggled ? (
+              <IoIosArrowUp className="text-white text-lg" />
+            ) : (
+              <IoIosArrowDown className="text-white text-lg" />
+            )}
+          </div>
+          {isProfileDropdownToggled && (
+            <div className="absolute z-20 flex flex-col w-full min-w-[250px] right-0 translate-y-4 bg-main-blue border rounded-lg text-white border-light-blue">
+              <span className="w-full border-light-blue border-b p-4 text-white font-medium text-md">
+                Bonjour {profile.username} 👋
+              </span>
+              <ul className="w-full border-light-blue text-sm  p-4 text-white text-md flex flex-col gap-4">
+                <li>
+                  <Link to="/profile">Mon profil</Link>
+                </li>
+                <li>
+                  <Link to="/settings">Préférences</Link>
+                </li>
+                <li
+                  onClick={() => setIsDisconnectModalOpened(true)}
+                  className="text-red cursor-pointer"
+                >
+                  Se déconnecter
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

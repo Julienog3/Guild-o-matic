@@ -27,12 +27,12 @@ const AuthModal = ({ onClose }: AuthModalProps): JSX.Element => {
     {
       type: AuthModalTypeEnum.LOGIN,
       title: 'Connexion',
-      component: <LoginModal />,
+      component: <LoginModal onClose={onClose} />,
     },
     {
       type: AuthModalTypeEnum.SIGN_UP,
       title: 'Inscription',
-      component: <SignUpModal />,
+      component: <SignUpModal onClose={onClose} />,
     },
   ];
 

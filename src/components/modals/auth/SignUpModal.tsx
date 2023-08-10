@@ -12,7 +12,11 @@ interface Credentials {
   repeatedPassword: string;
 }
 
-const SignUpModal = (): JSX.Element => {
+interface SignUpModalProps {
+  onClose: () => void;
+}
+
+const SignUpModal = ({ onClose }: SignUpModalProps): JSX.Element => {
   const { session, signUp, error } = useAuth();
 
   const handleSubmit = (event: FormEvent, credentials: Credentials) => {
@@ -20,11 +24,11 @@ const SignUpModal = (): JSX.Element => {
     signUp(credentials);
   };
 
-  // useEffect(() => {
-  //   if (session.user) {
-  //     onClose();
-  //   }
-  // }, [session]);
+  useEffect(() => {
+    if (session?.user) {
+      onClose();
+    }
+  }, [session]);
 
   return <SignUpForm onSubmit={handleSubmit} error={error} />;
 };

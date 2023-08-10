@@ -35,10 +35,10 @@ const router = createBrowserRouter([
         path: 'profile',
         element: <Profile />,
       },
-      // {
-      //   path: 'settings',
-      //   element: <Settings />,
-      // },
+      {
+        path: 'settings',
+        element: <Settings />,
+      },
     ],
   },
 ]);

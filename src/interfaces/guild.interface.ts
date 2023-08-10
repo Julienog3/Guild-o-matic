@@ -1,5 +1,5 @@
 export interface GuildType {
-  id: number;
+  id: string;
   tag?: string;
   memberCount?: number;
   numberCapacity?: number;

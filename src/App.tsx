@@ -19,6 +19,7 @@ import Toaster from "./components/layout/toaster/Toaster";
 import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal";
 import { AuthModalContext } from "./contexts/AuthModalContext";
 import ChangelogModal from "./components/modals/ChangelogModal";
+import useAuth from "./hooks/useAuth";
 
 export type SidebarButtonType = {
   name: string;
@@ -29,30 +30,13 @@ export type SidebarButtonType = {
 }
 
 function App() {
-  const queryClient = new QueryClient()
-  const [session, setSession] = useState<Session>({} as Session)
+  const [queryClient] = useState(() => new QueryClient())
   const [modal, setModal] = useState<Modal>({} as Modal)
   const [notifications, setNotifications] = useState<Notification[]>([ ])
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
   const [isChangelogModalOpened, setIsChangelogModalOpened] =
     useState<boolean>(false);
-
-  useEffect(() => {
-    const getSession = async () => {
-      const { data, error } = await supabase.auth.getSession()
-
-      if (error) {
-        return
-      }
-  
-      if (data.session) {
-        setSession(data.session)
-      }
-    } 
-
-    getSession()
-  }, [])
 
   const sidebarButtons: SidebarButtonType[] = [
     {
@@ -76,27 +60,21 @@ function App() {
       link: '/guilds/add',
       isAuthNeeded: true
     },
-    // {
-    //   name: 'settings',
-    //   icon: <BsFillGearFill />,
-    //   link: '/settings'
-    // },
   ]
 
   return (
-    <AuthContext.Provider value={{ session, setSession }}>
-      <AuthModalContext.Provider
-        value={{
-          isOpen: isAuthModalOpened,
-          setIsOpen: setIsAuthModalOpened,
-          type: authModalType,
-          setType: setAuthModalType,
-        }}
-      >
+    <QueryClientProvider client={queryClient}>
+    <AuthModalContext.Provider
+      value={{
+        isOpen: isAuthModalOpened,
+        setIsOpen: setIsAuthModalOpened,
+        type: authModalType,
+        setType: setAuthModalType,
+      }}
+    >
       <AuthModal onClose={() => setIsAuthModalOpened(false)} />
       <NotificationContext.Provider value={{ notifications, setNotifications}}>
       <ModalContext.Provider value={{ modal, setModal }}>
-        <QueryClientProvider client={queryClient}>
           {isChangelogModalOpened && <ChangelogModal onClose={(): void => setIsChangelogModalOpened(false)} />}
            <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Toaster />
@@ -111,11 +89,10 @@ function App() {
               <Footer />
             </div>
           </div>
-        </QueryClientProvider>
       </ModalContext.Provider>
       </NotificationContext.Provider>
-      </AuthModalContext.Provider>
-    </AuthContext.Provider>
+    </AuthModalContext.Provider>
+    </QueryClientProvider>
   )
 }
 

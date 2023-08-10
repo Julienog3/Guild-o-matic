@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Page from '../components/layout/Page';
 import useAuth from '../hooks/useAuth';
 import { supabase } from '../supabaseClient';
@@ -7,22 +7,21 @@ import DisconnectModal from '../components/modals/DisconnectModal';
 import { useNavigate } from 'react-router-dom';
 import { FaPen } from 'react-icons/fa';
 import { BsCheckLg } from 'react-icons/bs';
-import { v4 as uuidv4 } from 'uuid';
+import { NotificationContext } from '../contexts/NotificationContext';
+import { NotificationEnum } from '../interfaces/notification.interface';
 
 const Profile = (): JSX.Element => {
   const [userProfile, setUserProfile] = useState<any>();
   const [playerInformations, setPlayerInformations] = useState<any>();
-  const [isDisconnectModalOpened, setIsDisconnectModalOpened] =
-    useState<boolean>(false);
 
-  const { session, signOut } = useAuth();
+  const { session } = useAuth();
 
   const [userApiKey, setUserApiKey] = useState<string>('');
   const [isApiKeyEditing, setIsApiKeyEditing] = useState<boolean>(false);
   const [selectedAvatar, setSelectedAvatar] = useState<File>();
   const [preview, setPreview] = useState<string>();
-
-  const navigate = useNavigate();
+  const { notifications, setNotifications } = useContext(NotificationContext);
+  const [userAvatarUrl, setUserAvatarUrl] = useState<string>();
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -33,16 +32,22 @@ const Profile = (): JSX.Element => {
   };
 
   const uploadAvatar = async (avatar: File) => {
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from('users')
-      .upload(`${session.user.id}/avatar`, avatar);
+      .upload(`${session?.user.id}/avatar`, avatar, {
+        cacheControl: '3600',
+        upsert: true,
+      });
 
     if (error) {
-      console.error(error);
-      return;
+      setNotifications([
+        ...notifications,
+        {
+          type: NotificationEnum.DANGER,
+          message: error.message,
+        },
+      ]);
     }
-
-    console.log(data);
   };
 
   useEffect(() => {
@@ -59,7 +64,7 @@ const Profile = (): JSX.Element => {
   }, [selectedAvatar]);
 
   useEffect(() => {
-    if (!session.user) {
+    if (!session?.user) {
       return setUserProfile(undefined);
     }
 
@@ -74,10 +79,25 @@ const Profile = (): JSX.Element => {
       }
 
       const formattedData = keysToCamel(data);
+      console.log(formattedData);
       setUserProfile(formattedData[0]);
     };
 
+    const getAvatar = async () => {
+      const { data, error } = await supabase.storage
+        .from('users')
+        .createSignedUrl(`${session.user.id}/avatar`, 3600);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setUserAvatarUrl(data.signedUrl);
+    };
+
     getProfile();
+    getAvatar();
   }, [session]);
 
   useEffect(() => {
@@ -87,11 +107,6 @@ const Profile = (): JSX.Element => {
 
     setUserApiKey(userProfile.apiKey);
   }, [userProfile]);
-
-  const handleDisconnect = (): void => {
-    signOut();
-    navigate('/');
-  };
 
   useEffect(() => {
     if (!userProfile) {
@@ -116,17 +131,16 @@ const Profile = (): JSX.Element => {
 
   return (
     <>
-      {isDisconnectModalOpened && (
-        <DisconnectModal
-          onClose={(): void => setIsDisconnectModalOpened(false)}
-          onDisconnect={(): void => handleDisconnect()}
-        />
-      )}
       {userProfile && (
         <Page>
           <div className="max-w-7xl mx-auto mb-8 flex flex-col">
-            <div className="w-full border-b border-light-blue mb-4">
-              <h2 className="text-4xl font-raleway font-semibold text-white mb-4">
+            <div className="w-full flex gap-4 items-end border-b border-light-blue mb-4 pb-4">
+              <img
+                className="w-32 h-32 rounded-lg object-cover"
+                src={userAvatarUrl}
+                alt=""
+              />
+              <h2 className="text-3xl font-raleway font-semibold text-white mb-4">
                 Profil de {userProfile.username}
               </h2>
             </div>
@@ -176,7 +190,7 @@ const Profile = (): JSX.Element => {
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   {preview ? (
                     <img
-                      className="w-20 overflow-hidden rounded-lg mb-4"
+                      className=" w-28 overflow-hidden rounded-lg mb-4"
                       src={preview}
                     />
                   ) : (
@@ -196,11 +210,11 @@ const Profile = (): JSX.Element => {
                       />
                     </svg>
                   )}
-                  <p className="mb-2 text-sm text-white dark:text-gray-400">
+                  <p className="mb-2 text-white dark:text-gray-400">
                     <span className="font-semibold">Click to upload</span> or
                     drag and drop
                   </p>
-                  <p className="text-xs text-white dark:text-gray-400">
+                  <p className="text-xs text-white">
                     SVG, PNG, JPG or GIF (MAX. 800x400px)
                   </p>
                 </div>
@@ -231,12 +245,6 @@ const Profile = (): JSX.Element => {
                 Upload avatar
               </button>
             </div>
-            <button
-              className="bg-red/25 border border-red font-medium text-white p-4 rounded-lg w-fit"
-              onClick={(): void => setIsDisconnectModalOpened(true)}
-            >
-              Déconnecter
-            </button>
           </div>
         </Page>
       )}

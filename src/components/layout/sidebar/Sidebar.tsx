@@ -18,11 +18,7 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
   );
 
   useEffect(() => {
-    if (!session) {
-      return;
-    }
-
-    if (session.user) {
+    if (session?.user) {
       setFilteredButtons(buttons);
     } else {
       setFilteredButtons(
@@ -40,9 +36,9 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
       <span className="mt-4 text-2xl text-white sm:block hidden">
         <BsShieldShaded />
       </span>
-      <div className="sm:mt-8 flex sm:flex-col gap-4 ">
-        {filteredButtons &&
-          filteredButtons.map((button) => {
+      {filteredButtons && (
+        <div className="sm:mt-8 flex sm:flex-col gap-4 ">
+          {filteredButtons.map((button) => {
             return (
               <SidebarButton
                 label={button.label}
@@ -53,7 +49,8 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
               />
             );
           })}
-      </div>
+        </div>
+      )}
     </aside>
   );
 };

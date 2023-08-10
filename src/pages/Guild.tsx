@@ -9,6 +9,7 @@ import GuildPresentation from '../components/guild/tabs/GuildPresentation';
 import GuildConditions from '../components/guild/tabs/GuildConditions';
 import GuildTabs from '../components/guild/GuildTabs';
 import { BsDiscord } from 'react-icons/bs';
+import { supabase } from '../supabaseClient';
 
 export type Tab = {
   name: string,
@@ -20,6 +21,7 @@ function Guild(): JSX.Element {
   const { guildId } = useParams();
   const [guildDetails, setGuildDetails] = useState<GuildType>();
   const [categories, setCategories] = useState<any[]>([]);
+  const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
 
   const { data } = useQuery(['guilds', guildId], () => {
     if (guildId) {
@@ -45,6 +47,19 @@ function Guild(): JSX.Element {
       return;
     }
 
+    const getGuildBackgroundUrl = async (guildId: string) => {
+      const { data, error } = await supabase.storage
+        .from('guilds')
+        .createSignedUrl(`${guildId}/background`, 3600);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setGuildBackgroundUrl(data.signedUrl);
+    };
+
     gw2Service.getGuildById(data.guildId).then((res) => {
       setGuildDetails(res);
     });
@@ -53,7 +68,7 @@ function Guild(): JSX.Element {
       setCategories(res);
     });
 
-    console.log(data.discordLink);
+    getGuildBackgroundUrl(data.id);
   }, [data]);
 
   return (
@@ -97,7 +112,7 @@ function Guild(): JSX.Element {
         <div className="absolute z-0 top-0 left-0 w-full h-full guild-card__image">
           <img
             className="absolute h-full object-cover w-full"
-            src="/images/bg-home.jpg"
+            src={guildBackgroundUrl}
             alt=""
           />
         </div>

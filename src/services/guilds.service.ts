@@ -19,8 +19,6 @@ export const guildsService = {
 
     return Promise.all(
       guilds.map(async (guild) => {
-        console.log(guild.name, guild.guildId);
-
         const gw2Guild = await gw2Service
           .getGuildById(guild.guildId)
           .then((gw2Guild) => {
@@ -62,8 +60,6 @@ export const guildsService = {
   getGuildCountByGameId: async (
     guildId: string,
   ): Promise<number | undefined> => {
-    console.log(guildId);
-
     const { count, error } = await supabase
       .from('guilds')
       .select('*', { count: 'exact' })
@@ -75,7 +71,7 @@ export const guildsService = {
 
     return keysToCamel(count);
   },
-  getGuildCategoriesById: async (id: number): Promise<any> => {
+  getGuildCategoriesById: async (id: string): Promise<any> => {
     const { data, error } = await supabase
       .from('guilds_category')
       .select('categories (name)')
@@ -107,8 +103,6 @@ export const guildsService = {
         guild.categories,
       );
     }
-
-    console.log(data);
   },
   getGuildCategory: async (
     categoryName: string,

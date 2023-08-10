@@ -110,11 +110,13 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
           </div>
         </div>
         <div className="absolute top-0 left-0 w-full h-full guild-card__image">
-          <img
-            className="absolute h-full object-cover w-full group-hover:scale-110 transition-transform"
-            src={guildBackgroundUrl}
-            alt=""
-          />
+          {guildBackgroundUrl && (
+            <img
+              className="absolute h-full object-cover w-full group-hover:scale-110 transition-transform"
+              src={guildBackgroundUrl}
+              alt=""
+            />
+          )}
         </div>
       </div>
       <div className="p-4 flex justify-between">
