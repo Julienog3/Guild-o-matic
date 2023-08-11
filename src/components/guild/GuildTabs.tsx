@@ -7,7 +7,7 @@ interface GuildTabsProps {
 
 const GuildTabs = ({ tabs }: GuildTabsProps): JSX.Element => {
   const [guildTabIndex, setGuildTabIndex] = useState<number>(0);
-  const tabComponent = tabs[guildTabIndex].component;
+  const { component } = tabs[guildTabIndex];
 
   return (
     <>
@@ -28,7 +28,7 @@ const GuildTabs = ({ tabs }: GuildTabsProps): JSX.Element => {
           );
         })}
       </ul>
-      {tabComponent}
+      {component}
     </>
   );
 };
