@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { BsFillJournalBookmarkFill, BsShieldShaded } from 'react-icons/bs';
+import { BiShield } from 'react-icons/bi';
 import SidebarButton from './SidebarButton';
 import { SidebarButtonType } from '../../../App';
 import useAuth from '../../../hooks/useAuth';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import ChangelogModal from '../../modals/ChangelogModal';
+import { useQuery } from 'react-query';
+import { guildsService } from '../../../services/guilds.service';
+import { GuildType } from '../../../interfaces/guild.interface';
 
 interface SidebarProps {
   buttons: SidebarButtonType[];
@@ -22,6 +26,14 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
   const [filteredButtons, setFilteredButtons] = useState<SidebarButtonType[]>(
     [],
   );
+
+  const userId = session ? session?.user.id : '';
+
+  const { data: userGuilds } = useQuery({
+    queryKey: ['userGuilds', userId],
+    queryFn: () => guildsService.getUserGuilds(userId),
+    enabled: !!userId,
+  });
 
   useEffect(() => {
     if (session?.user) {
@@ -82,20 +94,21 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
             <span className="font-medium text-sm flex gap-2">
               Mes guildes
               <div className=" w-5 h-5  text-xs flex items-center justify-center text-white bg-accent-blue rounded-full">
-                3
+                {userGuilds?.length}
               </div>
             </span>
-            <ul className="flex flex-col gap-4">
-              <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
-                Ordres Des Phoenix
-              </li>
-              <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
-                Oblivious
-              </li>
-              <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
-                Fraternité tyrienne
-              </li>
-            </ul>
+            {userGuilds?.length && (
+              <ul className="flex flex-col gap-4">
+                {userGuilds.map((guild: GuildType) => (
+                  <Link key={guild.id} to={`/guilds/${guild.id}`}>
+                    <li className="flex gap-2 items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
+                      <BiShield />
+                      {guild.name}
+                    </li>
+                  </Link>
+                ))}
+              </ul>
+            )}
           </div>
         )}
         <div className="rounded-md flex flex-col items-center justify-center  relative overflow-hidden h-56 w-full bg-bg-blue border border-light-blue p-4 my-6">
@@ -105,7 +118,7 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
           </p>
           <button
             onClick={(): void => setIsChangelogModalOpened(true)}
-            className="w-full text-white text-sm bg-accent-blue p-4 rounded-md"
+            className="w-full text-white text-sm bg-accent-blue p-3 rounded-md"
           >
             Voir changelogs
           </button>
