@@ -77,25 +77,27 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
             })}
           </div>
         )}
-        <div className="flex flex-col text-light-gray gap-4 w-full border-b border-light-blue py-6">
-          <span className="font-medium text-sm flex gap-2">
-            Mes guildes
-            <div className=" w-5 h-5  text-xs flex items-center justify-center text-white bg-accent-blue rounded-full">
-              3
-            </div>
-          </span>
-          <ul className="flex flex-col gap-4">
-            <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
-              Ordres Des Phoenix
-            </li>
-            <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
-              Oblivious
-            </li>
-            <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
-              Fraternité tyrienne
-            </li>
-          </ul>
-        </div>
+        {session?.user && (
+          <div className="flex flex-col text-light-gray gap-4 w-full border-b border-light-blue py-6">
+            <span className="font-medium text-sm flex gap-2">
+              Mes guildes
+              <div className=" w-5 h-5  text-xs flex items-center justify-center text-white bg-accent-blue rounded-full">
+                3
+              </div>
+            </span>
+            <ul className="flex flex-col gap-4">
+              <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
+                Ordres Des Phoenix
+              </li>
+              <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
+                Oblivious
+              </li>
+              <li className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
+                Fraternité tyrienne
+              </li>
+            </ul>
+          </div>
+        )}
         <div className="rounded-md flex flex-col items-center justify-center  relative overflow-hidden h-56 w-full bg-bg-blue border border-light-blue p-4 my-6">
           <BsFillJournalBookmarkFill className="text-white text-4xl mb-4" />
           <p className="w-auto text-sm text-center text-light-gray mb-6">
