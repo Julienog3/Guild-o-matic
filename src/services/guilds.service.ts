@@ -8,11 +8,11 @@ import { keysToCamel, keysToSnake } from '../utils/helpers';
 import { gw2Service } from './gw2.service';
 
 export const guildsService = {
-  getGuilds: async (): Promise<GuildType[] | undefined> => {
+  getGuilds: async (): Promise<GuildType[]> => {
     const { data, error } = await supabase.from('guilds').select('*');
 
     if (error) {
-      return;
+      throw new Error("Can't fetch guilds");
     }
 
     const guilds: GuildType[] = keysToCamel(data);
@@ -38,9 +38,18 @@ export const guildsService = {
               }, {});
           });
 
+        const guildCategories = await guildsService
+          .getGuildCategoriesById(guild.id)
+          .then((categories) => {
+            return categories.map((category: any) => category.categories.name);
+          });
+
+        console.log('guildCategories', guildCategories);
+
         return {
           ...guild,
           ...gw2Guild,
+          categories: guildCategories,
         };
       }),
     );
@@ -112,6 +121,8 @@ export const guildsService = {
     return keysToCamel(count);
   },
   getGuildCategoriesById: async (id: string): Promise<any> => {
+    console.log('id', id);
+
     const { data, error } = await supabase
       .from('guilds_category')
       .select('categories (name)')

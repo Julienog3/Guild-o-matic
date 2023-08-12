@@ -122,7 +122,7 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
       <div className="p-4 flex justify-between">
         <div className="flex gap-4 items-center">
           <img
-            className="rounded-xl w-10 h-10"
+            className="rounded-xl w-10 h-10 object-cover"
             src={guildOwnerAvatarUrl}
             alt=""
           />
