@@ -42,10 +42,14 @@ function Guilds() {
     [filter],
   );
 
-  const { data: guilds } = useQuery(['guilds'], guildsService.getGuilds, {
-    retry: 2,
-    select: filterGuildByCategories,
-  });
+  const { data: guilds, isLoading } = useQuery(
+    ['guilds'],
+    guildsService.getGuilds,
+    {
+      retry: 2,
+      select: filterGuildByCategories,
+    },
+  );
 
   const [isDisplayList, setIsDisplayList] = useState<boolean>(false);
 
@@ -98,13 +102,7 @@ function Guilds() {
             </button>
           </div>
         </div>
-        {guilds?.length ? (
-          isDisplayList ? (
-            <GuildList guilds={guilds} />
-          ) : (
-            <GuildCards guilds={guilds} />
-          )
-        ) : (
+        {isLoading ? (
           <div className=" text-light-gray flex items-center justify-center text-sm w-full">
             <div role="status">
               <svg
@@ -126,6 +124,20 @@ function Guilds() {
             </div>
             Le guild-o-matic recherche les meilleurs guildes
           </div>
+        ) : (
+          <>
+            {guilds ? (
+              isDisplayList ? (
+                <GuildList guilds={guilds} />
+              ) : (
+                <GuildCards guilds={guilds} />
+              )
+            ) : (
+              <div className=" text-light-gray flex items-center justify-center text-sm w-full">
+                Nous n&apos;avons pas trouver de guildes
+              </div>
+            )}
+          </>
         )}
       </div>
     </Page>

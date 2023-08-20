@@ -21,7 +21,7 @@ const SidebarButton = ({
       <div
         className={`${
           isActive ? 'bg-accent-blue text-white' : 'hover:bg-light-blue'
-        } flex items-center text-light-gray text-sm gap-5  py-4 px-5 rounded-md`}
+        } flex transition items-center text-light-gray text-sm gap-5  py-4 px-5 rounded-md`}
       >
         <div
           onMouseEnter={() => setIsButtonHovered(true)}

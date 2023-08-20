@@ -4,6 +4,7 @@ import LoginModal from './LoginModal';
 import SignUpModal from './SignUpModal';
 import { AuthModalContext } from '../../../contexts/AuthModalContext';
 import ResetPasswordModal from './ResetPasswordModal';
+import SignUpConfirmationModal from './SignupConfirmationModal';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -13,6 +14,7 @@ export enum AuthModalTypeEnum {
   RESET_PASSWORD = 'resetPassword',
   LOGIN = 'login',
   SIGN_UP = 'signUp',
+  SIGN_UP_CONFIRMATION = 'signUpConfirmation',
 }
 
 const AuthModal = ({ onClose }: AuthModalProps): JSX.Element => {
@@ -33,6 +35,11 @@ const AuthModal = ({ onClose }: AuthModalProps): JSX.Element => {
       type: AuthModalTypeEnum.SIGN_UP,
       title: 'Inscription',
       component: <SignUpModal onClose={onClose} />,
+    },
+    {
+      type: AuthModalTypeEnum.SIGN_UP_CONFIRMATION,
+      title: 'Confirmation',
+      component: <SignUpConfirmationModal onClose={onClose} />,
     },
   ];
 

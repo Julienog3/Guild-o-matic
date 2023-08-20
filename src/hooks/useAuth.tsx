@@ -7,7 +7,6 @@ import { useQuery } from 'react-query';
 import { authService } from '../services/auth.service';
 
 const useAuth = () => {
-  // const { session, setSession } = useContext(AuthContext);
   const [error, setError] = useState<AuthError>();
 
   const { data: session, refetch } = useQuery(
@@ -65,8 +64,6 @@ const useAuth = () => {
     if (error) {
       return setError(error);
     }
-
-    // setSession({} as Session)
   };
 
   return { session, error, signIn, signUp, signOut, resetPassword };

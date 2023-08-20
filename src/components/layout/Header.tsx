@@ -10,6 +10,8 @@ const Header = (): JSX.Element => {
   const { setType, setIsOpen } = useContext(AuthModalContext);
   const { session } = useAuth();
 
+  console.log(session?.user.id);
+
   return (
     <>
       <header className="z-10 max-w-7xl w-full mx-auto pb-0 flex justify-between items-center">

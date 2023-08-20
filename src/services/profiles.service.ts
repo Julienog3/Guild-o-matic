@@ -17,8 +17,10 @@ export const profilesService = {
 
     const formattedData = {
       ...keysToCamel(data[0]),
-      avatarUrl: userAvatar,
+      ...(userAvatar && { avatarUrl: userAvatar }),
     };
+    console.log(formattedData);
+
     return formattedData;
   },
   postProfile: async (user: any): Promise<any> => {
@@ -31,13 +33,14 @@ export const profilesService = {
       return;
     }
   },
-  getUserAvatar: async (userId: string): Promise<string> => {
+  getUserAvatar: async (userId: string): Promise<string | undefined> => {
     const { data, error } = await supabase.storage
       .from('users')
       .createSignedUrl(`${userId}/avatar`, 3600);
 
     if (error) {
-      throw new Error("Can't fetch user avatar");
+      // throw new Error("Can't fetch user avatar");
+      return;
     }
 
     return data.signedUrl;

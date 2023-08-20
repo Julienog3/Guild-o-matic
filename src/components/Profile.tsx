@@ -31,6 +31,10 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
   };
 
   useEffect(() => {
+    console.log('profile', profile);
+  }, [profile]);
+
+  useEffect(() => {
     setIsProfileDropdownToggled(false);
   }, [location]);
 
@@ -48,15 +52,19 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
             onClick={() => setIsProfileDropdownToggled((value) => !value)}
             className="cursor-pointer w-fit gap-4 py-2 px-4 border border-light-blue rounded-lg bg-main-blue flex items-center justify-between hover:border-accent-blue transition-colors"
           >
-            {profile.avatarUrl && (
-              <div className="relative">
-                <img
-                  className="rounded-lg w-12 h-12 object-cover"
-                  src={profile.avatarUrl}
-                />
-                <span className="absolute bottom-0 right-0 translate-x-1 border-2 border-main-blue translate-y-1 bg-green w-3 h-3 rounded-full" />
+            <div className="relative">
+              <div className="rounded-lg overflow-hidden w-12 h-12 bg-light-blue">
+                {profile.avatarUrl && (
+                  <img
+                    className="object-cover w-full h-full"
+                    src={profile.avatarUrl}
+                  />
+                )}
               </div>
-            )}
+
+              <span className="absolute bottom-0 right-0 translate-x-1 border-2 border-main-blue translate-y-1 bg-green w-3 h-3 rounded-full" />
+            </div>
+
             {isProfileDropdownToggled ? (
               <IoIosArrowUp className="text-white text-lg" />
             ) : (

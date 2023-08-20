@@ -35,6 +35,7 @@ function App() {
   const [notifications, setNotifications] = useState<Notification[]>([ ])
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
+  const [authModalSignUpEmail, setAuthModalSignUpEmail] = useState<string>();
 
   const sidebarButtons: SidebarButtonType[] = [
     {
@@ -68,6 +69,8 @@ function App() {
         setIsOpen: setIsAuthModalOpened,
         type: authModalType,
         setType: setAuthModalType,
+        signUpEmail: authModalSignUpEmail,
+        setSignUpEmail: setAuthModalSignUpEmail,
       }}
     >
       <AuthModal onClose={() => setIsAuthModalOpened(false)} />

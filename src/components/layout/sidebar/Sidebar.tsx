@@ -97,7 +97,7 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
                 {userGuilds?.length}
               </div>
             </span>
-            {userGuilds?.length && (
+            {userGuilds && userGuilds?.length > 0 ? (
               <ul className="flex flex-col gap-4">
                 {userGuilds.map((guild: GuildType) => (
                   <Link key={guild.id} to={`/guilds/${guild.id}`}>
@@ -108,10 +108,16 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
                   </Link>
                 ))}
               </ul>
+            ) : (
+              <Link to="/guilds/add">
+                <div className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
+                  Ajouter une guilde
+                </div>
+              </Link>
             )}
           </div>
         )}
-        <div className="rounded-md flex flex-col items-center justify-center  relative overflow-hidden h-56 w-full bg-bg-blue border border-light-blue p-4 my-6">
+        {/* <div className="rounded-md flex flex-col items-center justify-center  relative overflow-hidden h-56 w-full bg-bg-blue border border-light-blue p-4 my-6">
           <BsFillJournalBookmarkFill className="text-white text-4xl mb-4" />
           <p className="w-auto text-sm text-center text-light-gray mb-6">
             Suivez la progression du projet
@@ -122,7 +128,7 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
           >
             Voir changelogs
           </button>
-        </div>
+        </div> */}
       </aside>
     </>
   );
