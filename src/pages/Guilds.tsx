@@ -15,7 +15,7 @@ export type GuildsFilterType = {
   name: string,
 };
 
-function Guilds() {
+export default function Guilds() {
   const [filter, setFilter] = useState<GuildsFilterType>({
     categories: [],
     isRecruiting: false,
@@ -143,5 +143,3 @@ function Guilds() {
     </Page>
   );
 }
-
-export default Guilds;
