@@ -19,6 +19,15 @@ export const guildsService = {
 
     return Promise.all(
       guilds.map(async (guild) => {
+        const { data: ownerProfile } = await supabase
+          .from('profiles')
+          .select('api_key')
+          .eq('user_id', guild.ownerId);
+
+        if (!ownerProfile) {
+          return;
+        }
+
         const gw2Guild = await gw2Service
           .getGuildById(guild.guildId)
           .then((gw2Guild) => {
@@ -43,8 +52,6 @@ export const guildsService = {
           .then((categories) => {
             return categories.map((category: any) => category.categories.name);
           });
-
-        console.log('guildCategories', guildCategories);
 
         return {
           ...guild,
@@ -121,8 +128,6 @@ export const guildsService = {
     return keysToCamel(count);
   },
   getGuildCategoriesById: async (id: string): Promise<any> => {
-    console.log('id', id);
-
     const { data, error } = await supabase
       .from('guilds_category')
       .select('categories (name)')
@@ -154,6 +159,8 @@ export const guildsService = {
         guild.categories,
       );
     }
+
+    return keysToCamel(data[0]);
   },
   getGuildCategory: async (
     categoryName: string,
@@ -191,8 +198,6 @@ export const guildsService = {
       if (error) {
         return;
       }
-
-      console.log(data);
     });
   },
 };

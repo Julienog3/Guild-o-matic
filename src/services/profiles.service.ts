@@ -19,7 +19,6 @@ export const profilesService = {
       ...keysToCamel(data[0]),
       ...(userAvatar && { avatarUrl: userAvatar }),
     };
-    console.log(formattedData);
 
     return formattedData;
   },

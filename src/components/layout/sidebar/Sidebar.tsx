@@ -82,6 +82,7 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
                   label={button.label}
                   key={button.name}
                   to={button.link}
+                  onClick={button.onClick}
                   isActive={isButtonActive(button)}
                   icon={button.icon}
                 />

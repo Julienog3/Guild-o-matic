@@ -19,6 +19,7 @@ export interface GuildPayloadInterface {
   isRecruiting: boolean;
   guildId: string;
   discordLink?: string;
+  illustration?: File;
   categories: GuildCategoryEnum[];
   ownerId: string;
 }

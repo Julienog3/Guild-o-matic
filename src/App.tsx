@@ -1,38 +1,35 @@
 import { Outlet } from "react-router-dom"
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Sidebar from "./components/layout/sidebar/Sidebar";
 import Header from "./components/layout/Header";
 import { AiFillHome, AiOutlinePlus } from "react-icons/ai";
 import { BsFillGearFill, BsFillShieldFill } from "react-icons/bs";
-import LoginModal from "./components/modals/auth/LoginModal";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { AuthContext } from "./contexts/AuthContext";
-import { Session } from "@supabase/supabase-js";
 import { ModalContext } from "./contexts/ModalContext";
 import { NotificationContext } from "./contexts/NotificationContext";
-import { Modal, ModalType } from "./interfaces/modal.interface";
+import { Modal } from "./interfaces/modal.interface";
 import Footer from "./components/layout/Footer";
-import { supabase } from "./supabaseClient";
 import { IoMdWarning } from "react-icons/io";
-import { Notification, NotificationEnum } from "./interfaces/notification.interface";
+import { Notification } from "./interfaces/notification.interface";
 import Toaster from "./components/layout/toaster/Toaster";
 import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal";
 import { AuthModalContext } from "./contexts/AuthModalContext";
-import ChangelogModal from "./components/modals/ChangelogModal";
-import useAuth from "./hooks/useAuth";
+import AddingGuildModal from "./components/modals/AddingGuildModal/AddingGuildModal";
 
 export type SidebarButtonType = {
   name: string;
   label: string;
   icon: React.ReactNode;
-  link: string;
+  link?: string;
+  onClick?: () => void;
   isAuthNeeded?: boolean;
 }
 
 function App() {
   const [queryClient] = useState(() => new QueryClient())
   const [modal, setModal] = useState<Modal>({} as Modal)
-  const [notifications, setNotifications] = useState<Notification[]>([ ])
+  const [isAddingGuildModalOpened, setIsAddingGuildModalOpened] = useState<boolean>(false)
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
   const [authModalSignUpEmail, setAuthModalSignUpEmail] = useState<string>();
@@ -56,13 +53,14 @@ function App() {
       name: 'add-guild',
       label: 'Ajouter une guilde',
       icon: <AiOutlinePlus />,
-      link: '/guilds/add',
+      onClick: () => setIsAddingGuildModalOpened(true),
       isAuthNeeded: true
     },
   ]
 
   return (
     <QueryClientProvider client={queryClient}>
+      <NotificationContext.Provider value={{ notifications, setNotifications }}>
     <AuthModalContext.Provider
       value={{
         isOpen: isAuthModalOpened,
@@ -74,7 +72,7 @@ function App() {
       }}
     >
       <AuthModal onClose={() => setIsAuthModalOpened(false)} />
-      <NotificationContext.Provider value={{ notifications, setNotifications}}>
+      {isAddingGuildModalOpened && <AddingGuildModal onClose={() => setIsAddingGuildModalOpened(false)} onSubmit={() => {}}/> }
       <ModalContext.Provider value={{ modal, setModal }}>
            <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Toaster />
@@ -90,8 +88,8 @@ function App() {
             </div>
           </div>
       </ModalContext.Provider>
-      </NotificationContext.Provider>
     </AuthModalContext.Provider>
+    </NotificationContext.Provider>
     </QueryClientProvider>
   )
 }

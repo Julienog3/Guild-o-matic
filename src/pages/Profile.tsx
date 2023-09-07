@@ -79,7 +79,6 @@ const Profile = (): JSX.Element => {
       }
 
       const formattedData = keysToCamel(data);
-      console.log(formattedData);
       setUserProfile(formattedData[0]);
     };
 

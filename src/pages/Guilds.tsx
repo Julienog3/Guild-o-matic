@@ -57,10 +57,6 @@ function Guilds() {
     setFilter(newFilter);
   };
 
-  useEffect(() => {
-    console.log('filter', filter);
-  }, [filter]);
-
   return (
     <Page>
       <div className="max-w-7xl mx-auto">

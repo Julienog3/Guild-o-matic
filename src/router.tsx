@@ -28,10 +28,6 @@ const router = createBrowserRouter([
         element: <Guild />,
       },
       {
-        path: 'guilds/add',
-        element: <AddingGuild />,
-      },
-      {
         path: 'profile',
         element: <Profile />,
       },

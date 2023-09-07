@@ -31,10 +31,6 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
   };
 
   useEffect(() => {
-    console.log('profile', profile);
-  }, [profile]);
-
-  useEffect(() => {
     setIsProfileDropdownToggled(false);
   }, [location]);
 
