@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { GuildType } from '../../interfaces/guild.interface';
-import { guildsService } from '../../services/guilds.service';
-import { supabase } from '../../supabaseClient';
-import { keysToCamel } from '../../utils/helpers';
+import { GuildType } from '../../../interfaces/guild.interface';
+import { guildsService } from '../../../services/guilds.service';
+import { supabase } from '../../../supabaseClient';
+import { keysToCamel } from '../../../utils/helpers';
+import GuildCardStatus from './GuildCardStatus';
 
 interface GuildCardProps {
   guild: GuildType;
@@ -70,26 +71,9 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
 
   return (
     <article className="guild-card bg-light-blue rounded-lg overflow-hidden hover:outline outline-1 outline-accent-blue transition group">
-      <div className="relative h-44 w-full p-6 overflow-hidden flex flex-col ">
+      <div className="relative h-44 w-full p-6 overflow-hidden flex flex-col">
         <div className="relative z-10 flex flex-col h-full justify-between">
-          <div
-            className={`flex gap-4 items-center self-end py-2 px-3 border rounded-full ${
-              guild.isRecruiting
-                ? 'bg-green/25 border-green'
-                : 'bg-red/25 border-red'
-            }`}
-          >
-            <span
-              className={`${
-                guild.isRecruiting ? 'bg-green' : 'bg-red'
-              } w-2 h-2 rounded-full`}
-            />
-            {guild.isRecruiting ? (
-              <p className="text-green text-sm font-medium">Ouvert</p>
-            ) : (
-              <p className="text-red text-sm font-medium">Fermé</p>
-            )}
-          </div>
+          <GuildCardStatus isOpened={guild.isRecruiting} />
           <div className="flex flex-col gap-2">
             <h3 className="text-white font-raleway text-2xl font-semibold">
               {guild.name}

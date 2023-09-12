@@ -60,8 +60,6 @@ const AddingGuildModal = ({
   const mutation = useMutation({
     mutationFn: guildsService.postGuild,
     onSuccess: async (data) => {
-      console.log('data', data);
-
       if (guildToAdd.illustration) {
         await uploadBanner(data.id, guildToAdd.illustration);
       }
@@ -184,7 +182,7 @@ const AddingGuildModal = ({
           onConfirmation={(): void => {}}
         />
       )} */}
-      <Modal title={title} onClose={() => onClose()}>
+      <Modal title="Ajouter une guilde" onClose={() => onClose()}>
         <div className="flex flex-col gap-4">
           <form id="adding-form" className="">
             {component}

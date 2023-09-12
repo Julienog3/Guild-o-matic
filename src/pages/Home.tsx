@@ -1,7 +1,5 @@
 import React from 'react';
 import Page from '../components/layout/Page';
-import LinkedButton from '../components/utils/LinkedButton';
-import GuildFilter from '../components/guilds/GuildFilter';
 import GuildCards from '../components/guilds/GuildCards';
 import { guildsService } from '../services/guilds.service';
 import { useQuery } from 'react-query';

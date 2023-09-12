@@ -55,6 +55,10 @@ const GeneralStep = ({
         })
         .then((guilds) => {
           setGuilds(guilds);
+          handleChange({
+            ...guildPayload,
+            guildId: guilds[0].id,
+          });
         });
     };
 
@@ -84,7 +88,7 @@ const GeneralStep = ({
                 guildId: e.target.value,
               });
             }}
-            className="bg-main-blue text-sm p-4 rounded-lg border border-light-blue text-white"
+            className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white"
           >
             {guilds &&
               guilds.map((guild) => {
@@ -161,7 +165,7 @@ const GeneralStep = ({
           Lien discord
           <input
             type="text"
-            className="bg-main-blue w-full p-4 rounded-lg border text-sm border-light-blue text-white"
+            className="bg-bg-blue w-full p-4 rounded-lg border text-sm border-light-blue text-white"
             placeholder="ex : https://discord.com/invite/..."
             value={guildPayload.discordLink}
             onChange={(e) =>

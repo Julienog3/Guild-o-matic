@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Link, ScrollRestoration, useParams } from 'react-router-dom';
+import React from 'react';
+import { ScrollRestoration, useParams } from 'react-router-dom';
 import Page from '../components/layout/Page';
-import { GuildCategoryEnum, GuildType } from '../interfaces/guild.interface';
 import { useQuery } from 'react-query';
 import { guildsService } from '../services/guilds.service';
-import { gw2Service } from '../services/gw2.service';
 import GuildPresentation from '../components/guild/tabs/GuildPresentation';
 import GuildConditions from '../components/guild/tabs/GuildConditions';
 import GuildTabs from '../components/guild/GuildTabs';
-import { BsDiscord } from 'react-icons/bs';
-import { supabase } from '../supabaseClient';
+import GuildHeader from '../components/guild/GuildHeader';
 
 export type Tab = {
   name: string,
@@ -19,11 +16,8 @@ export type Tab = {
 
 function Guild(): JSX.Element {
   const { guildId } = useParams();
-  const [guildDetails, setGuildDetails] = useState<GuildType>();
-  const [categories, setCategories] = useState<any[]>([]);
-  const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
 
-  const { data } = useQuery(['guilds', guildId], () => {
+  const { data: guild } = useQuery(['guilds', guildId], () => {
     if (guildId) {
       return guildsService.getGuildById(guildId);
     }
@@ -33,90 +27,19 @@ function Guild(): JSX.Element {
     {
       name: 'general',
       label: 'Général',
-      component: <GuildPresentation description={data?.description} />,
+      component: <GuildPresentation description={guild?.description} />,
     },
     {
       name: 'conditions',
       label: 'Conditions',
-      component: <GuildConditions description={data?.description} />,
+      component: <GuildConditions description={guild?.description} />,
     },
   ];
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-
-    const getGuildBackgroundUrl = async (guildId: string) => {
-      const { data, error } = await supabase.storage
-        .from('guilds')
-        .createSignedUrl(`${guildId}/background`, 3600);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setGuildBackgroundUrl(data.signedUrl);
-    };
-
-    gw2Service.getGuildById(data.guildId).then((res) => {
-      setGuildDetails(res);
-    });
-
-    guildsService.getGuildCategoriesById(data.id).then((res) => {
-      setCategories(res);
-    });
-
-    getGuildBackgroundUrl(data.id);
-  }, [data]);
 
   return (
     <Page>
       <ScrollRestoration />
-      <div className="flex flex-col max-w-7xl mx-auto gap-4 mb-4 p-8 justify-end rounded-lg overflow-hidden relative h-64">
-        <div className="flex justify-between items-center">
-          <div className="flex gap-2 items-center justify-between">
-            <div className="flex flex-col gap-4">
-              {guildDetails && (
-                <h2 className="flex z-10 items-center gap-4 text-white text-4xl font-bold">
-                  <span className=" bg-accent-blue/25 border text-xl border-accent-blue font-medium backdrop-blur text-accent-blue py-1 px-3 rounded-lg ">
-                    {guildDetails.tag}
-                  </span>
-                  {guildDetails.name}
-                </h2>
-              )}
-              <div className="flex gap-2">
-                {categories &&
-                  categories.map((category, index) => {
-                    return (
-                      <div
-                        className="bg-light-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
-                        key={index}
-                      >
-                        {category.categories.name}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
-          {data && data.discordLink && (
-            <Link className="z-10" to={data.discordLink}>
-              <span className="flex gap-2 items-center bg-purple/50 p-3 rounded-md border backdrop-blur border-purple text-white text-sm hover:bg-purple transition-all">
-                <BsDiscord /> Lien du serveur discord
-              </span>
-            </Link>
-          )}
-        </div>
-        <div className="absolute z-0 top-0 left-0 w-full h-full guild-card__image">
-          <img
-            className="absolute h-full object-cover w-full"
-            src={guildBackgroundUrl}
-            alt=""
-          />
-        </div>
-      </div>
+      {guild && <GuildHeader guild={guild} />}
       <GuildTabs tabs={tabs} />
     </Page>
   );

@@ -200,4 +200,23 @@ export const guildsService = {
       }
     });
   },
+  removeCategoriesGuild: async (guildId: string): Promise<any> => {
+    const { error } = await supabase
+      .from('guilds_category')
+      .delete()
+      .eq('guild_id', guildId);
+
+    if (error) {
+      return;
+    }
+  },
+  deleteGuild: async (id: string): Promise<void> => {
+    guildsService.removeCategoriesGuild(id).then(async () => {
+      const { error } = await supabase.from('guilds').delete().eq('id', id);
+
+      if (error) {
+        return;
+      }
+    });
+  },
 };
