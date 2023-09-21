@@ -12,6 +12,7 @@ import GuildDeleteModal from '../modals/GuildDeleteModal';
 import { useMutation } from 'react-query';
 import { QueryClient } from '@tanstack/query-core';
 import useAuth from '../../hooks/useAuth';
+import EditingGuildModal from '../modals/GuildModal/EditingGuildModal';
 
 interface GuildHeaderProps {
   guild: GuildType;
@@ -22,7 +23,9 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
 
   const [categories, setCategories] = useState<any[]>([]);
   const [isGuildDeleteModalOpened, setIsGuildDeleteModalOpened] =
-    useState<boolean>();
+    useState<boolean>(false);
+  const [isEditingGuildModalOpened, setIsEditingGuildModalOpened] =
+    useState<boolean>(false);
   const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
   const [guildDetails, setGuildDetails] = useState<GuildType>();
 
@@ -32,10 +35,19 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
   const queryClient = new QueryClient();
   const navigate = useNavigate();
 
-  const mutation = useMutation({
+  const deleteGuild = useMutation({
     mutationFn: guildsService.deleteGuild,
     onSuccess: async () => {
       navigate('/guilds');
+      queryClient.invalidateQueries({ queryKey: ['guilds'] });
+    },
+  });
+
+  const editGuild = useMutation({
+    mutationFn: (updatedGuild: GuildType) =>
+      guildsService.updateGuild(guild.id, updatedGuild),
+    onSuccess: async () => {
+      navigate(`/guilds/${guild.id}`);
       queryClient.invalidateQueries({ queryKey: ['guilds'] });
     },
   });
@@ -72,7 +84,14 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
       {isGuildDeleteModalOpened && (
         <GuildDeleteModal
           onClose={() => setIsGuildDeleteModalOpened(false)}
-          onDelete={() => mutation.mutate(guild.id)}
+          onDelete={() => deleteGuild.mutate(guild.id)}
+        />
+      )}
+      {isEditingGuildModalOpened && (
+        <EditingGuildModal
+          guild={guild}
+          onClose={() => setIsEditingGuildModalOpened(false)}
+          onSubmit={(guild) => editGuild.mutate(guild)}
         />
       )}
       <div className="flex flex-col max-w-7xl mx-auto gap-4 mb-4 p-8 justify-end  relative h-64">
@@ -121,9 +140,14 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
                 {isMoreButtonExpanded && (
                   <div className="absolute z-50 flex flex-col w-40 right-0 translate-y-4 bg-main-blue border rounded-lg text-white border-light-blue">
                     <ul className="w-full border-light-blue text-sm  p-4 text-white text-md flex flex-col gap-4">
-                      <li className="cursor-pointer">Modifer</li>
                       <li
-                        onClick={() => setIsGuildDeleteModalOpened(true)}
+                        onClick={(): void => setIsEditingGuildModalOpened(true)}
+                        className="cursor-pointer"
+                      >
+                        Modifer
+                      </li>
+                      <li
+                        onClick={(): void => setIsGuildDeleteModalOpened(true)}
                         className="text-red cursor-pointer"
                       >
                         Supprimer

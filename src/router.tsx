@@ -6,7 +6,6 @@ import App from './App';
 import ErrorPage from './pages/ErrorPage';
 import Guild from './pages/Guild';
 import Profile from './pages/Profile';
-import AddingGuild from './pages/AddingGuild';
 import Settings from './pages/Settings';
 
 const router = createBrowserRouter([

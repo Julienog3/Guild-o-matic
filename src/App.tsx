@@ -14,7 +14,9 @@ import { Notification } from "./interfaces/notification.interface";
 import Toaster from "./components/layout/toaster/Toaster";
 import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal";
 import { AuthModalContext } from "./contexts/AuthModalContext";
-import AddingGuildModal from "./components/modals/AddingGuildModal/AddingGuildModal";
+import AddingGuildModal from "./components/modals/GuildModal/AddingGuildModal";
+import GuildModal from "./components/modals/GuildModal/GuildModal";
+import { GuildModalMode } from "./components/modals/GuildModal/GuildModal.intefaces";
 
 export type SidebarButtonType = {
   name: string;
@@ -72,7 +74,7 @@ function App() {
       }}
     >
       <AuthModal onClose={() => setIsAuthModalOpened(false)} />
-      {isAddingGuildModalOpened && <AddingGuildModal onClose={() => setIsAddingGuildModalOpened(false)} onSubmit={() => {}}/> }
+      {isAddingGuildModalOpened && <GuildModal mode={GuildModalMode.ADDING} onClose={() => setIsAddingGuildModalOpened(false)} onSubmit={() => {}}/> }
       <ModalContext.Provider value={{ modal, setModal }}>
            <div className="relative bg-bg-blue flex w-full min-h-screen">
             <Toaster />
