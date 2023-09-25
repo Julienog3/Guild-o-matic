@@ -41,8 +41,8 @@ jobs:
           ARGS: "-rlgoDzvc -i"
           SOURCE: "dist/"
           REMOTE_HOST: ${{ secrets.HOST }}
-          REMOTE_USER: ${{ secrets.USER }}
-          TARGET: ${{ secrets.REMOTE_TARGET }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.TARGET }}
           EXCLUDE: "/dist/, /node_modules/"
           SCRIPT_BEFORE: |
             whoami
