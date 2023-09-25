@@ -4,7 +4,10 @@ import GeneralStep from './steps/GeneralStep';
 import DescriptionStep from './steps/DescriptionStep';
 import ImageStep from './steps/ImageStep';
 import GuildConfirmationModal from '../GuildConfirmationModal';
-import { GuildPayloadInterface } from '../../../interfaces/guild.interface';
+import {
+  GuildPayloadInterface,
+  GuildType,
+} from '../../../interfaces/guild.interface';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
 import usePlayer from '../../../hooks/usePlayer';
@@ -17,11 +20,6 @@ import { supabase } from '../../../supabaseClient';
 import { IoIosArrowForward } from 'react-icons/io';
 import { GuildModalMode, GuildModalStep } from './GuildModal.intefaces';
 
-export interface GuildModalStepProps {
-  guildPayload: GuildPayloadInterface;
-  handleChange: (guild: GuildPayloadInterface) => void;
-}
-
 interface GuildModalStepInterface {
   title: string;
   type: GuildModalStep;
@@ -30,12 +28,14 @@ interface GuildModalStepInterface {
 
 interface GuildModalProps {
   mode: GuildModalMode;
+  guild?: GuildType;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (guild?: GuildType) => void;
 }
 
 const GuildModal = ({
   mode,
+  guild,
   onClose,
   onSubmit,
 }: GuildModalProps): JSX.Element => {
@@ -45,21 +45,33 @@ const GuildModal = ({
 
   const queryClient = new QueryClient();
 
-  const [guildToAdd, setGuildToAdd] = useState<GuildPayloadInterface>({
-    guildId: '',
-    isRecruiting: false,
-    description: '',
-    discordLink: '',
-    categories: [],
-    ownerId: '',
-  });
+  const [guildToAdd, setGuildToAdd] = useState<GuildPayloadInterface>(
+    guild ?? {
+      guildId: '',
+      isRecruiting: false,
+      description: '',
+      discordLink: '',
+      categories: [],
+      ownerId: '',
+    },
+  );
 
-  const mutation = useMutation({
+  const addingGuild = useMutation({
     mutationFn: guildsService.postGuild,
     onSuccess: async (data) => {
       if (guildToAdd.illustration) {
         await uploadBanner(data.id, guildToAdd.illustration);
       }
+      queryClient.invalidateQueries({ queryKey: ['guilds'] });
+    },
+  });
+
+  const editingGuild = useMutation({
+    mutationFn: guildsService.updateGuild,
+    onSuccess: async (data) => {
+      // if (guildToAdd.illustration) {
+      //   await uploadBanner(data.id, guildToAdd.illustration);
+      // }
       queryClient.invalidateQueries({ queryKey: ['guilds'] });
     },
   });
@@ -85,6 +97,7 @@ const GuildModal = ({
       type: GuildModalStep.GENERAL,
       component: (
         <GeneralStep
+          mode={mode}
           guildPayload={guildToAdd}
           handleChange={(guild) => setGuildToAdd(guild)}
         />
@@ -95,6 +108,7 @@ const GuildModal = ({
       type: GuildModalStep.DESCRIPTION,
       component: (
         <DescriptionStep
+          mode={mode}
           guildPayload={guildToAdd}
           handleChange={(guild) => setGuildToAdd(guild)}
         />
@@ -105,6 +119,7 @@ const GuildModal = ({
       type: GuildModalStep.IMAGE,
       component: (
         <ImageStep
+          mode={mode}
           guildPayload={guildToAdd}
           handleChange={(guild) => setGuildToAdd(guild)}
         />
@@ -117,16 +132,31 @@ const GuildModal = ({
 
   const handleSubmit = async () => {
     const { illustration, ...guildPayload } = guildToAdd;
-    mutation.mutate(guildPayload);
-    navigate('/guilds');
+
+    if (mode === GuildModalMode.ADDING) {
+      addingGuild.mutate(guildPayload);
+      navigate('/guilds');
+      setNotifications([
+        ...notifications,
+        {
+          type: NotificationEnum.SUCCESS,
+          message: 'Votre guilde a été ajouté avec succès !',
+        },
+      ]);
+    }
+
+    if (mode === GuildModalMode.EDITING && guild) {
+      editingGuild.mutate({ id: guild?.id, guild: guildPayload });
+      setNotifications([
+        ...notifications,
+        {
+          type: NotificationEnum.SUCCESS,
+          message: 'Votre guilde a été modifié avec succès !',
+        },
+      ]);
+    }
+
     onClose();
-    setNotifications([
-      ...notifications,
-      {
-        type: NotificationEnum.SUCCESS,
-        message: 'Votre guilde a été ajouté avec succès !',
-      },
-    ]);
   };
 
   const uploadBanner = async (id: string, banner: File) => {
@@ -176,7 +206,12 @@ const GuildModal = ({
           onConfirmation={(): void => {}}
         />
       )} */}
-      <Modal title="Ajouter une guilde" onClose={() => onClose()}>
+      <Modal
+        title={`${
+          mode === GuildModalMode.ADDING ? 'Ajouter' : 'Editer'
+        } une guilde`}
+        onClose={() => onClose()}
+      >
         <div className="flex flex-col gap-4">
           <form id="adding-form" className="">
             {component}

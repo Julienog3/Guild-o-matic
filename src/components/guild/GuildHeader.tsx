@@ -12,7 +12,8 @@ import GuildDeleteModal from '../modals/GuildDeleteModal';
 import { useMutation } from 'react-query';
 import { QueryClient } from '@tanstack/query-core';
 import useAuth from '../../hooks/useAuth';
-import EditingGuildModal from '../modals/GuildModal/EditingGuildModal';
+import GuildModal from '../modals/GuildModal/GuildModal';
+import { GuildModalMode } from '../modals/GuildModal/GuildModal.intefaces';
 
 interface GuildHeaderProps {
   guild: GuildType;
@@ -88,10 +89,11 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
         />
       )}
       {isEditingGuildModalOpened && (
-        <EditingGuildModal
+        <GuildModal
+          mode={GuildModalMode.EDITING}
           guild={guild}
           onClose={() => setIsEditingGuildModalOpened(false)}
-          onSubmit={(guild) => editGuild.mutate(guild)}
+          onSubmit={() => editGuild.mutate(guild)}
         />
       )}
       <div className="flex flex-col max-w-7xl mx-auto gap-4 mb-4 p-8 justify-end  relative h-64">

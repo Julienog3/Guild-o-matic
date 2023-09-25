@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { GuildModalStepProps } from '../AddingGuildModal';
+import { GuildModalStepProps } from '../GuildModal.intefaces';
 
 const ImageStep = ({
+  mode,
   guildPayload,
   handleChange,
 }: GuildModalStepProps): JSX.Element => {

@@ -1,8 +1,9 @@
 import React from 'react';
-import { GuildModalStepProps } from '../AddingGuildModal';
 import TextEditor from '../../../utils/TextEditor';
+import { GuildModalStepProps } from '../GuildModal.intefaces';
 
 const DescriptionStep = ({
+  mode,
   guildPayload,
   handleChange,
 }: GuildModalStepProps): JSX.Element => {

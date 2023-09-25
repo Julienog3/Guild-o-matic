@@ -162,13 +162,18 @@ export const guildsService = {
 
     return keysToCamel(data[0]);
   },
-  updateGuild: async (
+  updateGuild: async ({
+    id,
+    guild,
+  }: {
     id: string,
     guild: GuildPayloadInterface,
-  ): Promise<any> => {
+  }): Promise<any> => {
     const guildPayload = Object.fromEntries(
       Object.entries(guild).filter(([key]) => key !== 'categories'),
     );
+
+    console.log(keysToSnake(guildPayload));
 
     const { data, error } = await supabase
       .from('guilds')
@@ -180,6 +185,10 @@ export const guildsService = {
       return;
     }
 
+    if (data) {
+      console.log('data', data);
+    }
+
     // if (data) {
     //   guildsService.addCategoriesToGuild(
     //     keysToCamel(data[0]).id,
@@ -187,7 +196,7 @@ export const guildsService = {
     //   );
     // }
 
-    return keysToCamel(data[0]);
+    // return keysToCamel(data[0]);
   },
   getGuildCategory: async (
     categoryName: string,

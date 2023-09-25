@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { GuildModalStepProps } from '../AddingGuildModal';
 import { GuildCategoryEnum } from '../../../../interfaces/guild.interface';
 import { keysToCamel } from '../../../../utils/helpers';
 import usePlayer from '../../../../hooks/usePlayer';
 import { guildsService } from '../../../../services/guilds.service';
+import { GuildModalMode, GuildModalStepProps } from '../GuildModal.intefaces';
 
 const GeneralStep = ({
+  mode,
   guildPayload,
   handleChange,
 }: GuildModalStepProps): JSX.Element => {
@@ -17,6 +18,8 @@ const GeneralStep = ({
     GuildCategoryEnum.PVE,
     GuildCategoryEnum.PVP,
   ];
+
+  const isEditing: boolean = mode === GuildModalMode.EDITING;
 
   useEffect(() => {
     const getGuild = async (id: string) => {
@@ -62,8 +65,16 @@ const GeneralStep = ({
         });
     };
 
-    if (player) {
+    if (!player) {
+      return;
+    }
+
+    if (mode === GuildModalMode.ADDING) {
       getAllGuilds(player.guilds);
+    }
+
+    if (mode === GuildModalMode.EDITING) {
+      getGuild(guildPayload.guildId).then((guild) => setGuilds([guild]));
     }
   }, [player]);
 
@@ -81,6 +92,7 @@ const GeneralStep = ({
           <select
             name="guilds"
             id="guilds"
+            disabled={isEditing}
             value={guildPayload.guildId}
             onChange={(e) => {
               handleChange({
@@ -90,20 +102,25 @@ const GeneralStep = ({
             }}
             className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white"
           >
-            {guilds &&
+            {guilds.length > 0 && isEditing ? (
+              <option key={guilds[0].id} value={guilds[0].id}>
+                {guilds[0].name}
+              </option>
+            ) : (
               guilds.map((guild) => {
                 return (
                   <option key={guild.id} value={guild.id}>
                     {guild.name}
                   </option>
                 );
-              })}
+              })
+            )}
           </select>
         </label>
-        <div className="relative flex flex-col gap-2 text-light-gray text-sm">
+        {/* <div className="relative flex flex-col gap-2 text-light-gray text-sm">
           Catégories
           <div className="grid grid-cols-3 gap-4">
-            {categories &&
+            {categories.length > 0 &&
               categories.map((category: GuildCategoryEnum) => {
                 return (
                   <label htmlFor={`guild-type-${category}`} key={category}>
@@ -140,7 +157,7 @@ const GeneralStep = ({
                 );
               })}
           </div>
-        </div>
+        </div> */}
         <label className="relative inline-flex items-center cursor-pointer text-sm">
           <input
             type="checkbox"
