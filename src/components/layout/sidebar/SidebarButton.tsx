@@ -15,7 +15,7 @@ export enum SidebarButtonTypeEnum {
   MODAL = 'MODAL',
 }
 
-interface conditionalLinkedSidebarButtonProps {
+interface ConditionalLinkedSidebarButtonProps {
   link?: string;
   children: JSX.Element;
 }
@@ -23,7 +23,7 @@ interface conditionalLinkedSidebarButtonProps {
 const ConditionalLinkedSidebarButton = ({
   link,
   children,
-}: conditionalLinkedSidebarButtonProps): JSX.Element =>
+}: ConditionalLinkedSidebarButtonProps): JSX.Element =>
   link ? <Link to={link}>{children}</Link> : children;
 
 const SidebarButton = ({

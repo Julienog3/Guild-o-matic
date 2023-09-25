@@ -46,7 +46,7 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
 
   const editGuild = useMutation({
     mutationFn: (updatedGuild: GuildType) =>
-      guildsService.updateGuild(guild.id, updatedGuild),
+      guildsService.updateGuild({ id: guild.id, guild: updatedGuild }),
     onSuccess: async () => {
       navigate(`/guilds/${guild.id}`);
       queryClient.invalidateQueries({ queryKey: ['guilds'] });
