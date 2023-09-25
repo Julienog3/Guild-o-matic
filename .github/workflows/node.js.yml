@@ -20,18 +20,32 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: Deploy app on remote VPS
-        uses: appleboy/ssh-action@v0.1.7
-        with: 
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            cd deep-bot
-            git fetch
-            git pull
-            git status
-            npm install
-            pm2 restart deep-bot
+      - name: Download project from git
+        uses: actions/checkout@v3
+
+      - name: Build project
+        run: |
+          npm install
+          npm run build
+
+      - name: Download project as artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: bundle
+          path: ./dist
+
+      # - name: Deploy app on remote VPS
+      #   uses: appleboy/ssh-action@v0.1.7
+      #   with: 
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     script: |
+      #       export NVM_DIR=~/.nvm
+      #       source ~/.nvm/nvm.sh
+      #       cd deep-bot
+      #       git fetch
+      #       git pull
+      #       git status
+      #       npm install
+      #       pm2 restart deep-bot

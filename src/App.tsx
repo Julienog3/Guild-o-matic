@@ -14,7 +14,6 @@ import { Notification } from "./interfaces/notification.interface";
 import Toaster from "./components/layout/toaster/Toaster";
 import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal";
 import { AuthModalContext } from "./contexts/AuthModalContext";
-import AddingGuildModal from "./components/modals/GuildModal/AddingGuildModal";
 import GuildModal from "./components/modals/GuildModal/GuildModal";
 import { GuildModalMode } from "./components/modals/GuildModal/GuildModal.intefaces";
 
