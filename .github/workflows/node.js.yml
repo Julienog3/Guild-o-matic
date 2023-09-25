@@ -28,42 +28,25 @@ jobs:
           npm install
           npm run build
 
-      # - name: Download project as artifact
-      #   uses: actions/upload-artifact@master
-      #   with:
-      #     name: bundle
-      #     path: ./dist
-
   deploy:
-    - name: Deploy to Staging server
-      uses: easingthemes/ssh-deploy@main
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-rlgoDzvc -i"
-        SOURCE: "dist/"
-        REMOTE_HOST: ${{ secrets.HOST }}
-        REMOTE_USER: ${{ secrets.USERNAME }}
-        TARGET: ${{ secrets.TARGET }}
-        EXCLUDE: "/dist/, /node_modules/"
-        SCRIPT_BEFORE: |
-          whoami
-          ls -al
-        SCRIPT_AFTER: |
-          whoami
-          ls -al
-          echo $RSYNC_STDOUT
-      # - name: Deploy app on remote VPS
-      #   uses: appleboy/ssh-action@v0.1.7
-      #   with: 
-      #     host: ${{ secrets.HOST }}
-      #     username: ${{ secrets.USERNAME }}
-      #     password: ${{ secrets.PASSWORD }}
-      #     script: |
-      #       export NVM_DIR=~/.nvm
-      #       source ~/.nvm/nvm.sh
-      #       cd deep-bot
-      #       git fetch
-      #       git pull
-      #       git status
-      #       npm install
-      #       pm2 restart deep-bot
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to Staging server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rlgoDzvc -i"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.HOST }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.TARGET }}
+          EXCLUDE: "/dist/, /node_modules/"
+          SCRIPT_BEFORE: |
+            whoami
+            ls -al
+          SCRIPT_AFTER: |
+            whoami
+            ls -al
+            echo $RSYNC_STDOUT
