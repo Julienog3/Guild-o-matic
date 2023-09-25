@@ -69,9 +69,9 @@ const GuildModal = ({
   const editingGuild = useMutation({
     mutationFn: guildsService.updateGuild,
     onSuccess: async (data) => {
-      // if (guildToAdd.illustration) {
-      //   await uploadBanner(data.id, guildToAdd.illustration);
-      // }
+      if (guildToAdd.illustration) {
+        await uploadBanner(data.id, guildToAdd.illustration);
+      }
       queryClient.invalidateQueries({ queryKey: ['guilds'] });
     },
   });

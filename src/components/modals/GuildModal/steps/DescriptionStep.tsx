@@ -3,7 +3,6 @@ import TextEditor from '../../../utils/TextEditor';
 import { GuildModalStepProps } from '../GuildModal.intefaces';
 
 const DescriptionStep = ({
-  mode,
   guildPayload,
   handleChange,
 }: GuildModalStepProps): JSX.Element => {
@@ -21,7 +20,10 @@ const DescriptionStep = ({
         htmlFor=""
       >
         <p>Description</p>
-        <TextEditor handleChange={handleTextEditorChange} />
+        <TextEditor
+          value={guildPayload.description}
+          handleChange={handleTextEditorChange}
+        />
       </label>
     </>
   );

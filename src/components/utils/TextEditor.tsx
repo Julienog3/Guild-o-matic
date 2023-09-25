@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
-import { draftToMarkdown } from 'markdown-draft-js';
+import {
+  ContentState,
+  Editor,
+  EditorState,
+  RichUtils,
+  convertFromRaw,
+  convertToRaw,
+} from 'draft-js';
+import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
 
 interface TextEditorProps {
+  value?: string;
   handleChange: (change: string) => void;
 }
 
-const TextEditor = ({ handleChange }: TextEditorProps): JSX.Element => {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(),
-  );
+const TextEditor = ({ value, handleChange }: TextEditorProps): JSX.Element => {
+  const [editorState, setEditorState] = useState(() => {
+    if (value) {
+      const rawData = markdownToDraft(value);
+      const contentData = convertFromRaw(rawData);
+      return EditorState.createWithContent(contentData);
+    }
+    return EditorState.createEmpty();
+  });
 
   const onBoldClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();

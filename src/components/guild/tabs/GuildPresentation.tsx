@@ -10,10 +10,10 @@ interface GuildPresentation {
 const GuildPresentation = ({ description }: GuildPresentation): JSX.Element => {
   return (
     <div>
-      <div className="flex flex-col mb-4 max-w-7xl mx-auto">
+      <div className="flex flex-col mb-4 ">
         <article className="relative w-full rounded-md bg-main-blue border border-light-blue p-8 z-10">
           <h3 className="text-xl font-semibold text-white mb-4">Description</h3>
-          <div className="prose text-light-gray prose-headings:text-white prose-headings:text-xl prose-headings:font-semibold">
+          <div className="w- max-w-full prose text-light-gray prose-headings:text-white prose-headings:text-xl prose-headings:font-semibold">
             {description && (
               <ReactMarkdown
                 children={description}

@@ -173,11 +173,9 @@ export const guildsService = {
       Object.entries(guild).filter(([key]) => key !== 'categories'),
     );
 
-    console.log(keysToSnake(guildPayload));
-
     const { data, error } = await supabase
       .from('guilds')
-      .update([keysToSnake(guildPayload)])
+      .update(keysToSnake(guildPayload))
       .eq('id', id)
       .select();
 
@@ -186,17 +184,13 @@ export const guildsService = {
     }
 
     if (data) {
-      console.log('data', data);
+      // guildsService.addCategoriesToGuild(
+      //   keysToCamel(data[0]).id,
+      //   guild.categories,
+      // );
     }
 
-    // if (data) {
-    //   guildsService.addCategoriesToGuild(
-    //     keysToCamel(data[0]).id,
-    //     guild.categories,
-    //   );
-    // }
-
-    // return keysToCamel(data[0]);
+    return keysToCamel(data[0]);
   },
   getGuildCategory: async (
     categoryName: string,
