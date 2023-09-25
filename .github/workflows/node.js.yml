@@ -28,11 +28,11 @@ jobs:
           npm install
           npm run build
 
-      - name: Download project as artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: bundle
-          path: ./dist
+      # - name: Download project as artifact
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: bundle
+      #     path: ./dist
 
       - name: Deploy to Staging server
         uses: easingthemes/ssh-deploy@main
