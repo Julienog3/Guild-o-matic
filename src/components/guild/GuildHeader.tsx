@@ -14,6 +14,7 @@ import { QueryClient } from '@tanstack/query-core';
 import useAuth from '../../hooks/useAuth';
 import GuildModal from '../modals/GuildModal/GuildModal';
 import { GuildModalMode } from '../modals/GuildModal/GuildModal.intefaces';
+import { useTransition, animated } from '@react-spring/web';
 
 interface GuildHeaderProps {
   guild: GuildType;
@@ -35,6 +36,21 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
 
   const queryClient = new QueryClient();
   const navigate = useNavigate();
+
+  const transition = useTransition(isMoreButtonExpanded, {
+    from: {
+      y: 0,
+      opacity: 0,
+    },
+    enter: {
+      y: 15,
+      opacity: 1,
+    },
+    leave: {
+      y: 0,
+      opacity: 0,
+    },
+  });
 
   const deleteGuild = useMutation({
     mutationFn: guildsService.deleteGuild,
@@ -139,24 +155,35 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
                 >
                   <FiMoreHorizontal />
                 </button>
-                {isMoreButtonExpanded && (
-                  <div className="absolute z-50 flex flex-col w-40 right-0 translate-y-4 bg-main-blue border rounded-lg text-white border-light-blue">
-                    <ul className="w-full border-light-blue text-sm  p-4 text-white text-md flex flex-col gap-4">
-                      <li
-                        onClick={(): void => setIsEditingGuildModalOpened(true)}
-                        className="cursor-pointer"
+                {transition((style, isExpanded) => (
+                  <>
+                    {isExpanded && (
+                      <animated.div
+                        style={{ ...style }}
+                        className="absolute z-50 flex flex-col w-40 right-0 translate-y-4 bg-main-blue border rounded-lg text-white border-light-blue"
                       >
-                        Modifer
-                      </li>
-                      <li
-                        onClick={(): void => setIsGuildDeleteModalOpened(true)}
-                        className="text-red cursor-pointer"
-                      >
-                        Supprimer
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                        <ul className="w-full border-light-blue text-sm  p-4 text-white text-md flex flex-col gap-4">
+                          <li
+                            onClick={(): void =>
+                              setIsEditingGuildModalOpened(true)
+                            }
+                            className="cursor-pointer"
+                          >
+                            Modifer
+                          </li>
+                          <li
+                            onClick={(): void =>
+                              setIsGuildDeleteModalOpened(true)
+                            }
+                            className="text-red cursor-pointer"
+                          >
+                            Supprimer
+                          </li>
+                        </ul>
+                      </animated.div>
+                    )}
+                  </>
+                ))}
               </div>
             )}
           </div>

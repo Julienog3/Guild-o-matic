@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import DisconnectModal from './modals/DisconnectModal';
 import useAuth from '../hooks/useAuth';
+import { animated, useSpring, useTransition } from '@react-spring/web';
 
 interface ProfileProps {
   userId: string;
@@ -20,6 +21,21 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
     useState<boolean>(false);
   const [isDisconnectModalOpened, setIsDisconnectModalOpened] =
     useState<boolean>(false);
+
+  const transition = useTransition(isProfileDropdownToggled, {
+    from: {
+      y: 0,
+      opacity: 0,
+    },
+    enter: {
+      y: 15,
+      opacity: 1,
+    },
+    leave: {
+      y: 0,
+      opacity: 0,
+    },
+  });
 
   const { data: profile } = useQuery(['profile', userId], () =>
     profilesService.getProfile(userId),
@@ -45,7 +61,9 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
       {profile && (
         <div className="relative">
           <div
-            onClick={() => setIsProfileDropdownToggled((value) => !value)}
+            onClick={() => {
+              setIsProfileDropdownToggled((value) => !value);
+            }}
             className="cursor-pointer w-fit gap-4 py-2 px-4 border border-light-blue rounded-lg bg-main-blue flex items-center justify-between hover:border-accent-blue transition-colors"
           >
             <div className="relative">
@@ -67,27 +85,34 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
               <IoIosArrowDown className="text-white text-lg" />
             )}
           </div>
-          {isProfileDropdownToggled && (
-            <div className="absolute z-20 flex flex-col w-full min-w-[250px] right-0 translate-y-4 bg-main-blue border rounded-lg text-white border-light-blue">
-              <span className="w-full border-light-blue border-b p-4 text-white font-medium text-md">
-                Bonjour {profile.username} 👋
-              </span>
-              <ul className="w-full border-light-blue text-sm  p-4 text-white text-md flex flex-col gap-4">
-                <li>
-                  <Link to="/profile">Mon profil</Link>
-                </li>
-                <li>
-                  <Link to="/settings">Préférences</Link>
-                </li>
-                <li
-                  onClick={() => setIsDisconnectModalOpened(true)}
-                  className="text-red cursor-pointer"
+          {transition((style, isProfileDropdownToggled) => (
+            <>
+              {isProfileDropdownToggled && (
+                <animated.div
+                  style={{ ...style }}
+                  className="absolute z-20 flex flex-col w-full min-w-[250px] right-0 translate-y-4 bg-main-blue border rounded-lg text-white border-light-blue"
                 >
-                  Se déconnecter
-                </li>
-              </ul>
-            </div>
-          )}
+                  <span className="w-full border-light-blue border-b p-4 text-white font-medium text-md">
+                    Bonjour {profile.username} 👋
+                  </span>
+                  <ul className="w-full border-light-blue text-sm  p-4 text-white text-md flex flex-col gap-4">
+                    <li>
+                      <Link to="/profile">Mon profil</Link>
+                    </li>
+                    <li>
+                      <Link to="/settings">Préférences</Link>
+                    </li>
+                    <li
+                      onClick={() => setIsDisconnectModalOpened(true)}
+                      className="text-red cursor-pointer"
+                    >
+                      Se déconnecter
+                    </li>
+                  </ul>
+                </animated.div>
+              )}
+            </>
+          ))}
         </div>
       )}
     </>
