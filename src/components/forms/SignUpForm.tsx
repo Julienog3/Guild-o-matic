@@ -7,6 +7,9 @@ import { AuthError } from '@supabase/supabase-js';
 import { GW2UserType } from '../../interfaces/gw2/user';
 import { AuthModalTypeEnum } from '../modals/auth/AuthModal';
 import { AuthModalContext } from '../../contexts/AuthModalContext';
+import { useForm } from 'react-hook-form';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { gw2Service } from '../../services/gw2.service';
 
 interface SignUpFormProps {
   onSubmit: (event: FormEvent, credentials: Credentials) => void;
@@ -22,8 +25,16 @@ interface Credentials {
 }
 
 const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
-  const [playerInformations, setPlayerInformations] = useState<GW2UserType>();
+  // const [playerInformations, setPlayerInformations] = useState<GW2UserType>();
   const { setType } = useContext(AuthModalContext);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const queryClient = useQueryClient();
 
   const [credentials, setCredentials] = useState<Credentials>({
     username: '',
@@ -33,6 +44,16 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
     repeatedPassword: '',
   });
 
+  const {
+    status,
+    data: playerInformations,
+    refetch,
+  } = useQuery({
+    queryKey: ['account', credentials.gw2ApiKey],
+    queryFn: () => gw2Service.fetchAccount(credentials.gw2ApiKey),
+    refetchOnMount: false,
+  });
+
   const verifyCredentials = () => {
     if (credentials.password !== credentials.repeatedPassword) {
       return;
@@ -40,24 +61,9 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
   };
 
   useEffect(() => {
-    if (!credentials.gw2ApiKey) {
-      return;
+    if (credentials.gw2ApiKey) {
+      refetch();
     }
-
-    const getAccount = async () => {
-      await fetch(
-        `${import.meta.env.VITE_GW2_API_URL}/v2/account?access_token=${
-          credentials.gw2ApiKey
-        }`,
-        {
-          method: 'GET',
-        },
-      )
-        .then((res) => res.json())
-        .then((data) => setPlayerInformations(data));
-    };
-
-    getAccount();
   }, [credentials.gw2ApiKey]);
 
   return (
@@ -73,6 +79,7 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
               Pseudo <span className="text-accent-blue">*</span>
             </label>
             <input
+              {...register('username', { required: true })}
               className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white focus:outline-none focus:border-accent-blue"
               required
               value={credentials.username}
@@ -93,6 +100,7 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
               E-mail <span className="text-accent-blue">*</span>
             </label>
             <input
+              {...register('email', { required: true })}
               className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white focus:outline-none focus:border-accent-blue"
               required
               value={credentials.email}
@@ -113,6 +121,7 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
             Clé API Guild Wars 2
           </label>
           <input
+            {...register('gw2ApiKey')}
             className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white mb-4 focus:outline-none focus:border-accent-blue"
             value={credentials.gw2ApiKey}
             onChange={(e) =>
