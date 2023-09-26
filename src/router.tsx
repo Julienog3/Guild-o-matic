@@ -7,6 +7,11 @@ import ErrorPage from './pages/ErrorPage';
 import Guild from './pages/Guild';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import Legal from './pages/LegalPage';
+import PrivacyPolicy from './pages/PrivacyPolicyPage';
+import FaqPage from './pages/FaqPage';
+import LegalPage from './pages/LegalPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +38,18 @@ const router = createBrowserRouter([
       {
         path: 'settings',
         element: <Settings />,
+      },
+      {
+        path: 'legal',
+        element: <LegalPage />,
+      },
+      {
+        path: 'privacy-policy',
+        element: <PrivacyPolicyPage />,
+      },
+      {
+        path: 'faq',
+        element: <FaqPage />,
       },
     ],
   },
