@@ -23,16 +23,16 @@ interface GuildHeaderProps {
 const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
   const { session } = useAuth();
 
-  const [categories, setCategories] = useState<any[]>([]);
   const [isGuildDeleteModalOpened, setIsGuildDeleteModalOpened] =
     useState<boolean>(false);
   const [isEditingGuildModalOpened, setIsEditingGuildModalOpened] =
     useState<boolean>(false);
-  const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
-  const [guildDetails, setGuildDetails] = useState<GuildType>();
-
   const [isMoreButtonExpanded, setIsMoreButtonExpanded] =
     useState<boolean>(false);
+
+  const [categories, setCategories] = useState<any[]>([]);
+  const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
+  const [guildDetails, setGuildDetails] = useState<GuildType>();
 
   const queryClient = new QueryClient();
   const navigate = useNavigate();
