@@ -6,7 +6,6 @@ import SidebarButton from './SidebarButton';
 import { SidebarButtonType } from '../../../App';
 import useAuth from '../../../hooks/useAuth';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import ChangelogModal from '../../modals/ChangelogModal';
 import { useQuery } from 'react-query';
 import { guildsService } from '../../../services/guilds.service';
 import { GuildType } from '../../../interfaces/guild.interface';
@@ -19,8 +18,6 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
   const location = useLocation();
 
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
-  const [isChangelogModalOpened, setIsChangelogModalOpened] =
-    useState<boolean>(false);
 
   const { session } = useAuth();
   const [filteredButtons, setFilteredButtons] = useState<SidebarButtonType[]>(
@@ -51,11 +48,6 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
 
   return (
     <>
-      {isChangelogModalOpened && (
-        <ChangelogModal
-          onClose={(): void => setIsChangelogModalOpened(false)}
-        />
-      )}
       <aside
         className={`${
           isExpanded ? ' w-72' : 'w-24'
