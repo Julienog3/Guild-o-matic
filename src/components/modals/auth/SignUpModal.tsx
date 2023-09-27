@@ -23,9 +23,8 @@ const SignUpModal = ({ onClose }: SignUpModalProps): JSX.Element => {
   const { setType, setSignUpEmail } = useContext(AuthModalContext);
 
   const handleSubmit = (credentials: Credentials) => {
-    console.log('credentials', credentials);
-    // signUp(credentials);
-    // setSignUpEmail(credentials.email);
+    signUp(credentials);
+    setSignUpEmail(credentials.email);
     setType(AuthModalTypeEnum.SIGN_UP_CONFIRMATION);
   };
 
