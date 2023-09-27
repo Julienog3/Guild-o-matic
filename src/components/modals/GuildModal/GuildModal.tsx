@@ -1,4 +1,4 @@
-import Modal from '../../utils/Modal';
+import Modal, { ModalStyle } from '../../utils/Modal';
 import React, { useContext, useEffect, useState } from 'react';
 import GeneralStep from './steps/GeneralStep';
 import DescriptionStep from './steps/DescriptionStep';
@@ -10,7 +10,6 @@ import {
 } from '../../../interfaces/guild.interface';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
-import usePlayer from '../../../hooks/usePlayer';
 import { NotificationEnum } from '../../../interfaces/notification.interface';
 import { useMutation } from 'react-query';
 import { guildsService } from '../../../services/guilds.service';
@@ -28,6 +27,7 @@ interface GuildModalStepInterface {
 
 interface GuildModalProps {
   mode: GuildModalMode;
+  style: ModalStyle;
   guild?: GuildType;
   onClose: () => void;
   onSubmit: (guild?: GuildType) => void;
@@ -35,6 +35,7 @@ interface GuildModalProps {
 
 const GuildModal = ({
   mode,
+  style,
   guild,
   onClose,
   onSubmit,
@@ -207,6 +208,7 @@ const GuildModal = ({
         />
       )} */}
       <Modal
+        style={{ ...style }}
         title={`${
           mode === GuildModalMode.ADDING ? 'Ajouter' : 'Editer'
         } une guilde`}

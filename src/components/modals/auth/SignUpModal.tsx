@@ -22,10 +22,10 @@ const SignUpModal = ({ onClose }: SignUpModalProps): JSX.Element => {
   const { session, signUp, error } = useAuth();
   const { setType, setSignUpEmail } = useContext(AuthModalContext);
 
-  const handleSubmit = (event: FormEvent, credentials: Credentials) => {
-    event.preventDefault();
-    signUp(credentials);
-    setSignUpEmail(credentials.email);
+  const handleSubmit = (credentials: Credentials) => {
+    console.log('credentials', credentials);
+    // signUp(credentials);
+    // setSignUpEmail(credentials.email);
     setType(AuthModalTypeEnum.SIGN_UP_CONFIRMATION);
   };
 
