@@ -1,17 +1,19 @@
-import Modal from '../utils/Modal';
+import Modal, { ModalStyle } from '../utils/Modal';
 import React from 'react';
 
 interface GuildConfirmationModalProps {
+  style: ModalStyle;
   onClose: () => void;
   onConfirmation: () => void;
 }
 
 const GuildConfirmationModal = ({
+  style,
   onClose,
   onConfirmation,
 }: GuildConfirmationModalProps): JSX.Element => {
   return (
-    <Modal onClose={onClose} title="Ajout de guilde">
+    <Modal style={{ ...style }} onClose={onClose} title="Ajout de guilde">
       <div className="flex flex-col">
         <p className="text-white mb-6">
           Etes vous sûr de vouloir vouloir ajouter cette guilde ?

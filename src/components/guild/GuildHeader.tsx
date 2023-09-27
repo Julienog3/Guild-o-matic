@@ -37,7 +37,7 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
   const queryClient = new QueryClient();
   const navigate = useNavigate();
 
-  const transition = useTransition(isMoreButtonExpanded, {
+  const moreButtonTransition = useTransition(isMoreButtonExpanded, {
     from: {
       y: 0,
       opacity: 0,
@@ -52,7 +52,7 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
     },
   });
 
-  const guildModalTransition = useTransition(isEditingGuildModalOpened, {
+  const transition = {
     from: {
       y: 0,
       opacity: 0,
@@ -68,7 +68,17 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
     config: {
       duration: 200,
     },
-  });
+  };
+
+  const guildEditingModalTransition = useTransition(
+    isEditingGuildModalOpened,
+    transition,
+  );
+
+  const guildDeleteModalTransition = useTransition(
+    isGuildDeleteModalOpened,
+    transition,
+  );
 
   const deleteGuild = useMutation({
     mutationFn: guildsService.deleteGuild,
@@ -116,13 +126,18 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
 
   return (
     <>
-      {isGuildDeleteModalOpened && (
-        <GuildDeleteModal
-          onClose={() => setIsGuildDeleteModalOpened(false)}
-          onDelete={() => deleteGuild.mutate(guild.id)}
-        />
-      )}
-      {guildModalTransition((style, isOpened) => (
+      {guildDeleteModalTransition((style, isOpened) => (
+        <>
+          {isOpened && (
+            <GuildDeleteModal
+              style={{ ...style }}
+              onClose={() => setIsGuildDeleteModalOpened(false)}
+              onDelete={() => deleteGuild.mutate(guild.id)}
+            />
+          )}
+        </>
+      ))}
+      {guildEditingModalTransition((style, isOpened) => (
         <>
           {isOpened && (
             <GuildModal
@@ -179,7 +194,7 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
                 >
                   <FiMoreHorizontal />
                 </button>
-                {transition((style, isExpanded) => (
+                {moreButtonTransition((style, isExpanded) => (
                   <>
                     {isExpanded && (
                       <animated.div
