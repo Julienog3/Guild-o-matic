@@ -22,7 +22,7 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
   const [isDisconnectModalOpened, setIsDisconnectModalOpened] =
     useState<boolean>(false);
 
-  const transition = useTransition(isProfileDropdownToggled, {
+  const dropDownTransition = useTransition(isProfileDropdownToggled, {
     from: {
       y: 0,
       opacity: 0,
@@ -34,6 +34,24 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
     leave: {
       y: 0,
       opacity: 0,
+    },
+  });
+
+  const disconnectModalTransition = useTransition(isDisconnectModalOpened, {
+    from: {
+      y: 0,
+      opacity: 0,
+    },
+    enter: {
+      y: -10,
+      opacity: 1,
+    },
+    leave: {
+      y: 0,
+      opacity: 0,
+    },
+    config: {
+      duration: 200,
     },
   });
 
@@ -52,12 +70,17 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
 
   return (
     <>
-      {isDisconnectModalOpened && (
-        <DisconnectModal
-          onClose={(): void => setIsDisconnectModalOpened(false)}
-          onDisconnect={(): void => handleDisconnect()}
-        />
-      )}
+      {disconnectModalTransition((style, isDisconnectModalOpened) => (
+        <>
+          {isDisconnectModalOpened && (
+            <DisconnectModal
+              style={style}
+              onClose={(): void => setIsDisconnectModalOpened(false)}
+              onDisconnect={(): void => handleDisconnect()}
+            />
+          )}
+        </>
+      ))}
       {profile && (
         <div className="relative">
           <div
@@ -85,7 +108,7 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
               <IoIosArrowDown className="text-white text-lg" />
             )}
           </div>
-          {transition((style, isProfileDropdownToggled) => (
+          {dropDownTransition((style, isProfileDropdownToggled) => (
             <>
               {isProfileDropdownToggled && (
                 <animated.div

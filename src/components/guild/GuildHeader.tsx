@@ -52,6 +52,24 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
     },
   });
 
+  const guildModalTransition = useTransition(isEditingGuildModalOpened, {
+    from: {
+      y: 0,
+      opacity: 0,
+    },
+    enter: {
+      y: -10,
+      opacity: 1,
+    },
+    leave: {
+      y: 0,
+      opacity: 0,
+    },
+    config: {
+      duration: 200,
+    },
+  });
+
   const deleteGuild = useMutation({
     mutationFn: guildsService.deleteGuild,
     onSuccess: async () => {
@@ -104,14 +122,20 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
           onDelete={() => deleteGuild.mutate(guild.id)}
         />
       )}
-      {isEditingGuildModalOpened && (
-        <GuildModal
-          mode={GuildModalMode.EDITING}
-          guild={guild}
-          onClose={() => setIsEditingGuildModalOpened(false)}
-          onSubmit={() => editGuild.mutate(guild)}
-        />
-      )}
+      {guildModalTransition((style, isOpened) => (
+        <>
+          {isOpened && (
+            <GuildModal
+              mode={GuildModalMode.EDITING}
+              style={{ ...style }}
+              guild={guild}
+              onClose={() => setIsEditingGuildModalOpened(false)}
+              onSubmit={() => editGuild.mutate(guild)}
+            />
+          )}
+        </>
+      ))}
+
       <div className="flex flex-col max-w-7xl mx-auto gap-4 mb-4 p-8 justify-end  relative h-64">
         <div className="flex justify-between items-center">
           <div className="flex gap-2 items-center justify-between">

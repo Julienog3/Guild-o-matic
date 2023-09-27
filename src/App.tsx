@@ -16,6 +16,7 @@ import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal
 import { AuthModalContext } from "./contexts/AuthModalContext";
 import GuildModal from "./components/modals/GuildModal/GuildModal";
 import { GuildModalMode } from "./components/modals/GuildModal/GuildModal.intefaces";
+import { useTransition } from "@react-spring/web";
 
 export type SidebarButtonType = {
   name: string;
@@ -34,6 +35,24 @@ function App() {
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
   const [authModalSignUpEmail, setAuthModalSignUpEmail] = useState<string>();
+
+  const guildModalTransition = useTransition(isAddingGuildModalOpened, {
+    from: {
+      y: 0,
+      opacity: 0,
+    },
+    enter: {
+      y: -10,
+      opacity: 1,
+    },
+    leave: {
+      y: 0,
+      opacity: 0,
+    },
+    config: {
+      duration: 200,
+    },
+  })
 
   const sidebarButtons: SidebarButtonType[] = [
     {
@@ -73,7 +92,14 @@ function App() {
       }}
     >
       <AuthModal onClose={() => setIsAuthModalOpened(false)} />
-      {isAddingGuildModalOpened && <GuildModal mode={GuildModalMode.ADDING} onClose={() => setIsAddingGuildModalOpened(false)} onSubmit={() => {}}/> }
+      {guildModalTransition((style, isOpened) => (
+        <>{isOpened && <GuildModal 
+          style={{...style}}
+          mode={GuildModalMode.ADDING}
+          onClose={() => setIsAddingGuildModalOpened(false)}
+          onSubmit={() => {}}/> }
+        </>
+      ))}
       <ModalContext.Provider value={{ modal, setModal }}>
         <div className="relative bg-bg-blue flex w-full min-h-screen">
           <Toaster />

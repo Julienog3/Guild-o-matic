@@ -9,7 +9,7 @@ const FaqPage = (): JSX.Element => {
     <>
       <ScrollRestoration />
       <div>
-        <div className="max-w-full prose text-light-gray prose-headings:text-white prose-headings:text-xl prose-headings:font-semibold">
+        <div className="max-w-7xl m-auto prose text-light-gray prose-headings:text-white prose-headings:text-xl prose-headings:font-semibold">
           <MDXProvider>
             <Faq />
           </MDXProvider>
