@@ -1,17 +1,19 @@
-import Modal from '../utils/Modal';
+import Modal, { ModalStyle } from '../utils/Modal';
 import React from 'react';
 
 interface GuildDeleteModalProps {
+  style: ModalStyle;
   onClose: () => void;
   onDelete: () => void;
 }
 
 const GuildDeleteModal = ({
+  style,
   onClose,
   onDelete,
 }: GuildDeleteModalProps): JSX.Element => {
   return (
-    <Modal onClose={onClose} title="Supprimer la guilde ">
+    <Modal style={{ ...style }} onClose={onClose} title="Supprimer la guilde ">
       <div className="flex flex-col">
         <p className="text-white mb-6">
           Etes vous sûr de vouloir vous supprimer la guilde ?
