@@ -1,5 +1,19 @@
-# Guild Wars 2 Guild Finder
+# Guild-o-matic
 
-- React with Typescript
-- Strapi
+Guild Wars 2 application to find your future guild
 
+## Installation
+
+```bash
+npm install
+```
+
+## Usage
+
+```bash
+npm run start
+```
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
