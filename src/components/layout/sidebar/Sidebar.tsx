@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BsFillJournalBookmarkFill, BsShieldShaded } from 'react-icons/bs';
+import { BsShieldShaded } from 'react-icons/bs';
 import { BiShield } from 'react-icons/bi';
 import SidebarButton from './SidebarButton';
 import { SidebarButtonType } from '../../../App';
 import useAuth from '../../../hooks/useAuth';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useQuery } from 'react-query';
 import { guildsService } from '../../../services/guilds.service';
 import { GuildType } from '../../../interfaces/guild.interface';
@@ -53,12 +52,13 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
           isExpanded ? ' w-72' : 'w-24'
         } z-20 flex flex-col p-4 h-screen bottom-0 bg-main-blue border-r border-light-blue items-start relative`}
       >
-        <h1 className="flex gap-4 text-white text-lg items-center font-semibold p-4 mt-4">
-          <span className="text-2xl">
-            <BsShieldShaded />
-          </span>
-          Guild-o-matic
-        </h1>
+        <div className="flex items-center gap-4 p-4 mt-4">
+          <img className="w-10 h-10" src="./images/icon.png" />
+          <h1 className=" text-white text-base font-semibold ">
+            Guild-o-matic
+          </h1>
+        </div>
+
         {/* <button onClick={() => setIsExpanded(!isExpanded)}>
         {isExpanded ? (
           <IoIosArrowBack className="text-white text-lg" />

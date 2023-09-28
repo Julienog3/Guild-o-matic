@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { gw2Service } from '../../services/gw2.service';
 import React from 'react';
 import { supabase } from '../../supabaseClient';
-import { GuildType } from '../../interfaces/guild.interface';
+import { GuildCategoryEnum, GuildType } from '../../interfaces/guild.interface';
 import { guildsService } from '../../services/guilds.service';
 import { Link, useNavigate } from 'react-router-dom';
 import { BsDiscord } from 'react-icons/bs';
@@ -30,12 +30,17 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
   const [isMoreButtonExpanded, setIsMoreButtonExpanded] =
     useState<boolean>(false);
 
-  const [categories, setCategories] = useState<any[]>([]);
   const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
   const [guildDetails, setGuildDetails] = useState<GuildType>();
 
   const queryClient = new QueryClient();
   const navigate = useNavigate();
+
+  const categoriesLabel: Record<GuildCategoryEnum, string> = {
+    [GuildCategoryEnum.MCM]: 'mcm',
+    [GuildCategoryEnum.PVP]: 'pvp',
+    [GuildCategoryEnum.PVE]: 'pve',
+  };
 
   const moreButtonTransition = useTransition(isMoreButtonExpanded, {
     from: {
@@ -117,10 +122,6 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
       setGuildDetails(res);
     });
 
-    guildsService.getGuildCategoriesById(guild.id).then((res) => {
-      setCategories(res);
-    });
-
     getGuildBackgroundUrl(guild.id);
   }, [guild]);
 
@@ -164,14 +165,14 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
                 </h2>
               )}
               <div className="flex gap-2">
-                {categories &&
-                  categories.map((category, index) => {
+                {guild.categories &&
+                  guild.categories.map((category, index) => {
                     return (
                       <div
                         className="bg-light-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
                         key={index}
                       >
-                        {category.categories.name}
+                        {categoriesLabel[category]}
                       </div>
                     );
                   })}

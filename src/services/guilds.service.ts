@@ -1,4 +1,5 @@
 import {
+  GuildCategoryEnum,
   GuildCategoryInterface,
   GuildPayloadInterface,
   GuildType,
@@ -47,11 +48,9 @@ export const guildsService = {
               }, {});
           });
 
-        const guildCategories = await guildsService
-          .getGuildCategoriesById(guild.id)
-          .then((categories) => {
-            return categories.map((category: any) => category.categories.name);
-          });
+        const guildCategories = await guildsService.getGuildCategoriesById(
+          guild.id,
+        );
 
         return {
           ...guild,
@@ -65,13 +64,20 @@ export const guildsService = {
     const { data, error } = await supabase
       .from('guilds')
       .select('*')
-      .eq('id', id);
+      .eq('id', id)
+      .limit(1);
 
     if (error) {
       return;
     }
 
-    return keysToCamel(data[0]);
+    const guild = keysToCamel(data[0]);
+
+    const guildCategories = await guildsService.getGuildCategoriesById(
+      guild.id,
+    );
+
+    return { ...guild, categories: guildCategories };
   },
   getUserGuilds: async (userId: string): Promise<GuildType[] | undefined> => {
     const { data, error } = await supabase
@@ -127,17 +133,18 @@ export const guildsService = {
 
     return keysToCamel(count);
   },
-  getGuildCategoriesById: async (id: string): Promise<any> => {
+  getGuildCategoriesById: async (id: string): Promise<string[] | undefined> => {
     const { data, error } = await supabase
       .from('guilds_category')
-      .select('categories (name)')
+      .select('category_id')
       .eq('guild_id', id);
 
     if (error) {
       return;
     }
 
-    return data;
+    const guildCategories = data.map((category) => category.category_id);
+    return guildCategories;
   },
   postGuild: async (guild: GuildPayloadInterface): Promise<any> => {
     const guildPayload = Object.fromEntries(
@@ -154,10 +161,9 @@ export const guildsService = {
     }
 
     if (data) {
-      guildsService.addCategoriesToGuild(
-        keysToCamel(data[0]).id,
-        guild.categories,
-      );
+      const guildId = keysToCamel(data[0]).id;
+
+      // guildsService.addCategoriesToGuild(guildId, guild.categories);
     }
 
     return keysToCamel(data[0]);
@@ -184,53 +190,76 @@ export const guildsService = {
     }
 
     if (data) {
-      // guildsService.addCategoriesToGuild(
-      //   keysToCamel(data[0]).id,
-      //   guild.categories,
-      // );
+      const newGuild = keysToCamel(data[0]);
+      const allGuildCategories = await guildsService.getAllGuildCategories(
+        newGuild.id,
+      );
+
+      console.log('allGuildCategories', allGuildCategories);
+
+      allGuildCategories?.forEach(async (category) => {
+        if (!guild.categories?.includes(category)) {
+          await guildsService.removeCategoryGuild(newGuild.id, category);
+        }
+      });
+
+      guild.categories.forEach(async (category) => {
+        if (!allGuildCategories?.includes(category)) {
+          await guildsService.addCategoryGuild(newGuild.id, category);
+        }
+      });
     }
 
     return keysToCamel(data[0]);
   },
-  getGuildCategory: async (
-    categoryName: string,
-  ): Promise<GuildCategoryInterface | undefined> => {
+  getAllGuildCategories: async (
+    guildId: string,
+  ): Promise<GuildCategoryEnum[] | undefined> => {
     const { data, error } = await supabase
-      .from('categories')
-      .select()
-      .eq('name', categoryName)
-      .limit(1);
+      .from('guilds_category')
+      .select('category_id')
+      .eq('guild_id', guildId);
 
     if (error) {
       return;
     }
 
-    return keysToCamel(data[0]);
+    const formatedData: GuildCategoryInterface[] = keysToCamel(data);
+    console.log('data getAllGuildCategories', formatedData);
+
+    const categories = formatedData.map((category) => category.categoryId);
+    return categories;
   },
-  addCategoriesToGuild: async (
+  addCategoryGuild: async (
     guildId: string,
-    categories: string[],
+    categoryId: GuildCategoryEnum,
   ): Promise<any> => {
-    categories.forEach(async (category) => {
-      const guildCategory = await guildsService.getGuildCategory(category);
+    const { data, error } = await supabase.from('guilds_category').insert([
+      keysToSnake({
+        guildId: guildId,
+        categoryId: categoryId,
+      }),
+    ]);
 
-      if (guildCategory === undefined) {
-        return;
-      }
-
-      const { data, error } = await supabase.from('guilds_category').insert([
-        keysToSnake({
-          guildId: guildId,
-          categoryId: guildCategory.id,
-        }),
-      ]);
-
-      if (error) {
-        return;
-      }
-    });
+    if (error) {
+      return;
+    }
   },
-  removeCategoriesGuild: async (guildId: string): Promise<any> => {
+  removeCategoryGuild: async (
+    guildId: string,
+    categoryId: number,
+  ): Promise<any> => {
+    const { error } = await supabase
+      .from('guilds_category')
+      .delete()
+      .eq('guild_id', guildId)
+      .eq('category_id', categoryId);
+
+    if (error) {
+      return;
+    }
+  },
+  removeAllCategoriesGuild: async (guildId: string): Promise<any> => {
     const { error } = await supabase
       .from('guilds_category')
       .delete()
@@ -241,7 +270,7 @@ export const guildsService = {
     }
   },
   deleteGuild: async (id: string): Promise<void> => {
-    guildsService.removeCategoriesGuild(id).then(async () => {
+    guildsService.removeAllCategoriesGuild(id).then(async () => {
       const { error } = await supabase.from('guilds').delete().eq('id', id);
 
       if (error) {

@@ -19,6 +19,12 @@ const GeneralStep = ({
     GuildCategoryEnum.PVP,
   ];
 
+  const categoriesLabel: Record<GuildCategoryEnum, string> = {
+    [GuildCategoryEnum.MCM]: 'mcm',
+    [GuildCategoryEnum.PVP]: 'pvp',
+    [GuildCategoryEnum.PVE]: 'pve',
+  };
+
   const isEditing: boolean = mode === GuildModalMode.EDITING;
 
   useEffect(() => {
@@ -65,9 +71,7 @@ const GeneralStep = ({
         });
     };
 
-    if (!player) {
-      return;
-    }
+    if (!player) return;
 
     if (mode === GuildModalMode.ADDING) {
       getAllGuilds(player.guilds);
@@ -76,6 +80,8 @@ const GeneralStep = ({
     if (mode === GuildModalMode.EDITING) {
       getGuild(guildPayload.guildId).then((guild) => setGuilds([guild]));
     }
+
+    console.log('guildPayload', guildPayload);
   }, [player]);
 
   return (
@@ -117,7 +123,7 @@ const GeneralStep = ({
             )}
           </select>
         </label>
-        {/* <div className="relative flex flex-col gap-2 text-light-gray text-sm">
+        <div className="relative flex flex-col gap-2 text-light-gray text-sm">
           Catégories
           <div className="grid grid-cols-3 gap-4">
             {categories.length > 0 &&
@@ -146,10 +152,12 @@ const GeneralStep = ({
                       }}
                     />
                     <div className="relative cursor-pointer text-white font-semibold text-xl flex items-center justify-center bg-main-blue rounded-lg overflow-hidden border peer-checked:border-accent-blue transition-all border-light-blue w-full h-28">
-                      <p className="z-10">{category.toUpperCase()}</p>
+                      <p className="z-10">
+                        {categoriesLabel[category].toUpperCase()}
+                      </p>
                       <img
                         className="absolute top-0 w-full h-full object-cover opacity-25 peer-checked:opacity-50"
-                        src={`/images/bg-${category}.jpg`}
+                        src={`/images/bg-${categoriesLabel[category]}.jpg`}
                         alt=""
                       />
                     </div>
@@ -157,7 +165,7 @@ const GeneralStep = ({
                 );
               })}
           </div>
-        </div> */}
+        </div>
         <label className="relative inline-flex items-center cursor-pointer text-sm">
           <input
             type="checkbox"

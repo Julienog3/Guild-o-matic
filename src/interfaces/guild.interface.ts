@@ -25,9 +25,9 @@ export interface GuildPayloadInterface {
 }
 
 export enum GuildCategoryEnum {
-  MCM = 'mcm',
-  PVP = 'pvp',
-  PVE = 'pve',
+  MCM = 1,
+  PVP = 2,
+  PVE = 3,
 }
 
 export interface GuildCategoryInterface {

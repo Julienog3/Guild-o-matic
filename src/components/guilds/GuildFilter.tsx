@@ -17,6 +17,12 @@ const GuildFilter = ({
     GuildCategoryEnum.PVP,
   ];
 
+  const categoriesLabel: Record<GuildCategoryEnum, string> = {
+    [GuildCategoryEnum.MCM]: 'mcm',
+    [GuildCategoryEnum.PVP]: 'pvp',
+    [GuildCategoryEnum.PVE]: 'pve',
+  };
+
   const handleCategoryClick = (category: GuildCategoryEnum) => {
     if (filter.categories.includes(category)) {
       onFilterChange({
@@ -47,7 +53,7 @@ const GuildFilter = ({
               return (
                 <>
                   <label
-                    htmlFor={category}
+                    htmlFor={categoriesLabel[category]}
                     key={index}
                     className={`${
                       filter.categories.includes(category)
@@ -55,14 +61,14 @@ const GuildFilter = ({
                         : 'bg-light-blue border-light-blue'
                     }  rounded-full select-none h-8 flex items-center px-6 border  text-sm text-white font-semibold uppercase cursor-pointer`}
                   >
-                    {category}
+                    {categoriesLabel[category]}
                   </label>
                   <input
                     type="checkbox"
                     className="sr-only peer hidden"
                     checked={filter.categories.includes(category)}
                     onClick={() => handleCategoryClick(category)}
-                    id={category}
+                    id={categoriesLabel[category]}
                   />
                 </>
               );

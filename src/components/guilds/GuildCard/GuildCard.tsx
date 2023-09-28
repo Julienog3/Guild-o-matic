@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { GuildType } from '../../../interfaces/guild.interface';
+import {
+  GuildCategoryEnum,
+  GuildType,
+} from '../../../interfaces/guild.interface';
 import { guildsService } from '../../../services/guilds.service';
 import { supabase } from '../../../supabaseClient';
 import { keysToCamel } from '../../../utils/helpers';
@@ -10,10 +13,15 @@ interface GuildCardProps {
 }
 
 const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
-  const [categories, setCategories] = useState<any[]>([]);
   const [owner, setOwner] = useState<any>();
   const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
   const [guildOwnerAvatarUrl, setGuildOwnerAvatarUrl] = useState<string>();
+
+  const categoriesLabel: Record<GuildCategoryEnum, string> = {
+    [GuildCategoryEnum.MCM]: 'mcm',
+    [GuildCategoryEnum.PVP]: 'pvp',
+    [GuildCategoryEnum.PVE]: 'pve',
+  };
 
   useEffect(() => {
     if (!guild) {
@@ -60,9 +68,9 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
       setGuildBackgroundUrl(data.signedUrl);
     };
 
-    guildsService.getGuildCategoriesById(guild.id).then((res) => {
-      setCategories(res);
-    });
+    // guildsService.getGuildCategoriesById(guild.id).then((res) => {
+    //   setCategories(res);
+    // });
 
     getGuildOwner();
     getGuildBackgroundUrl();
@@ -79,14 +87,14 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
               {guild.name}
             </h3>
             <ul className="flex gap-2">
-              {categories &&
-                categories.map((category, index) => {
+              {guild.categories &&
+                guild.categories.map((category, index) => {
                   return (
                     <div
                       className="bg-light-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
                       key={index}
                     >
-                      {category.categories.name}
+                      {categoriesLabel[category]}
                     </div>
                   );
                 })}
