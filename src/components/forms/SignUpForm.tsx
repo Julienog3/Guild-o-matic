@@ -49,8 +49,6 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
   const onSubmitForm = handleSubmit((data) => onSubmit(data));
   const userGw2ApiKey = watch('gw2ApiKey');
 
-  const queryClient = useQueryClient();
-
   const {
     status,
     data: playerInformations,

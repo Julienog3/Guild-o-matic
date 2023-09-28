@@ -38,7 +38,6 @@ export const profilesService = {
       .createSignedUrl(`${userId}/avatar`, 3600);
 
     if (error) {
-      // throw new Error("Can't fetch user avatar");
       return;
     }
 

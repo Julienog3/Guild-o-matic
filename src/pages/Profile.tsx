@@ -9,9 +9,10 @@ import { FaPen } from 'react-icons/fa';
 import { BsCheckLg } from 'react-icons/bs';
 import { NotificationContext } from '../contexts/NotificationContext';
 import { NotificationEnum } from '../interfaces/notification.interface';
+import { useQuery } from 'react-query';
+import { profilesService } from '../services/profiles.service';
 
 const Profile = (): JSX.Element => {
-  const [userProfile, setUserProfile] = useState<any>();
   const [playerInformations, setPlayerInformations] = useState<any>();
 
   const { session } = useAuth();
@@ -21,7 +22,6 @@ const Profile = (): JSX.Element => {
   const [selectedAvatar, setSelectedAvatar] = useState<File>();
   const [preview, setPreview] = useState<string>();
   const { notifications, setNotifications } = useContext(NotificationContext);
-  const [userAvatarUrl, setUserAvatarUrl] = useState<string>();
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -30,6 +30,16 @@ const Profile = (): JSX.Element => {
 
     setSelectedAvatar(e.target.files[0]);
   };
+
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile', session?.user.id],
+    queryFn: () => session && profilesService.getProfile(session.user.id),
+    enabled: !!session,
+  });
+
+  useEffect(() => {
+    console.log('userProfile', userProfile);
+  }, [session]);
 
   const uploadAvatar = async (avatar: File) => {
     const { error } = await supabase.storage
@@ -62,42 +72,6 @@ const Profile = (): JSX.Element => {
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedAvatar]);
-
-  useEffect(() => {
-    if (!session?.user) {
-      return setUserProfile(undefined);
-    }
-
-    const getProfile = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', session.user.id);
-
-      if (error) {
-        return;
-      }
-
-      const formattedData = keysToCamel(data);
-      setUserProfile(formattedData[0]);
-    };
-
-    const getAvatar = async () => {
-      const { data, error } = await supabase.storage
-        .from('users')
-        .createSignedUrl(`${session.user.id}/avatar`, 3600);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setUserAvatarUrl(data.signedUrl);
-    };
-
-    getProfile();
-    getAvatar();
-  }, [session]);
 
   useEffect(() => {
     if (!userProfile) {
@@ -133,18 +107,30 @@ const Profile = (): JSX.Element => {
       {userProfile && (
         <Page>
           <div className="max-w-7xl mx-auto mb-8 flex flex-col">
-            <div className="w-full flex gap-4 items-end border-b border-light-blue mb-4 pb-4">
-              <img
-                className="w-32 h-32 rounded-lg object-cover"
-                src={userAvatarUrl}
-                alt=""
-              />
-              <h2 className="text-3xl font-raleway font-semibold text-white mb-4">
-                Profil de {userProfile.username}
-              </h2>
+            <div className="w-full flex justify-between mb-4 pb-4 border-b border-light-blue">
+              <div className="flex gap-4 items-end ">
+                {userProfile.avatarUrl && (
+                  <img
+                    className="w-32 h-32 rounded-lg object-cover"
+                    src={userProfile.avatarUrl}
+                    alt=""
+                  />
+                )}
+                <h2 className="text-3xl font-raleway font-semibold text-white">
+                  Profil de {userProfile.username}
+                </h2>
+              </div>
+              <div className="flex gap-4 self-end">
+                <button className=" bg-gray/25 border border-gray text-white p-4 rounded-lg w-fit text-sm">
+                  Annuler
+                </button>
+                <button className="bg-accent-blue text-white p-4 rounded-lg w-fit text-sm">
+                  Enregistrer
+                </button>
+              </div>
             </div>
             <div className="flex flex-col text-md mb-4">
-              <label className="text-light-gray mb-2 text-md" htmlFor="">
+              <label className="text-light-gray mb-2 text-sm" htmlFor="">
                 Clé api
               </label>
               <div className="flex gap-4">
@@ -172,7 +158,7 @@ const Profile = (): JSX.Element => {
               </div>
             </div>
             {playerInformations && playerInformations.name ? (
-              <div className="flex gap-4 p-4 w-96 text-white items-center rounded-lg bg-green/25 border border-green mb-4">
+              <div className="flex gap-4 p-4 w-96 text-sm text-white items-center rounded-lg bg-green/25 border border-green mb-4">
                 <span className="bg-green w-2 h-2 rounded-full" />
                 Connecté en tant que {playerInformations.name}
               </div>

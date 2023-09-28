@@ -4,6 +4,7 @@ import {
   GuildPayloadInterface,
   GuildType,
 } from '../interfaces/guild.interface';
+import { ProfileType } from '../interfaces/profile.interface';
 import { supabase } from '../supabaseClient';
 import { keysToCamel, keysToSnake } from '../utils/helpers';
 import { gw2Service } from './gw2.service';
@@ -118,6 +119,21 @@ export const guildsService = {
         };
       }),
     );
+  },
+  getGuildOwnerProfile: async (
+    ownerId: string,
+  ): Promise<ProfileType | undefined> => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', ownerId);
+
+    if (error) {
+      return;
+    }
+
+    const formattedData = keysToCamel(data[0]);
+    return formattedData;
   },
   getGuildCountByGameId: async (
     guildId: string,
@@ -277,5 +293,19 @@ export const guildsService = {
         return;
       }
     });
+  },
+  getGuildBackgroundUrl: async (
+    guildId: string,
+  ): Promise<string | undefined> => {
+    const { data, error } = await supabase.storage
+      .from('guilds')
+      .createSignedUrl(`${guildId}/background`, 3600);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    return data.signedUrl;
   },
 };

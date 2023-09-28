@@ -16,19 +16,15 @@ const GuildCards = ({
 
   return (
     <div className="w-full">
-      {guilds ? (
-        <ul className="grid gap-4 xl:grid-cols-3 md:grid-cols-2 grid-cols-1">
-          {filteredGuilds.map((guild: GuildType) => {
-            return (
-              <Link to={`/guilds/${guild.id}`} key={guild.id}>
-                <GuildCard guild={guild} />
-              </Link>
-            );
-          })}
-        </ul>
-      ) : (
-        <div className="text-white">test</div>
-      )}
+      <ul className="grid gap-4 xl:grid-cols-3 md:grid-cols-2 grid-cols-1">
+        {filteredGuilds.map((guild: GuildType) => {
+          return (
+            <Link to={`/guilds/${guild.id}`} key={guild.id}>
+              <GuildCard guild={guild} />
+            </Link>
+          );
+        })}
+      </ul>
     </div>
   );
 };

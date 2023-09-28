@@ -7,75 +7,32 @@ import { guildsService } from '../../../services/guilds.service';
 import { supabase } from '../../../supabaseClient';
 import { keysToCamel } from '../../../utils/helpers';
 import GuildCardStatus from './GuildCardStatus';
+import { useQuery } from 'react-query';
+import { profilesService } from '../../../services/profiles.service';
+import GuildCardFooter from './GuildCardFooter';
 
 interface GuildCardProps {
   guild: GuildType;
 }
 
 const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
-  const [owner, setOwner] = useState<any>();
-  const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
-  const [guildOwnerAvatarUrl, setGuildOwnerAvatarUrl] = useState<string>();
-
   const categoriesLabel: Record<GuildCategoryEnum, string> = {
     [GuildCategoryEnum.MCM]: 'mcm',
     [GuildCategoryEnum.PVP]: 'pvp',
     [GuildCategoryEnum.PVE]: 'pve',
   };
 
-  useEffect(() => {
-    if (!guild) {
-      return;
-    }
+  const { data: guildOwnerProfile } = useQuery({
+    queryKey: ['guildOwnerProfile', guild.ownerId],
+    queryFn: () => guildsService.getGuildOwnerProfile(guild.ownerId),
+    enabled: !!guild,
+  });
 
-    const getGuildOwner = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', guild.ownerId);
-
-      if (error) {
-        return;
-      }
-
-      const formattedData = keysToCamel(data[0]);
-      setOwner(formattedData);
-    };
-
-    const getGuildOwnerAvatarUrl = async () => {
-      const { data, error } = await supabase.storage
-        .from('users')
-        .createSignedUrl(`${guild.ownerId}/avatar`, 3600);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setGuildOwnerAvatarUrl(data.signedUrl);
-    };
-
-    const getGuildBackgroundUrl = async () => {
-      const { data, error } = await supabase.storage
-        .from('guilds')
-        .createSignedUrl(`${guild.id}/background`, 3600);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setGuildBackgroundUrl(data.signedUrl);
-    };
-
-    // guildsService.getGuildCategoriesById(guild.id).then((res) => {
-    //   setCategories(res);
-    // });
-
-    getGuildOwner();
-    getGuildBackgroundUrl();
-    getGuildOwnerAvatarUrl();
-  }, [guild]);
+  const { data: guildBackgroundUrl } = useQuery({
+    queryKey: ['guildBackgroundUrl', guild.id],
+    queryFn: () => guildsService.getGuildBackgroundUrl(guild.id),
+    enabled: !!guild,
+  });
 
   return (
     <article className="guild-card bg-light-blue rounded-lg overflow-hidden hover:outline outline-1 outline-accent-blue transition group">
@@ -111,21 +68,9 @@ const GuildCard = ({ guild }: GuildCardProps): JSX.Element => {
           )}
         </div>
       </div>
-      <div className="p-4 flex justify-between">
-        <div className="flex gap-4 items-center">
-          <img
-            className="rounded-xl w-10 h-10 object-cover"
-            src={guildOwnerAvatarUrl}
-            alt=""
-          />
-          <div className="flex flex-col">
-            <p className="text-light-gray text-sm">Géré par</p>
-            <span className="text-white font-semibold text-sm">
-              {owner && owner.username}
-            </span>
-          </div>
-        </div>
-      </div>
+      {guildOwnerProfile && (
+        <GuildCardFooter guildOwnerProfile={guildOwnerProfile} />
+      )}
     </article>
   );
 };
