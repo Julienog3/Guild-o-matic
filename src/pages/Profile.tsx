@@ -1,16 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Page from '../components/layout/Page';
 import useAuth from '../hooks/useAuth';
 import { supabase } from '../supabaseClient';
-import { keysToCamel } from '../utils/helpers';
-import DisconnectModal from '../components/modals/DisconnectModal';
-import { useNavigate } from 'react-router-dom';
 import { FaPen } from 'react-icons/fa';
 import { BsCheckLg } from 'react-icons/bs';
 import { NotificationContext } from '../contexts/NotificationContext';
 import { NotificationEnum } from '../interfaces/notification.interface';
 import { useQuery } from 'react-query';
 import { profilesService } from '../services/profiles.service';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import ProfileForm, {
+  ProfileFormValues,
+} from '../components/forms/ProfileForm';
 
 const Profile = (): JSX.Element => {
   const [playerInformations, setPlayerInformations] = useState<any>();
@@ -22,6 +23,11 @@ const Profile = (): JSX.Element => {
   const [selectedAvatar, setSelectedAvatar] = useState<File>();
   const [preview, setPreview] = useState<string>();
   const { notifications, setNotifications } = useContext(NotificationContext);
+
+  const profileFormRef = useRef();
+
+  const onSubmit: SubmitHandler<ProfileFormValues> = (data) =>
+    console.log(data);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -121,15 +127,23 @@ const Profile = (): JSX.Element => {
                 </h2>
               </div>
               <div className="flex gap-4 self-end">
-                <button className=" bg-gray/25 border border-gray text-white p-4 rounded-lg w-fit text-sm">
+                <button
+                  onClick={(): void => profileFormRef.current.onReset()}
+                  className=" bg-gray/25 border border-gray text-white p-4 rounded-lg w-fit text-sm"
+                >
                   Annuler
                 </button>
-                <button className="bg-accent-blue text-white p-4 rounded-lg w-fit text-sm">
+                <button
+                  type="submit"
+                  form="profile-form"
+                  className="bg-accent-blue text-white p-4 rounded-lg w-fit text-sm"
+                >
                   Enregistrer
                 </button>
               </div>
             </div>
-            <div className="flex flex-col text-md mb-4">
+            <ProfileForm userProfile={userProfile} onSubmit={onSubmit} />
+            {/* <div className="flex flex-col text-md mb-4">
               <label className="text-light-gray mb-2 text-sm" htmlFor="">
                 Clé api
               </label>
@@ -229,7 +243,7 @@ const Profile = (): JSX.Element => {
               >
                 Upload avatar
               </button>
-            </div>
+            </div> */}
           </div>
         </Page>
       )}

@@ -26,7 +26,7 @@ type SignUpFormValues = {
 const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
   const { setType } = useContext(AuthModalContext);
 
-  const SignUpSchema = z
+  const signUpSchema = z
     .object({
       username: z.string().min(4, { message: 'Required' }),
       email: z.string().email({ message: 'Invalid email address' }),
@@ -44,7 +44,7 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpFormValues>({ resolver: zodResolver(SignUpSchema) });
+  } = useForm<SignUpFormValues>({ resolver: zodResolver(signUpSchema) });
 
   const onSubmitForm = handleSubmit((data) => onSubmit(data));
   const userGw2ApiKey = watch('gw2ApiKey');
