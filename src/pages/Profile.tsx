@@ -8,7 +8,7 @@ import { NotificationContext } from '../contexts/NotificationContext';
 import { NotificationEnum } from '../interfaces/notification.interface';
 import { useQuery } from 'react-query';
 import { profilesService } from '../services/profiles.service';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, UseFormReset, useForm } from 'react-hook-form';
 import ProfileForm, {
   ProfileFormValues,
 } from '../components/forms/ProfileForm';
@@ -64,6 +64,10 @@ const Profile = (): JSX.Element => {
         },
       ]);
     }
+  };
+
+  const handleSubmit = (reset: UseFormReset<ProfileFormValues>) => {
+    reset();
   };
 
   useEffect(() => {
@@ -142,7 +146,11 @@ const Profile = (): JSX.Element => {
                 </button>
               </div>
             </div>
-            <ProfileForm userProfile={userProfile} onSubmit={onSubmit} />
+            <ProfileForm
+              ref={profileFormRef}
+              userProfile={userProfile}
+              onSubmit={onSubmit}
+            />
             {/* <div className="flex flex-col text-md mb-4">
               <label className="text-light-gray mb-2 text-sm" htmlFor="">
                 Clé api
