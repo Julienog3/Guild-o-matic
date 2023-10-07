@@ -32,6 +32,18 @@ export const profilesService = {
       return;
     }
   },
+  updateProfile: async (id: string, userPayload: any): Promise<any> => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(keysToSnake(userPayload))
+      .eq('id', id)
+      .select();
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+  },
   getUserAvatar: async (userId: string): Promise<string | undefined> => {
     const { data, error } = await supabase.storage
       .from('users')
