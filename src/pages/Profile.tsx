@@ -17,31 +17,15 @@ const Profile = (): JSX.Element => {
   const { session } = useAuth();
 
   const [isEdited, setIsEdited] = useState<boolean>(false);
-  const [userApiKey, setUserApiKey] = useState<string>('');
-  const [isApiKeyEditing, setIsApiKeyEditing] = useState<boolean>(false);
-  const [selectedAvatar, setSelectedAvatar] = useState<File>();
-  const [preview, setPreview] = useState<string>();
-  const { notifications, setNotifications } = useContext(NotificationContext);
 
-  const profileFormRef = useRef();
+  type ProfileFormHandle = React.ElementRef<typeof ProfileForm>;
+
+  const profileFormRef = useRef<ProfileFormHandle>(null);
 
   const onSubmit: SubmitHandler<ProfileFormValues> = (data) => {
     if (!session?.user) return;
 
-    console.log('data', data);
-
-    const { profilePicture, ...others } = data;
-
-    profilesService.uploadUserAvatar(session?.user.id, profilePicture[0]);
-    // profilesService.updateProfile(session?.user.id, others);
-  };
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-
-    setSelectedAvatar(e.target.files[0]);
+    profilesService.updateProfile(session?.user.id, data);
   };
 
   const { data: userProfile } = useQuery({
@@ -49,42 +33,6 @@ const Profile = (): JSX.Element => {
     queryFn: () => session && profilesService.getProfile(session.user.id),
     enabled: !!session,
   });
-
-  const uploadAvatar = async (avatar: File) => {
-    const { error } = await supabase.storage
-      .from('users')
-      .upload(`${session?.user.id}/avatar`, avatar, {
-        cacheControl: '3600',
-        upsert: true,
-      });
-
-    if (error) {
-      setNotifications([
-        ...notifications,
-        {
-          type: NotificationEnum.DANGER,
-          message: error.message,
-        },
-      ]);
-    }
-  };
-
-  const handleSubmit = (reset: UseFormReset<ProfileFormValues>) => {
-    reset();
-  };
-
-  useEffect(() => {
-    if (!selectedAvatar) {
-      setPreview(undefined);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedAvatar);
-    setPreview(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedAvatar]);
 
   return (
     <>
@@ -106,7 +54,9 @@ const Profile = (): JSX.Element => {
               </div>
               <div className="flex gap-4 self-end">
                 <button
-                  onClick={(): void => profileFormRef?.current?.onReset()}
+                  onClick={(): void => {
+                    profileFormRef?.current?.onReset();
+                  }}
                   className=" bg-gray/25 border border-gray text-white p-4 rounded-lg w-fit text-sm"
                 >
                   Annuler
@@ -116,7 +66,7 @@ const Profile = (): JSX.Element => {
                   form="profile-form"
                   disabled={!isEdited}
                   className={`${
-                    isEdited ? 'bg-accent-blue' : 'bg-light-blue'
+                    isEdited ? 'bg-accent-blue ' : 'bg-accent-blue/25'
                   } text-white p-4 rounded-lg w-fit text-sm`}
                 >
                   Enregistrer
