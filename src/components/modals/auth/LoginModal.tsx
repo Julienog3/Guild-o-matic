@@ -14,8 +14,7 @@ interface LoginModalProps {
 const LoginModal = ({ onClose }: LoginModalProps): JSX.Element => {
   const { session, signIn, error } = useAuth();
 
-  const handleSubmit = (event: FormEvent, { email, password }: Credentials) => {
-    event.preventDefault();
+  const handleSubmit = ({ email, password }: Credentials) => {
     signIn(email, password);
   };
 

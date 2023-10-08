@@ -32,13 +32,30 @@ export const profilesService = {
       return;
     }
   },
+  updateProfile: async (id: string, userPayload: any): Promise<any> => {
+    const { profilePicture, ...otherData } = userPayload;
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(keysToSnake(otherData))
+      .eq('user_id', id)
+      .select();
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    if (profilePicture[0]) {
+      profilesService.uploadUserAvatar(id, profilePicture[0]);
+    }
+  },
   getUserAvatar: async (userId: string): Promise<string | undefined> => {
     const { data, error } = await supabase.storage
       .from('users')
       .createSignedUrl(`${userId}/avatar`, 3600);
 
     if (error) {
-      // throw new Error("Can't fetch user avatar");
       return;
     }
 

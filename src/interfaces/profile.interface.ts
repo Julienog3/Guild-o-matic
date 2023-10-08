@@ -1,5 +1,5 @@
 export type ProfileType = {
-  id: number,
+  id: string,
   userId: string,
   username: string,
   apiKey?: string,

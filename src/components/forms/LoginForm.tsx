@@ -7,11 +7,19 @@ import { AuthError } from '@supabase/supabase-js';
 import { AuthModalContext } from '../../contexts/AuthModalContext';
 import { AuthModalTypeEnum } from '../modals/auth/AuthModal';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 
 interface LoginFormProps {
-  onSubmit: (event: FormEvent, credentials: Credentials) => void;
+  onSubmit: (data: LoginFormValues) => void;
   error?: AuthError;
 }
+
+type LoginFormValues = {
+  email: string,
+  password: string,
+};
 
 interface Credentials {
   email: string;
@@ -19,6 +27,23 @@ interface Credentials {
 }
 
 const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
+  const LoginSchema = z.object({
+    email: z.string().email({ message: 'Should be an email' }),
+    password: z
+      .string()
+      .min(7, { message: 'Password should have a least 7 letters' }),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(LoginSchema),
+  });
+
+  const onSubmitForm = handleSubmit((data) => onSubmit(data));
+
   const [credentials, setCredentials] = useState<Credentials>({
     email: '',
     password: '',
@@ -29,10 +54,7 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
   const { setType } = useContext(AuthModalContext);
 
   return (
-    <form
-      className="flex flex-col gap-8 h-full"
-      onSubmit={(e: FormEvent) => onSubmit(e, credentials)}
-    >
+    <form className="flex flex-col gap-8 h-full" onSubmit={onSubmitForm}>
       {error && <FormError>{error.message}</FormError>}
       <div className="flex flex-col gap-4 h-full">
         <div className="flex flex-col">
@@ -40,49 +62,31 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
             E-mail
           </label>
           <input
+            {...register('email', { required: true })}
             className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white focus:outline-none focus:border-accent-blue"
-            value={credentials.email}
-            required
-            onChange={(e) =>
-              setCredentials((credentials) => ({
-                ...credentials,
-                email: e.target.value,
-              }))
-            }
-            type="email"
             placeholder="E-mail"
           />
+          {errors.email && (
+            <div className="text-red text-sm pt-2">{errors.email.message}</div>
+          )}
         </div>
         <div className="flex flex-col">
           <label className="text-light-gray mb-2 text-sm" htmlFor="password">
             Mot de passe
           </label>
-          <div className="flex bg-bg-blue border-light-blue rounded-lg border items-center mb-3">
+          <div className="flex flex-col w-full">
             <input
-              className="bg-transparent text-sm h-full w-full p-4 text-white focus:outline-none focus:border-accent-blue "
-              value={credentials.password}
-              required
-              onChange={(e) =>
-                setCredentials((credentials) => ({
-                  ...credentials,
-                  password: e.target.value,
-                }))
-              }
-              type={isPasswordRevealed ? 'text' : 'password'}
+              className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white focus:outline-none focus:border-accent-blue mb-3"
+              {...register('password', { required: true })}
               placeholder="Mot de passe"
+              type="password"
             />
-            <button
-              className="bg-main-blue border border-light-blue hover:bg-light-blue transition-all p-2 mr-3 text-white rounded-md"
-              onClick={(
-                e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-              ): void => {
-                e.preventDefault();
-                setIsPasswordRevealed(!isPasswordRevealed);
-              }}
-            >
-              {isPasswordRevealed ? <AiFillEyeInvisible /> : <AiFillEye />}
-            </button>
           </div>
+          {errors.password && (
+            <div className="text-red text-sm pt-2">
+              {errors.password.message}
+            </div>
+          )}
           <span
             className="text-accent-blue self-end text-sm cursor-pointer"
             onClick={(): void => setType(AuthModalTypeEnum.RESET_PASSWORD)}

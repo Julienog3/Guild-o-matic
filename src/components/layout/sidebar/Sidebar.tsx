@@ -53,7 +53,7 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
         } z-20 flex flex-col p-4 h-screen bottom-0 bg-main-blue border-r border-light-blue items-start relative`}
       >
         <div className="flex items-center gap-4 p-4 mt-4">
-          <img className="w-10 h-10" src="./images/icon.png" />
+          <img className="w-10 h-10" src="/images/icon.png" />
           <h1 className=" text-white text-base font-semibold ">
             Guild-o-matic
           </h1>
