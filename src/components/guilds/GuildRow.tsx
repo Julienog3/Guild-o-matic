@@ -1,47 +1,37 @@
 import React from 'react';
-import { GuildType } from '../../interfaces/guild.interface';
+import { GuildCategoryEnum, GuildType } from '../../interfaces/guild.interface';
+import GuildCardStatus from './GuildCard/GuildCardStatus';
 
 interface GuildCardProps {
   guild: GuildType;
 }
 
 const GuildRow = ({ guild }: GuildCardProps): JSX.Element => {
+  const categoriesLabel: Record<GuildCategoryEnum, string> = {
+    [GuildCategoryEnum.MCM]: 'mcm',
+    [GuildCategoryEnum.PVP]: 'pvp',
+    [GuildCategoryEnum.PVE]: 'pve',
+  };
+
   return (
     <li className="flex items-center gap-4 p-4 bg-light-blue rounded-lg overflow-hidden hover:outline outline-1 outline-accent-blue transition group">
-      <div className="flex gap-4">
-        <div
-          className={`flex gap-4 items-center self-end py-2 px-3 border rounded-full ${
-            guild.isRecruiting
-              ? 'bg-green/25 border-green'
-              : 'bg-red/25 border-red'
-          }`}
-        >
-          <span
-            className={`${
-              guild.isRecruiting ? 'bg-green' : 'bg-red'
-            } w-2 h-2 rounded-full`}
-          />
-          {guild.isRecruiting ? (
-            <p className="text-green text-sm font-medium">Ouvert</p>
-          ) : (
-            <p className="text-red text-sm font-medium">Fermé</p>
-          )}
-        </div>
-        <h3 className="text-white text-md mt-2 font-semibold">{guild.name}</h3>
+      <div className="flex gap-4 items-center">
+        <GuildCardStatus isOpened={guild.isRecruiting} />
+        <h3 className="text-white text-md font-semibold">{guild.name}</h3>
       </div>
-      <div className="flex gap-2">
-        <ul className="flex gap-2">
-          <div className="bg-main-blue rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold">
-            PVP
-          </div>
-          <div className="bg-main-blue rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold">
-            PVE
-          </div>
-          <div className="bg-main-blue rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold">
-            MCM
-          </div>
-        </ul>
-      </div>
+      <ul className="flex ml-4 gap-2 items-center">
+        {guild.categories &&
+          guild.categories.map((category, index) => {
+            return (
+              <div
+                className="bg-main-blue/70 z-10 uppercase self-end rounded-full h-8 flex items-center px-6 border border-light-blue text-sm text-white font-semibold"
+                key={index}
+              >
+                {categoriesLabel[category]}
+              </div>
+            );
+          })}
+      </ul>
       <div className="flex gap-4 items-center ml-auto">
         <img
           className="rounded-xl w-10 h-10"

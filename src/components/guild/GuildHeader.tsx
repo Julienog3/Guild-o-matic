@@ -9,7 +9,7 @@ import { BsDiscord } from 'react-icons/bs';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import Banner from '../layout/Banner';
 import GuildDeleteModal from '../modals/GuildDeleteModal';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { QueryClient } from '@tanstack/query-core';
 import useAuth from '../../hooks/useAuth';
 import GuildModal from '../modals/GuildModal/GuildModal';
@@ -29,9 +29,6 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
     useState<boolean>(false);
   const [isMoreButtonExpanded, setIsMoreButtonExpanded] =
     useState<boolean>(false);
-
-  const [guildBackgroundUrl, setGuildBackgroundUrl] = useState<string>();
-  const [guildDetails, setGuildDetails] = useState<GuildType>();
 
   const queryClient = new QueryClient();
   const navigate = useNavigate();
@@ -102,28 +99,17 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
     },
   });
 
+  const { data: guildBackgroundUrl, isLoading: guildBackgroundUrlIsLoading } =
+    useQuery(['guildBackgroundUrl', guild.id], () =>
+      guildsService.getGuildBackgroundUrl(guild.id),
+    );
+
+  const { data: guildDetails } = useQuery<GuildType>(
+    ['guildDetails', guild.id],
+    () => gw2Service.getGuildById(guild.guildId),
+  );
+
   const isUserOwningGuild = session?.user.id === guild.ownerId;
-
-  useEffect(() => {
-    const getGuildBackgroundUrl = async (guildId: string) => {
-      const { data, error } = await supabase.storage
-        .from('guilds')
-        .createSignedUrl(`${guildId}/background`, 3600);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setGuildBackgroundUrl(data.signedUrl);
-    };
-
-    gw2Service.getGuildById(guild.guildId).then((res) => {
-      setGuildDetails(res);
-    });
-
-    getGuildBackgroundUrl(guild.id);
-  }, [guild]);
 
   return (
     <>
@@ -228,7 +214,12 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
             )}
           </div>
         </div>
-        {guildBackgroundUrl && <Banner url={guildBackgroundUrl} />}
+        {!guildBackgroundUrlIsLoading && guildBackgroundUrl && (
+          <Banner
+            url={guildBackgroundUrl}
+            alt={`Illustration de la guilde ${guild.name}`}
+          />
+        )}
       </div>
     </>
   );

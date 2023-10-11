@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import React from 'react';
+import React, { Suspense } from 'react';
 import Home from './pages/Home';
 import Guilds from './pages/Guilds';
 import App from './App';
@@ -12,6 +12,9 @@ import PrivacyPolicy from './pages/PrivacyPolicyPage';
 import FaqPage from './pages/FaqPage';
 import LegalPage from './pages/LegalPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import LoadingPage from './pages/Loading';
+
+const GuildPage = React.lazy(() => import('./pages/Guild'));
 
 const router = createBrowserRouter([
   {
@@ -29,7 +32,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'guilds/:guildId',
-        element: <Guild />,
+        element: (
+          <Suspense fallback={<LoadingPage />}>
+            <GuildPage />
+          </Suspense>
+        ),
       },
       {
         path: 'profile',
