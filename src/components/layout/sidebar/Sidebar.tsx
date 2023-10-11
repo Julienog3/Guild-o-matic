@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BsShieldShaded } from 'react-icons/bs';
 import { BiShield } from 'react-icons/bi';
 import SidebarButton from './SidebarButton';
 import { SidebarButtonType } from '../../../App';
@@ -8,12 +7,14 @@ import useAuth from '../../../hooks/useAuth';
 import { useQuery } from 'react-query';
 import { guildsService } from '../../../services/guilds.service';
 import { GuildType } from '../../../interfaces/guild.interface';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 interface SidebarProps {
   buttons: SidebarButtonType[];
+  onAddingGuild: () => void;
 }
 
-const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
+const Sidebar = ({ buttons, onAddingGuild }: SidebarProps): JSX.Element => {
   const location = useLocation();
 
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
@@ -90,7 +91,7 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
                 {userGuilds?.length}
               </div>
             </span>
-            {userGuilds && userGuilds?.length > 0 ? (
+            {userGuilds && userGuilds?.length > 0 && (
               <ul className="flex flex-col gap-4">
                 {userGuilds.map((guild: GuildType) => (
                   <Link key={guild.id} to={`/guilds/${guild.id}`}>
@@ -101,12 +102,13 @@ const Sidebar = ({ buttons }: SidebarProps): JSX.Element => {
                   </Link>
                 ))}
               </ul>
-            ) : (
-              <Link to="/guilds/add">
-                <div className="flex items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
-                  Ajouter une guilde
+            )}
+            {userGuilds && userGuilds?.length <= 4 && (
+              <button onClick={(): void => onAddingGuild()}>
+                <div className="flex gap-2 items-center bg-light-blue p-3 rounded-md text-light-gray text-sm">
+                  <AiOutlinePlus /> Ajouter une guilde
                 </div>
-              </Link>
+              </button>
             )}
           </div>
         )}

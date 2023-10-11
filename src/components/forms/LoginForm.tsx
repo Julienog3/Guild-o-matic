@@ -44,13 +44,6 @@ const LoginForm = ({ onSubmit, error }: LoginFormProps): JSX.Element => {
 
   const onSubmitForm = handleSubmit((data) => onSubmit(data));
 
-  const [credentials, setCredentials] = useState<Credentials>({
-    email: '',
-    password: '',
-  });
-
-  const [isPasswordRevealed, setIsPasswordRevealed] = useState<boolean>(false);
-
   const { setType } = useContext(AuthModalContext);
 
   return (

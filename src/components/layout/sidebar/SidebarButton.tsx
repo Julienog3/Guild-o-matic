@@ -34,7 +34,6 @@ const SidebarButton = ({
   isActive = false,
   label,
 }: SidebarButtonProps): JSX.Element => {
-  const [isButtonHovered, setIsButtonHovered] = useState<boolean>(false);
   return (
     <ConditionalLinkedSidebarButton link={to}>
       <div
@@ -43,11 +42,7 @@ const SidebarButton = ({
         } flex transition items-center text-light-gray text-sm gap-5  py-4 px-5 rounded-md cursor-pointer`}
         onClick={() => onClick && onClick()}
       >
-        <div
-          // onMouseEnter={() => setIsButtonHovered(true)}
-          // onMouseLeave={() => setIsButtonHovered(false)}
-          className="relative flex items-center justify-center text-xl text-white transition-opacity"
-        >
+        <div className="relative flex items-center justify-center text-xl text-white transition-opacity">
           {icon}
         </div>
         {label}

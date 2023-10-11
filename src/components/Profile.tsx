@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { profilesService } from '../services/profiles.service';
 import { useQuery } from 'react-query';
@@ -16,6 +16,28 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // useEffect(() => {
+  //   /**
+  //    * Alert if clicked on outside of element
+  //    */
+  //   function handleClickOutside(event) {
+  //     console.log('event', event);
+  //     console.log(dropdownRef.current);
+
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  //       alert('You clicked outside of me!');
+  //     }
+  //   }
+  //   // Bind the event listener
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     // Unbind the event listener on clean up
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [dropdownRef]);
 
   const [isProfileDropdownToggled, setIsProfileDropdownToggled] =
     useState<boolean>(false);
@@ -112,6 +134,7 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
             <>
               {isProfileDropdownToggled && (
                 <animated.div
+                  ref={dropdownRef}
                   style={{ ...style }}
                   className="absolute z-20 flex flex-col w-full min-w-[250px] right-0 translate-y-4 bg-main-blue border rounded-lg text-white border-light-blue"
                 >
