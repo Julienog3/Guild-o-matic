@@ -16,10 +16,10 @@ const DescriptionStep = ({
   return (
     <>
       <label
-        className="relative flex flex-col gap-2 text-light-gray w-full"
+        className="relative flex flex-col gap-3 text-light-gray text-sm w-full"
         htmlFor=""
       >
-        <p>Description</p>
+        <p>Ajouter une description</p>
         <TextEditor
           value={guildPayload.description}
           handleChange={handleTextEditorChange}

@@ -9,6 +9,11 @@ import { gw2Service } from '../../services/gw2.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Spinner from '../utils/Spinner';
+import { IoMdInformation } from 'react-icons/io';
+import { RiInformationLine } from 'react-icons/ri';
+import Tooltip from '../utils/Tooltip';
+import ApiKeyInstructions from './../../assets/api-key-instructions.mdx';
+import { MDXProvider } from '@mdx-js/react';
 
 interface SignUpFormProps {
   onSubmit: (data: SignUpFormValues) => void;
@@ -106,17 +111,31 @@ const SignUpForm = ({ onSubmit, error }: SignUpFormProps): JSX.Element => {
         </div>
 
         <div className="flex flex-col">
-          <label className="text-light-gray mb-2 text-sm" htmlFor="password">
+          <label
+            className="text-light-gray mb-2 text-sm flex gap-4 items-center"
+            htmlFor="password"
+          >
             Clé API Guild Wars 2
+            <Tooltip
+              content={
+                <MDXProvider>
+                  <ApiKeyInstructions />
+                </MDXProvider>
+              }
+            >
+              <span className="bg-bg-blue text-light-gray w-5 h-5 rounded-full flex items-center justify-center">
+                ?
+              </span>
+            </Tooltip>
           </label>
           <input
             {...register('gw2ApiKey')}
-            className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white mb-4 focus:outline-none focus:border-accent-blue"
+            className="bg-bg-blue text-sm p-4 rounded-lg border border-light-blue text-white focus:outline-none focus:border-accent-blue"
             type="text"
             placeholder="Clé API"
           />
           {playerInformations && playerInformations.id && (
-            <div className="flex gap-4 p-4 w-full text-sm text-white items-center rounded-lg bg-green/20 border-green border">
+            <div className="flex gap-4 p-4 w-full text-sm mt-4 text-white items-center rounded-lg bg-green/20 border-green border">
               <span className="bg-green w-2 h-2 rounded-full" />
               Connecté en tant que {playerInformations.name}
             </div>

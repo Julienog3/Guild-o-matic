@@ -179,6 +179,10 @@ export const guildsService = {
     if (data) {
       const guildId = keysToCamel(data[0]).id;
 
+      guild.categories.forEach(async (category) => {
+        await guildsService.addCategoryGuild(guildId, category);
+      });
+
       // guildsService.addCategoriesToGuild(guildId, guild.categories);
     }
 

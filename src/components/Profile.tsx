@@ -18,26 +18,20 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
   const navigate = useNavigate();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownButtonRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   /**
-  //    * Alert if clicked on outside of element
-  //    */
-  //   function handleClickOutside(event) {
-  //     console.log('event', event);
-  //     console.log(dropdownRef.current);
+  useEffect(() => {
+    const  handleClickOutside = (event: globalThis.MouseEvent) => {
+      if (dropdownRef.current && (!dropdownRef.current.contains(event.target as Node)&& !dropdownButtonRef?.current?.contains(event.target as Node))) {
+        setIsProfileDropdownToggled(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
 
-  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-  //       alert('You clicked outside of me!');
-  //     }
-  //   }
-  //   // Bind the event listener
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => {
-  //     // Unbind the event listener on clean up
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, [dropdownRef]);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const [isProfileDropdownToggled, setIsProfileDropdownToggled] =
     useState<boolean>(false);
@@ -106,6 +100,7 @@ const Profile = ({ userId }: ProfileProps): JSX.Element => {
       {profile && (
         <div className="relative">
           <div
+            ref={dropdownButtonRef}
             onClick={() => {
               setIsProfileDropdownToggled((value) => !value);
             }}

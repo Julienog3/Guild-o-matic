@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gw2Service } from '../../services/gw2.service';
 import React from 'react';
 import { supabase } from '../../supabaseClient';
@@ -38,6 +38,22 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
     [GuildCategoryEnum.PVP]: 'pvp',
     [GuildCategoryEnum.PVE]: 'pve',
   };
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const  handleClickOutside = (event: globalThis.MouseEvent) => {
+      if (dropdownRef.current && (!dropdownRef.current.contains(event.target as Node) && !dropdownButtonRef?.current?.contains(event.target as Node))) {
+        setIsMoreButtonExpanded(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const moreButtonTransition = useTransition(isMoreButtonExpanded, {
     from: {
@@ -177,6 +193,7 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
               <div className="relative z-10">
                 <button
                   onClick={() => setIsMoreButtonExpanded(!isMoreButtonExpanded)}
+                  ref={dropdownButtonRef}
                   className="text-white text-xl bg-main-blue border border-light-blue w-12 h-12 flex items-center justify-center rounded-md"
                 >
                   <FiMoreHorizontal />
@@ -185,6 +202,7 @@ const GuildHeader = ({ guild }: GuildHeaderProps): JSX.Element => {
                   <>
                     {isExpanded && (
                       <animated.div
+                        ref={dropdownRef}
                         style={{ ...style }}
                         className="absolute z-50 flex flex-col w-40 right-0 translate-y-4 bg-main-blue border rounded-lg text-white border-light-blue"
                       >
