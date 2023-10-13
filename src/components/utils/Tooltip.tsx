@@ -71,7 +71,7 @@ const Tooltip = ({
             <animated.div
               style={{ ...style }}
               role="tooltip"
-              className="prose prose-a:text-accent-blue absolute translate-y-full bottom-0 w-fit z-10 bg-black/90 px-3 py-2 text-sm font-medium text-light-gray bg-gray-900 rounded-lg tooltip"
+              className="prose prose-a:text-accent-blue absolute translate-y-full -bottom-2 w-fit z-10 bg-black/90 px-3 py-2 text-sm font-medium text-light-gray bg-gray-900 rounded-lg tooltip"
             >
               {content}
             </animated.div>
