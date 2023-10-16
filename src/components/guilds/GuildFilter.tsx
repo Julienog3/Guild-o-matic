@@ -1,6 +1,6 @@
 import React from 'react';
 import { GuildCategoryEnum } from '../../interfaces/guild.interface';
-import { GuildsFilterType } from '../../pages/Guilds';
+import { GuildsFilterType } from '../../pages/GuildsPage';
 
 interface GuildFilterProps {
   filter: GuildsFilterType;

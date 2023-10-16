@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import Home from './pages/Home';
-import Guilds from './pages/Guilds';
+import Guilds from './pages/GuildsPage';
 import App from './App';
 import ErrorPage from './pages/ErrorPage';
 import Guild from './pages/Guild';

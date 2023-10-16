@@ -1,29 +1,38 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { NotificationContext } from '../../../contexts/NotificationContext';
 import { Notification } from '../../../interfaces/notification.interface';
 import ToasterMessage from './ToasterMessage';
+import { useTransition } from '@react-spring/web';
+import useNotificationStore from '../../../stores/useNotificationStore';
 
 const Toaster = (): JSX.Element => {
-  const { notifications, setNotifications } = useContext(NotificationContext);
+  const notifications = useNotificationStore((state) => state.notifications);
+  const removeNotification = useNotificationStore(
+    (state) => state.removeNotification,
+  );
 
-  const handleDelete = (index: number) => {
-    const newNotification = [...notifications];
-    newNotification.splice(index, 1);
-    setNotifications(newNotification);
-  };
+  const handleDelete = useCallback((id: string) => {
+    removeNotification(id);
+  }, []);
+
+  const transitions = useTransition(notifications, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+  });
 
   return (
     <div className="z-50 fixed top-8 left-8 flex flex-col gap-4">
-      {notifications &&
-        notifications.map((notification: Notification, index: number) => {
-          return (
-            <ToasterMessage
-              key={index}
-              {...notification}
-              onDelete={(): void => handleDelete(index)}
-            />
-          );
-        })}
+      {transitions((style, item) => (
+        <>
+          <ToasterMessage
+            style={style}
+            key={item.id}
+            {...item}
+            onDelete={(): void => handleDelete(item.id)}
+          />
+        </>
+      ))}
     </div>
   );
 };

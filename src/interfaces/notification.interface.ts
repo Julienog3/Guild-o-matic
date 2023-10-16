@@ -1,4 +1,5 @@
 export interface Notification {
+  id: string;
   type: NotificationEnum;
   message: string;
 }

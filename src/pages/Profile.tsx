@@ -12,11 +12,16 @@ import { SubmitHandler, UseFormReset, useForm } from 'react-hook-form';
 import ProfileForm, {
   ProfileFormValues,
 } from '../components/forms/ProfileForm';
+import useNotificationStore from '../stores/useNotificationStore';
 
 const Profile = (): JSX.Element => {
   const { session } = useAuth();
 
   const [isEdited, setIsEdited] = useState<boolean>(false);
+
+  const addNotification = useNotificationStore(
+    (state) => state.addNotification,
+  );
 
   type ProfileFormHandle = React.ElementRef<typeof ProfileForm>;
 
@@ -26,30 +31,35 @@ const Profile = (): JSX.Element => {
     if (!session?.user) return;
 
     profilesService.updateProfile(session?.user.id, data);
+
+    addNotification({
+      type: NotificationEnum.SUCCESS,
+      message: `Votre profil a bien été modifié.`,
+    });
   };
 
-  const { data: userProfile } = useQuery({
-    queryKey: ['userProfile', session?.user.id],
+  const { data: profile } = useQuery({
+    queryKey: ['profile', session?.user.id],
     queryFn: () => session && profilesService.getProfile(session.user.id),
     enabled: !!session,
   });
 
   return (
     <>
-      {userProfile && (
+      {profile && (
         <Page>
           <div className="max-w-7xl mx-auto mb-8 flex flex-col">
             <div className="w-full flex justify-between mb-4 pb-4 border-b border-light-blue">
               <div className="flex gap-4 items-end ">
-                {userProfile.avatarUrl && (
+                {profile.avatarUrl && (
                   <img
                     className="w-32 h-32 rounded-lg object-cover"
-                    src={userProfile.avatarUrl}
+                    src={profile.avatarUrl}
                     alt=""
                   />
                 )}
                 <h2 className="text-3xl font-raleway font-semibold text-white">
-                  Profil de {userProfile.username}
+                  Profil de {profile.username}
                 </h2>
               </div>
               <div className="flex gap-4 self-end">
@@ -75,7 +85,7 @@ const Profile = (): JSX.Element => {
             </div>
             <ProfileForm
               ref={profileFormRef}
-              userProfile={userProfile}
+              userProfile={profile}
               onSubmit={onSubmit}
               onEdited={(isFormEdited) => setIsEdited(isFormEdited)}
             />

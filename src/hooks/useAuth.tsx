@@ -5,8 +5,13 @@ import { AuthContext } from '../contexts/AuthContext';
 import { profilesService } from '../services/profiles.service';
 import { useQuery } from 'react-query';
 import { authService } from '../services/auth.service';
+import useNotificationStore from '../stores/useNotificationStore';
+import { NotificationEnum } from '../interfaces/notification.interface';
 
 const useAuth = () => {
+  const addNotification = useNotificationStore(
+    (state) => state.addNotification,
+  );
   const [error, setError] = useState<AuthError>();
 
   const { data: session, refetch } = useQuery(
@@ -22,6 +27,13 @@ const useAuth = () => {
 
     if (error) {
       setError(error);
+    }
+
+    if (data) {
+      addNotification({
+        type: NotificationEnum.SUCCESS,
+        message: `Connecté en tant que ${data.user?.email}`,
+      });
     }
 
     refetch();
@@ -52,6 +64,11 @@ const useAuth = () => {
     if (error) {
       return setError(error);
     }
+
+    addNotification({
+      type: NotificationEnum.SUCCESS,
+      message: `Vous êtes déconnecté.`,
+    });
 
     refetch();
   };

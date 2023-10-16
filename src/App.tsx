@@ -1,5 +1,6 @@
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Outlet } from "react-router-dom"
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Sidebar from "./components/layout/sidebar/Sidebar";
 import Header from "./components/layout/Header";
 import { AiFillHome, AiOutlinePlus } from "react-icons/ai";
@@ -10,13 +11,14 @@ import { NotificationContext } from "./contexts/NotificationContext";
 import { Modal } from "./interfaces/modal.interface";
 import Footer from "./components/layout/Footer";
 import { IoMdWarning } from "react-icons/io";
-import { Notification } from "./interfaces/notification.interface";
+import { Notification, NotificationEnum } from "./interfaces/notification.interface";
 import Toaster from "./components/layout/toaster/Toaster";
 import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal";
 import { AuthModalContext } from "./contexts/AuthModalContext";
 import GuildModal from "./components/modals/GuildModal/GuildModal";
 import { GuildModalMode } from "./components/modals/GuildModal/GuildModal.intefaces";
 import { useTransition } from "@react-spring/web";
+import useNotificationStore from './stores/useNotificationStore';
 
 export type SidebarButtonType = {
   name: string;
@@ -31,7 +33,7 @@ function App() {
   const [queryClient] = useState(() => new QueryClient())
   const [modal, setModal] = useState<Modal>({} as Modal)
   const [isAddingGuildModalOpened, setIsAddingGuildModalOpened] = useState<boolean>(false)
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const addNotification = useNotificationStore((state) => state.addNotification)
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
   const [authModalSignUpEmail, setAuthModalSignUpEmail] = useState<string>();
@@ -73,39 +75,37 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NotificationContext.Provider value={{ notifications, setNotifications }}>
-        <AuthModalContext.Provider
-          value={{
-            isOpen: isAuthModalOpened,
-            setIsOpen: setIsAuthModalOpened,
-            type: authModalType,
-            setType: setAuthModalType,
-            signUpEmail: authModalSignUpEmail,
-            setSignUpEmail: setAuthModalSignUpEmail,
-          }}
-        >
-          <AuthModal onClose={() => setIsAuthModalOpened(false)} />
-          {guildModalTransition((style, isOpened) => (
-            <>{isOpened && <GuildModal 
-              style={{...style}}
-              mode={GuildModalMode.ADDING}
-              onClose={() => setIsAddingGuildModalOpened(false)}
-              onSubmit={() => {}}/> }
-            </>
-          ))}
-          <ModalContext.Provider value={{ modal, setModal }}>
-            <div className="relative bg-bg-blue flex w-full min-h-screen">
-              <Toaster />
-              <Sidebar buttons={sidebarButtons} onAddingGuild={() => setIsAddingGuildModalOpened(true)} />
-              <div className="flex flex-col gap-4 p-8 h-screen overflow-y-scroll w-full">
-                <Header />
-                <Outlet />
-                <Footer />
-              </div>
-            </div>
-          </ModalContext.Provider>
-        </AuthModalContext.Provider>
-      </NotificationContext.Provider>
+      <AuthModalContext.Provider
+        value={{
+          isOpen: isAuthModalOpened,
+          setIsOpen: setIsAuthModalOpened,
+          type: authModalType,
+          setType: setAuthModalType,
+          signUpEmail: authModalSignUpEmail,
+          setSignUpEmail: setAuthModalSignUpEmail,
+        }}
+      >
+      <AuthModal onClose={() => setIsAuthModalOpened(false)} />
+      {guildModalTransition((style, isOpened) => (
+        <>{isOpened && <GuildModal 
+          style={{...style}}
+          mode={GuildModalMode.ADDING}
+          onClose={() => setIsAddingGuildModalOpened(false)}
+          onSubmit={() => {}}/> }
+        </>
+      ))}
+      <ModalContext.Provider value={{ modal, setModal }}>
+        <div className="relative bg-bg-blue flex w-full min-h-screen">
+          <Toaster />
+          <Sidebar buttons={sidebarButtons} onAddingGuild={() => setIsAddingGuildModalOpened(true)} />
+          <div className="flex flex-col gap-4 p-8 h-screen overflow-y-scroll w-full relative">
+            <Header />
+            <Outlet />
+            <Footer />
+          </div>
+        </div>
+      </ModalContext.Provider>
+    </AuthModalContext.Provider>
     </QueryClientProvider>
   )
 }
