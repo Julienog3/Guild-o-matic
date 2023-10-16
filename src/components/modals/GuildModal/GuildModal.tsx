@@ -18,6 +18,7 @@ import { NotificationContext } from '../../../contexts/NotificationContext';
 import { supabase } from '../../../supabaseClient';
 import { IoIosArrowForward } from 'react-icons/io';
 import { GuildModalMode, GuildModalStep } from './GuildModal.intefaces';
+import useNotificationStore from '../../../stores/useNotificationStore';
 
 interface GuildModalStepInterface {
   title: string;
@@ -42,7 +43,9 @@ const GuildModal = ({
 }: GuildModalProps): JSX.Element => {
   const navigate = useNavigate();
   const { session } = useAuth();
-  const { notifications, setNotifications } = useContext(NotificationContext);
+  const addNotification = useNotificationStore(
+    (state) => state.addNotification,
+  );
 
   const queryClient = new QueryClient();
 
@@ -137,24 +140,18 @@ const GuildModal = ({
     if (mode === GuildModalMode.ADDING) {
       addingGuild.mutate(guildPayload);
       navigate('/guilds');
-      setNotifications([
-        ...notifications,
-        {
-          type: NotificationEnum.SUCCESS,
-          message: 'Votre guilde a été ajouté avec succès !',
-        },
-      ]);
+      addNotification({
+        type: NotificationEnum.SUCCESS,
+        message: 'Votre guilde a été ajouté avec succès !',
+      });
     }
 
     if (mode === GuildModalMode.EDITING && guild) {
       editingGuild.mutate({ id: guild?.id, guild: guildPayload });
-      setNotifications([
-        ...notifications,
-        {
-          type: NotificationEnum.SUCCESS,
-          message: 'Votre guilde a été modifié avec succès !',
-        },
-      ]);
+      addNotification({
+        type: NotificationEnum.SUCCESS,
+        message: 'Votre guilde a été modifié avec succès !',
+      });
     }
 
     onClose();
@@ -169,13 +166,10 @@ const GuildModal = ({
       });
 
     if (error) {
-      setNotifications([
-        ...notifications,
-        {
-          type: NotificationEnum.DANGER,
-          message: error.message,
-        },
-      ]);
+      addNotification({
+        type: NotificationEnum.DANGER,
+        message: error.message,
+      });
     }
   };
 
