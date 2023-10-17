@@ -3,7 +3,7 @@ import { IoMdClose } from 'react-icons/io';
 import { SpringValue, animated } from '@react-spring/web';
 
 interface ModalProps {
-  style: ModalStyle;
+  style?: ModalStyle;
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
@@ -23,7 +23,7 @@ const Modal = ({
   return (
     <animated.div
       role="alertdialog"
-      style={{ opacity: style.opacity }}
+      style={{ opacity: style?.opacity }}
       className="flex items-center justify-center fixed top-0 left-0 w-full h-screen bg-black/70 z-50"
     >
       <animated.div

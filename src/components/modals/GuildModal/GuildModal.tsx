@@ -1,4 +1,4 @@
-import Modal, { ModalStyle } from '../../utils/Modal';
+import Modal, { ModalStyle } from '../../utils/Modal/Modal';
 import React, { useContext, useEffect, useState } from 'react';
 import GeneralStep from './steps/GeneralStep';
 import DescriptionStep from './steps/DescriptionStep';

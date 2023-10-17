@@ -2,7 +2,7 @@ import { AuthModalContext } from '../../../contexts/AuthModalContext';
 import useAuth from '../../../hooks/useAuth';
 import LoginForm from '../../forms/LoginForm';
 import SignUpForm from '../../forms/SignUpForm';
-import Modal from '../../utils/Modal';
+import Modal from '../../utils/Modal/Modal';
 import React, { FormEvent, useContext, useEffect } from 'react';
 import { AuthModalTypeEnum } from './AuthModal';
 

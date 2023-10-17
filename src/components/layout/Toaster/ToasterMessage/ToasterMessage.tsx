@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { memo, useEffect } from 'react';
-import { NotificationEnum } from '../../../interfaces/notification.interface';
+import { NotificationEnum } from '../../../../interfaces/notification.interface';
 import { AiFillInfoCircle } from 'react-icons/ai';
 import { IoIosWarning, IoMdClose } from 'react-icons/io';
 import { BsFillCheckCircleFill } from 'react-icons/bs';

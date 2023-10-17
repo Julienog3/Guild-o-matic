@@ -1,4 +1,4 @@
-import Modal from '../../utils/Modal';
+import Modal from '../../utils/Modal/Modal';
 import React, { FormEvent, useContext, useEffect } from 'react';
 import LoginModal from './LoginModal';
 import SignUpModal from './SignUpModal';

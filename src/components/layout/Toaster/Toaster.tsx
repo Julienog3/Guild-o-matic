@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import { NotificationContext } from '../../../contexts/NotificationContext';
 import { Notification } from '../../../interfaces/notification.interface';
-import ToasterMessage from './ToasterMessage';
+import ToasterMessage from './ToasterMessage/ToasterMessage';
 import { useTransition } from '@react-spring/web';
 import useNotificationStore from '../../../stores/useNotificationStore';
 

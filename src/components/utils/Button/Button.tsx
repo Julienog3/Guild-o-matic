@@ -10,14 +10,14 @@ enum ButtonVariantType {
 interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   onClick?: () => void;
-  variant: ButtonVariantType;
+  // variant: ButtonVariantType;
   children: React.ReactNode;
 }
 
 const Button = ({
   type = 'button',
   onClick,
-  variant,
+  // variant,
   children,
 }: ButtonProps) => {
   return (
@@ -28,7 +28,7 @@ const Button = ({
           onClick();
         }
       }}
-      className="bg-neutral-900 px-8 py-3 text-white rounded-full"
+      className=" bg-accent-blue px-8 py-3 text-white rounded-full"
     >
       {children}
     </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTypeEnum } from '../../interfaces/alert.interface';
+import { AlertTypeEnum } from '../../../interfaces/alert.interface';
 
 interface AlertProps {
   type: AlertTypeEnum;

@@ -12,7 +12,7 @@ import { Modal } from "./interfaces/modal.interface";
 import Footer from "./components/layout/Footer";
 import { IoMdWarning } from "react-icons/io";
 import { Notification, NotificationEnum } from "./interfaces/notification.interface";
-import Toaster from "./components/layout/toaster/Toaster";
+import Toaster from "./components/layout/Toaster/Toaster";
 import AuthModal, { AuthModalTypeEnum } from "./components/modals/auth/AuthModal";
 import { AuthModalContext } from "./contexts/AuthModalContext";
 import GuildModal from "./components/modals/GuildModal/GuildModal";

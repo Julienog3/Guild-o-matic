@@ -1,4 +1,4 @@
-import Modal, { ModalStyle } from '../utils/Modal';
+import Modal, { ModalStyle } from '../utils/Modal/Modal';
 import React from 'react';
 
 interface GuildConfirmationModalProps {
