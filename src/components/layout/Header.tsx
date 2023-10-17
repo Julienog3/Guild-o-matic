@@ -14,7 +14,9 @@ const Header = (): JSX.Element => {
     <>
       <header className="z-10 max-w-7xl w-full mx-auto pb-0 flex justify-between items-center">
         <Link to="/">
-          <h1 className="text-white font-semibold text-3xl">Guild-o-matic</h1>
+          <h1 className="text-white font-semibold text-xl lg:text-3xl">
+            Guild-o-matic
+          </h1>
         </Link>
         <div className="flex gap-4">
           {session?.user.id && (
@@ -33,7 +35,7 @@ const Header = (): JSX.Element => {
                   setType(AuthModalTypeEnum.LOGIN);
                   setIsOpen(true);
                 }}
-                className="rounded-lg bg-main-blue border-light-blue border px-6 py-4 text-white w-fit text-sm"
+                className="lg:block hidden rounded-lg bg-main-blue border-light-blue border px-6 py-4 text-white w-fit text-sm"
               >
                 Se connecter
               </button>
