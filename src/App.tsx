@@ -33,10 +33,11 @@ function App() {
   const [queryClient] = useState(() => new QueryClient())
   const [modal, setModal] = useState<Modal>({} as Modal)
   const [isAddingGuildModalOpened, setIsAddingGuildModalOpened] = useState<boolean>(false)
-  const addNotification = useNotificationStore((state) => state.addNotification)
+  const addNotification = useNotificationStore((state) => state.addNotification);
   const [isAuthModalOpened, setIsAuthModalOpened] = useState<boolean>(false);
   const [authModalType, setAuthModalType] = useState<AuthModalTypeEnum>();
   const [authModalSignUpEmail, setAuthModalSignUpEmail] = useState<string>();
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const guildModalTransition = useTransition(isAddingGuildModalOpened, {
     from: {
@@ -97,8 +98,9 @@ function App() {
       <ModalContext.Provider value={{ modal, setModal }}>
         <div className="relative bg-bg-blue flex w-full min-h-screen">
           <Toaster />
-          <Sidebar buttons={sidebarButtons} onAddingGuild={() => setIsAddingGuildModalOpened(true)} />
-          <div className="flex flex-col gap-4 p-8 h-screen overflow-y-scroll w-full relative">
+          <Sidebar isExpanded={isExpanded} onClose={() => setIsExpanded(false)} buttons={sidebarButtons} onAddingGuild={() => setIsAddingGuildModalOpened(true)} />
+          <div className="flex flex-col gap-4 p-6 lg:p-8 h-screen overflow-y-scroll w-full relative">
+            <button onClick={() => setIsExpanded(!isExpanded)} className=''>Expanded</button>
             <Header />
             <Outlet />
             <Footer />

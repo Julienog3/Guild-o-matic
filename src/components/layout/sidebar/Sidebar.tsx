@@ -8,16 +8,22 @@ import { useQuery } from 'react-query';
 import { guildsService } from '../../../services/guilds.service';
 import { GuildType } from '../../../interfaces/guild.interface';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 interface SidebarProps {
+  isExpanded: boolean;
+  onClose: () => void;
   buttons: SidebarButtonType[];
   onAddingGuild: () => void;
 }
 
-const Sidebar = ({ buttons, onAddingGuild }: SidebarProps): JSX.Element => {
+const Sidebar = ({
+  isExpanded,
+  buttons,
+  onClose,
+  onAddingGuild,
+}: SidebarProps): JSX.Element => {
   const location = useLocation();
-
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
   const { session } = useAuth();
   const [filteredButtons, setFilteredButtons] = useState<SidebarButtonType[]>(
@@ -49,9 +55,9 @@ const Sidebar = ({ buttons, onAddingGuild }: SidebarProps): JSX.Element => {
   return (
     <>
       <aside
-        className={`${
-          isExpanded ? ' w-72' : 'w-24'
-        } z-20 flex flex-col p-4 h-screen bottom-0 bg-main-blue border-r border-light-blue items-start relative`}
+        className={`w-72 z-20 fixed ${
+          isExpanded ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0 lg:flex flex-col p-4 h-screen bottom-0 bg-main-blue border-r border-light-blue items-start lg:relative transition-all`}
       >
         <div className="flex items-center gap-4 p-4 mt-4">
           <img className="w-10 h-10" src="/images/icon.png" />
@@ -60,13 +66,13 @@ const Sidebar = ({ buttons, onAddingGuild }: SidebarProps): JSX.Element => {
           </h1>
         </div>
 
-        {/* <button onClick={() => setIsExpanded(!isExpanded)}>
-        {isExpanded ? (
-          <IoIosArrowBack className="text-white text-lg" />
-        ) : (
-          <IoIosArrowForward className="text-white text-lg" />
-        )}
-      </button> */}
+        <button onClick={() => onClose()}>
+          {isExpanded ? (
+            <IoIosArrowBack className="text-white text-lg" />
+          ) : (
+            <IoIosArrowForward className="text-white text-lg" />
+          )}
+        </button>
         {filteredButtons && (
           <div className="flex flex-col gap-4 w-full border-b border-light-blue py-6">
             {filteredButtons.map((button) => {
